@@ -9,6 +9,14 @@ function formatActiveStatus(isActive) {
   return isActive ? "공개" : "비공개";
 }
 
+function formatPostDate(date) {
+  if (!date) {
+    return "—";
+  }
+
+  return date;
+}
+
 export function AdminPostsTable({ posts }) {
   const { mutate } = useApiMutation("PATCH");
   const [activeById, setActiveById] = useState({});
@@ -48,6 +56,9 @@ export function AdminPostsTable({ posts }) {
         <thead>
           <tr>
             <th scope="col" className="caption">
+              Date
+            </th>
+            <th scope="col" className="caption">
               Title
             </th>
             <th scope="col" className="caption">
@@ -65,6 +76,7 @@ export function AdminPostsTable({ posts }) {
 
             return (
               <tr key={post.id}>
+                <td className={`p ${styles.dateCell}`}>{formatPostDate(post.date)}</td>
                 <td className="p">
                   <Link href={`/admin/posts/${post.id}`} className={styles.titleLink}>
                     {post.title ?? "—"}

@@ -80,6 +80,11 @@
   color: var(--gray-65);
 }
 
+.dateCell {
+  white-space: nowrap;
+  color: var(--gray-65);
+}
+
 .empty {
   padding: 24px 0;
 }

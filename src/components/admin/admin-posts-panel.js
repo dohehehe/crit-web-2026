@@ -62,7 +62,7 @@ export function AdminPostsPanel() {
 
   const postsParams = useMemo(() => {
     const base = {
-      select: "id,title,is_active,issue_id,authors(name)",
+      select: "id,title,date,is_active,issue_id,authors(name)",
       order: "created_at.desc",
       limit: 100,
       "eq.section_id": selectedSectionId,
