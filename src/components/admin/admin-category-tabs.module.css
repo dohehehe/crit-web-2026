@@ -11,8 +11,6 @@
   padding: 0;
   cursor: pointer;
   color: var(--black);
-  text-decoration-line: underline;
-  text-underline-offset: 35%;
 }
 
 .tab:hover {
@@ -21,7 +19,6 @@
 
 .tabActive {
   color: var(--crit-orange);
-  text-decoration-thickness: 2px;
 }
 
 .tabInactive,
