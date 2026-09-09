@@ -1,27 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { getSectionMode } from "@/lib/admin/section-mode";
+import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import EditorClient from "./EditorClient";
 import styles from "./post-form.module.css";
 
 const POST_SELECT =
   "id,title,subtitle,slug,content,section_id,category_id,issue_id,author_id,date,thumnail_img,video_url,workshop_url,start_at,end_at";
 
 function parseContent(content) {
-  if (!content) return "";
-  if (typeof content === "string") return content;
-  if (typeof content === "object" && content.body) return String(content.body);
-  return JSON.stringify(content, null, 2);
+  const blocks = normalizeBlocks(content);
+
+  if (blocks.length === 0) {
+    return null;
+  }
+
+  return { blocks };
 }
 
-function serializeContent(text) {
-  const trimmed = text.trim();
-  if (!trimmed) return null;
-  return { body: trimmed };
+function serializeEditorContent(savedData) {
+  const blocks = normalizeBlocks(savedData);
+
+  if (blocks.length === 0) {
+    return null;
+  }
+
+  return { blocks };
 }
 
 function toDatetimeLocalValue(isoString) {
@@ -44,7 +53,6 @@ function emptyForm(defaults = {}) {
     title: "",
     subtitle: "",
     slug: "",
-    content: "",
     section_id: defaults.sectionId ?? "",
     category_id: defaults.categoryId ?? "",
     issue_id: defaults.issueId ?? "",
@@ -63,7 +71,6 @@ function postToForm(post) {
     title: post.title ?? "",
     subtitle: post.subtitle ?? "",
     slug: post.slug ?? "",
-    content: parseContent(post.content),
     section_id: post.section_id ?? "",
     category_id: post.category_id ?? "",
     issue_id: post.issue_id ?? "",
@@ -81,6 +88,7 @@ function PostFormFields({
   mode,
   postId,
   initialValues,
+  initialContent,
   section,
   sectionMode,
   categories,
@@ -88,6 +96,7 @@ function PostFormFields({
   authors,
 }) {
   const router = useRouter();
+  const editorRef = useRef(null);
   const isEdit = mode === "edit";
   const isWorkshop = section?.slug === "Workshop";
 
@@ -95,6 +104,7 @@ function PostFormFields({
   const { mutate: updatePost, isLoading: isUpdating, error: updateError } = useApiMutation("PATCH");
 
   const [form, setForm] = useState(initialValues);
+  const [editorError, setEditorError] = useState(null);
 
   function updateField(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -102,12 +112,27 @@ function PostFormFields({
 
   async function handleSubmit(event) {
     event.preventDefault();
+    setEditorError(null);
+
+    let content = null;
+
+    try {
+      if (!editorRef.current?.isReady?.()) {
+        throw new Error("에디터가 아직 준비되지 않았습니다.");
+      }
+
+      const savedData = await editorRef.current.save();
+      content = serializeEditorContent(savedData);
+    } catch (error) {
+      setEditorError(error.message ?? "에디터 내용을 저장하지 못했습니다.");
+      return;
+    }
 
     const payload = {
       title: form.title.trim() || null,
       subtitle: form.subtitle.trim() || null,
       slug: form.slug.trim() || null,
-      content: serializeContent(form.content),
+      content,
       section_id: form.section_id || null,
       category_id: form.category_id || null,
       issue_id: form.issue_id || null,
@@ -171,7 +196,7 @@ function PostFormFields({
         </label>
 
         <label className={styles.field}>
-          <span className="caption">Slug</span>
+          <span className="caption">English Title</span>
           <input
             className={styles.input}
             type="text"
@@ -254,14 +279,13 @@ function PostFormFields({
       <div className={styles.section}>
         <h2 className={`${styles.sectionTitle} p-bold`}>콘텐츠</h2>
 
-        <label className={styles.field}>
+        <div className={styles.field}>
           <span className="caption">Content</span>
-          <textarea
-            className={styles.textarea}
-            value={form.content}
-            onChange={(event) => updateField("content", event.target.value)}
-          />
-        </label>
+          <EditorClient ref={editorRef} data={initialContent} />
+          {editorError && (
+            <p className={`${styles.error} caption`}>{editorError}</p>
+          )}
+        </div>
 
         <label className={styles.field}>
           <span className="caption">Thumbnail URL</span>
@@ -425,10 +449,14 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
   const initialValues = isEdit
     ? postToForm(postData)
     : emptyForm({
-        sectionId,
-        categoryId: defaultCategoryId,
-        issueId: defaultIssueId,
-      });
+      sectionId,
+      categoryId: defaultCategoryId,
+      issueId: defaultIssueId,
+    });
+
+  const initialContent = isEdit
+    ? parseContent(postData.content)
+    : null;
 
   const formKey = isEdit
     ? postId
@@ -440,6 +468,7 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
       mode={mode}
       postId={postId}
       initialValues={initialValues}
+      initialContent={initialContent}
       section={section}
       sectionMode={sectionMode}
       categories={categories}

@@ -1,0 +1,55 @@
+.wrapper {
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  background: #fff;
+  margin-bottom: 4px;
+  font-size: 1rem;
+  line-height: 1.65;
+  font-weight: 500;
+}
+
+.wrapper :global(.image-tool) {
+  width: 40% !important;
+}
+
+.wrapper :global(.image-tool__caption) {
+  position: static !important;
+}
+
+.wrapper :global(b) {
+  font-weight: 700;
+}
+
+.wrapper :global(i) {
+  position: relative;
+  display: inline-block;
+  text-decoration-style: dotted;
+  text-decoration-color: black;
+  text-decoration-thickness: 1.5px;
+  text-decoration-line: underline;
+  text-underline-position: under;
+  text-underline-offset: 2px;
+  line-height: 2.1;
+  font-style: normal;
+}
+
+.wrapper :global(a) {
+  color: rgb(43, 143, 249);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.loading {
+  min-height: 300px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.holder {
+  min-height: 300px;
+  padding: 20px;
+}

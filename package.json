@@ -14,6 +14,12 @@
     "supabase:schema:watch": "node scripts/supabase-schema-watch.mjs"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.31.6",
+    "@editorjs/embed": "^2.8.0",
+    "@editorjs/header": "^2.8.9",
+    "@editorjs/image": "^2.10.3",
+    "@editorjs/list": "^2.0.9",
+    "@editorjs/quote": "^2.7.6",
     "@supabase/supabase-js": "^2.109.0",
     "dotenv": "^17.4.2",
     "next": "16.3.4",
