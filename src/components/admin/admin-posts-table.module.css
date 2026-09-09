@@ -83,3 +83,12 @@
 .empty {
   padding: 24px 0;
 }
+
+.titleLink {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.titleLink:hover {
+  color: var(--crit-orange);
+}

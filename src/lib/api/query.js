@@ -7,7 +7,9 @@ export function parseListQuery(searchParams) {
   const order = searchParams.get("order");
   const filters = parseFilters(searchParams);
 
-  return { select, limit, offset, order, filters };
+  const scope = searchParams.get("scope");
+
+  return { select, limit, offset, order, filters, scope };
 }
 
 function clampInt(value, fallback, min, max) {

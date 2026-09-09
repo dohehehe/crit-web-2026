@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { shouldApplyActiveFilter } from "@/lib/api/constants";
 import { jsonError, jsonOk } from "@/lib/api/response";
 import { applyListQuery, parseListQuery } from "@/lib/api/query";
 
@@ -15,11 +16,16 @@ function mapSupabaseError(error) {
 export async function handleList(table, request) {
   try {
     const supabase = createAdminClient();
-    const queryOptions = parseListQuery(new URL(request.url).searchParams);
+    const searchParams = new URL(request.url).searchParams;
+    const queryOptions = parseListQuery(searchParams);
 
     let query = supabase.from(table).select(queryOptions.select, {
       count: "exact",
     });
+
+    if (shouldApplyActiveFilter(table, queryOptions.scope, searchParams)) {
+      query = query.eq("is_active", true);
+    }
 
     query = applyListQuery(query, queryOptions);
 

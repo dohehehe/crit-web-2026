@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
+import { buildPostCreateHref } from "@/lib/admin/section-mode";
 import { AdminPostsTable } from "./admin-posts-table";
 import styles from "./admin-issues-list.module.css";
 
@@ -18,7 +20,7 @@ function formatActiveStatus(isActive) {
   return isActive ? "활성" : "비활성";
 }
 
-export function AdminIssuesList({ issues, posts }) {
+export function AdminIssuesList({ issues, posts, sectionId }) {
   const [expandedIds, setExpandedIds] = useState(() => new Set());
 
   const postsByIssueId = useMemo(() => {
@@ -86,6 +88,16 @@ export function AdminIssuesList({ issues, posts }) {
 
             {isExpanded && (
               <div className={styles.postsPanel}>
+                {sectionId && (
+                  <div className={styles.issueToolbar}>
+                    <Link
+                      href={buildPostCreateHref(sectionId, { issueId: issue.id })}
+                      className={`${styles.createButton} caption`}
+                    >
+                      + 새 게시물
+                    </Link>
+                  </div>
+                )}
                 <AdminPostsTable posts={issuePosts} />
               </div>
             )}
@@ -114,6 +126,16 @@ export function AdminIssuesList({ issues, posts }) {
 
           {expandedIds.has(UNASSIGNED_ISSUE_ID) && (
             <div className={styles.postsPanel}>
+              {sectionId && (
+                <div className={styles.issueToolbar}>
+                  <Link
+                    href={buildPostCreateHref(sectionId)}
+                    className={`${styles.createButton} caption`}
+                  >
+                    + 새 게시물
+                  </Link>
+                </div>
+              )}
               <AdminPostsTable posts={unassignedPosts} />
             </div>
           )}

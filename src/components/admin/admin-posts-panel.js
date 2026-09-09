@@ -1,26 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useApiQuery } from "@/hooks/use-api-query";
+import { useAdminQuery } from "@/hooks/use-admin-query";
+import { buildPostCreateHref, getSectionMode } from "@/lib/admin/section-mode";
 import { AdminSectionTabs } from "./admin-section-tabs";
 import { AdminCategoryTabs } from "./admin-category-tabs";
 import { AdminIssuesList } from "./admin-issues-list";
 import { AdminPostsTable } from "./admin-posts-table";
 import styles from "./admin-posts-panel.module.css";
-
-const CURRENT_SECTION_SLUG = "Current";
-const JOURNAL_CRIT_SECTION_SLUG = "Journal Crit";
-const CHANNEL_SECTION_SLUG = "Channel";
-const WORKSHOP_SECTION_SLUG = "Workshop";
-
-function getSectionMode(section) {
-  if (section?.slug === JOURNAL_CRIT_SECTION_SLUG) return "journal";
-  if (section?.slug === CURRENT_SECTION_SLUG) return "current";
-  if (section?.slug === CHANNEL_SECTION_SLUG || section?.slug === WORKSHOP_SECTION_SLUG) {
-    return "posts";
-  }
-  return "posts";
-}
 
 export function AdminPostsPanel() {
   const [selectedSectionId, setSelectedSectionId] = useState(null);
@@ -30,7 +18,7 @@ export function AdminPostsPanel() {
     data: sectionsData,
     isLoading: sectionsLoading,
     error: sectionsError,
-  } = useApiQuery("sections", {
+  } = useAdminQuery("sections", {
     params: {
       order: "sort_order.asc",
       limit: 20,
@@ -45,7 +33,7 @@ export function AdminPostsPanel() {
     data: categoriesData,
     isLoading: categoriesLoading,
     error: categoriesError,
-  } = useApiQuery("categories", {
+  } = useAdminQuery("categories", {
     params: {
       "eq.section_id": selectedSectionId,
       select: "id,name,slug,sort_order",
@@ -61,7 +49,7 @@ export function AdminPostsPanel() {
     data: issuesData,
     isLoading: issuesLoading,
     error: issuesError,
-  } = useApiQuery("issues", {
+  } = useAdminQuery("issues", {
     params: {
       select: "id,title,issue_number,is_active",
       order: "issue_number.desc",
@@ -91,7 +79,7 @@ export function AdminPostsPanel() {
     data: postsData,
     isLoading: postsLoading,
     error: postsError,
-  } = useApiQuery("posts", {
+  } = useAdminQuery("posts", {
     params: postsParams,
     enabled: Boolean(selectedSectionId),
   });
@@ -164,8 +152,23 @@ export function AdminPostsPanel() {
           </p>
         )}
 
+        {selectedSectionId && !isListLoading && !listError && sectionMode !== "journal" && (
+          <div className={styles.toolbar}>
+            <Link
+              href={buildPostCreateHref(selectedSectionId, {
+                categoryId: sectionMode === "current" ? selectedCategoryId : null,
+              })}
+              className={`${styles.createButton} caption`}
+            >
+              + 새 게시물
+            </Link>
+          </div>
+        )}
+
         {showPostsTable && <AdminPostsTable posts={posts} />}
-        {showJournalIssuesList && <AdminIssuesList issues={issues} posts={posts} />}
+        {showJournalIssuesList && (
+          <AdminIssuesList issues={issues} posts={posts} sectionId={selectedSectionId} />
+        )}
       </div>
     </div>
   );

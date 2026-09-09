@@ -15,3 +15,22 @@
 .status {
   padding: 8px 0;
 }
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.createButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--crit-orange);
+  background: var(--crit-orange);
+  color: var(--white);
+  transition: opacity 0.15s ease;
+}
+
+.createButton:hover {
+  opacity: 0.9;
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import styles from "./admin-posts-table.module.css";
@@ -64,7 +65,11 @@ export function AdminPostsTable({ posts }) {
 
             return (
               <tr key={post.id}>
-                <td className="p">{post.title ?? "—"}</td>
+                <td className="p">
+                  <Link href={`/admin/posts/${post.id}`} className={styles.titleLink}>
+                    {post.title ?? "—"}
+                  </Link>
+                </td>
                 <td className="p">{post.authors?.name ?? "—"}</td>
                 <td className="p">
                   <button
