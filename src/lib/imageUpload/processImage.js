@@ -48,6 +48,17 @@ function getScaledDimensions(width, height, maxDimension) {
   };
 }
 
+function getScaledDimensionsByMaxWidth(width, height, maxWidth) {
+  if (width <= maxWidth) {
+    return { width, height };
+  }
+
+  return {
+    width: maxWidth,
+    height: Math.round((height / width) * maxWidth),
+  };
+}
+
 function drawToCanvas(image, width, height) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -80,7 +91,7 @@ function canvasToWebpBlob(canvas, quality) {
   });
 }
 
-export async function prepareImageForUpload(file) {
+export async function prepareImageForUpload(file, options = {}) {
   if (!(file instanceof File)) {
     throw new Error("유효하지 않은 파일입니다.");
   }
@@ -89,20 +100,30 @@ export async function prepareImageForUpload(file) {
     throw new Error("JPEG, PNG, WebP, GIF 이미지만 업로드할 수 있습니다.");
   }
 
+  const maxDimension = options.maxDimension ?? IMAGE_UPLOAD_MAX_DIMENSION;
+  const maxWidth = options.maxWidth ?? null;
+  const webpQuality = options.webpQuality ?? IMAGE_UPLOAD_WEBP_QUALITY;
+  const maxSizeMb = options.maxSizeMb ?? IMAGE_UPLOAD_MAX_SIZE_MB;
+
   const image = await loadImageFromFile(file);
-  const { width, height } = getScaledDimensions(
-    image.naturalWidth,
-    image.naturalHeight,
-    IMAGE_UPLOAD_MAX_DIMENSION
-  );
+  const { width, height } =
+    maxWidth != null
+      ? getScaledDimensionsByMaxWidth(
+          image.naturalWidth,
+          image.naturalHeight,
+          maxWidth
+        )
+      : getScaledDimensions(
+          image.naturalWidth,
+          image.naturalHeight,
+          maxDimension
+        );
   const canvas = drawToCanvas(image, width, height);
-  const blob = await canvasToWebpBlob(canvas, IMAGE_UPLOAD_WEBP_QUALITY);
-  const maxBytes = IMAGE_UPLOAD_MAX_SIZE_MB * 1024 * 1024;
+  const blob = await canvasToWebpBlob(canvas, webpQuality);
+  const maxBytes = maxSizeMb * 1024 * 1024;
 
   if (blob.size > maxBytes) {
-    throw new Error(
-      `이미지 크기는 ${IMAGE_UPLOAD_MAX_SIZE_MB}MB 이하여야 합니다.`
-    );
+    throw new Error(`이미지 크기는 ${maxSizeMb}MB 이하여야 합니다.`);
   }
 
   const fileName = `${Date.now()}.webp`;

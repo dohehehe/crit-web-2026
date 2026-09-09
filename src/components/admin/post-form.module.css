@@ -163,3 +163,12 @@
   border: 1px solid var(--gray-65);
   background: var(--white);
 }
+
+.popupThumbnailPreview {
+  display: block;
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+}

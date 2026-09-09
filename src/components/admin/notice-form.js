@@ -9,7 +9,7 @@ import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import EditorClient from "./EditorClient";
 import styles from "./post-form.module.css";
 
-const NOTICE_SELECT = "id,title,content,is_active";
+const NOTICE_SELECT = "id,title,content,is_active,date";
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);
@@ -34,6 +34,7 @@ function serializeEditorContent(savedData) {
 function emptyForm() {
   return {
     title: "",
+    date: "",
     is_active: false,
   };
 }
@@ -41,6 +42,7 @@ function emptyForm() {
 function noticeToForm(notice) {
   return {
     title: notice.title ?? "",
+    date: notice.date ?? "",
     is_active: Boolean(notice.is_active),
   };
 }
@@ -84,6 +86,7 @@ function NoticeFormFields({ mode, noticeId, initialValues, initialContent }) {
 
     const payload = {
       title: form.title.trim() || null,
+      date: form.date || null,
       content,
       is_active: form.is_active,
     };
@@ -135,6 +138,16 @@ function NoticeFormFields({ mode, noticeId, initialValues, initialContent }) {
             value={form.title}
             onChange={(event) => updateField("title", event.target.value)}
             required
+          />
+        </label>
+
+        <label className={styles.field}>
+          <span className="caption">Date</span>
+          <input
+            className={styles.input}
+            type="date"
+            value={form.date}
+            onChange={(event) => updateField("date", event.target.value)}
           />
         </label>
 

@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { POPUP_IMAGE_UPLOAD_OPTIONS } from "@/lib/imageUpload/constants";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import EditorClient from "./EditorClient";
 import styles from "./post-form.module.css";
 
-const POPUP_SELECT = "id,content,link_url,is_active";
+const POPUP_SELECT = "id,content,link_url,thumbnail_img,is_active";
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);
@@ -34,6 +36,7 @@ function serializeEditorContent(savedData) {
 function emptyForm() {
   return {
     link_url: "",
+    thumbnail_img: "",
     is_active: false,
   };
 }
@@ -41,6 +44,7 @@ function emptyForm() {
 function popupToForm(popup) {
   return {
     link_url: popup.link_url ?? "",
+    thumbnail_img: popup.thumbnail_img ?? "",
     is_active: Boolean(popup.is_active),
   };
 }
@@ -48,6 +52,7 @@ function popupToForm(popup) {
 function NoticePopupFormFields({ mode, popupId, initialValues, initialContent }) {
   const router = useRouter();
   const editorRef = useRef(null);
+  const thumbnailInputRef = useRef(null);
   const isEdit = mode === "edit";
 
   const { mutate: createPopup, isLoading: isCreating, error: createError } =
@@ -56,12 +61,42 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
     useApiMutation("PATCH");
   const { mutate: deletePopup, isLoading: isDeleting, error: deleteError } =
     useApiMutation("DELETE");
+  const { uploadImageToServer } = useImageUpload();
 
   const [form, setForm] = useState(initialValues);
   const [editorError, setEditorError] = useState(null);
+  const [thumbnailError, setThumbnailError] = useState(null);
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
 
   function updateField(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function handleThumbnailUpload(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setThumbnailError(null);
+    setIsUploadingThumbnail(true);
+
+    try {
+      const result = await uploadImageToServer(file, POPUP_IMAGE_UPLOAD_OPTIONS);
+
+      if (result.success && result.file?.url) {
+        updateField("thumbnail_img", result.file.url);
+        return;
+      }
+
+      setThumbnailError(result.error ?? "썸네일 업로드에 실패했습니다.");
+    } catch (error) {
+      setThumbnailError(error.message ?? "썸네일 업로드에 실패했습니다.");
+    } finally {
+      setIsUploadingThumbnail(false);
+      event.target.value = "";
+    }
   }
 
   async function handleSubmit(event) {
@@ -84,6 +119,7 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
 
     const payload = {
       link_url: form.link_url.trim() || null,
+      thumbnail_img: form.thumbnail_img.trim() || null,
       content,
       is_active: form.is_active,
     };
@@ -145,6 +181,40 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
           />
           <span className="caption">활성 (공개)</span>
         </label>
+
+        <div className={styles.field}>
+          <span className="caption">Thumbnail</span>
+          <input
+            ref={thumbnailInputRef}
+            className={styles.hiddenFileInput}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={handleThumbnailUpload}
+          />
+          <button
+            type="button"
+            className={`${styles.thumbnailButton} caption`}
+            onClick={() => thumbnailInputRef.current?.click()}
+            disabled={isUploadingThumbnail || isSaving}
+          >
+            {isUploadingThumbnail
+              ? "업로드 중…"
+              : form.thumbnail_img
+                ? "이미지 변경"
+                : "이미지 추가"}
+          </button>
+          {form.thumbnail_img ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={form.thumbnail_img}
+              alt="팝업 썸네일 미리보기"
+              className={styles.popupThumbnailPreview}
+            />
+          ) : null}
+          {thumbnailError && (
+            <p className={`${styles.error} caption`}>{thumbnailError}</p>
+          )}
+        </div>
       </div>
 
       <div className={styles.section}>

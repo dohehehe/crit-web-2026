@@ -22,8 +22,8 @@ export function AdminNoticePanel() {
     error: noticesError,
   } = useAdminQuery("notice", {
     params: {
-      select: "id,title,is_active,created_at",
-      order: "created_at.desc",
+      select: "id,title,date,is_active,created_at",
+      order: "date.desc",
       limit: 100,
     },
     enabled: selectedTab === "notice",

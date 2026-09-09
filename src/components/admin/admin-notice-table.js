@@ -9,17 +9,12 @@ function formatActiveStatus(isActive) {
   return isActive ? "공개" : "비공개";
 }
 
-function formatCreatedAt(value) {
+function formatNoticeDate(value) {
   if (!value) {
     return "—";
   }
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "—";
-  }
-
-  return date.toLocaleDateString("ko-KR");
+  return value;
 }
 
 export function AdminNoticeTable({ notices }) {
@@ -80,7 +75,7 @@ export function AdminNoticeTable({ notices }) {
 
             return (
               <tr key={notice.id}>
-                <td className={`p ${styles.dateCell}`}>{formatCreatedAt(notice.created_at)}</td>
+                <td className={`p ${styles.dateCell}`}>{formatNoticeDate(notice.date)}</td>
                 <td className="p">
                   <Link href={`/admin/notice/${notice.id}`} className={styles.titleLink}>
                     {notice.title ?? "—"}
