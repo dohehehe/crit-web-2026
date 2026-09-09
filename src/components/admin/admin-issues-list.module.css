@@ -9,8 +9,14 @@
   border: 1px solid var(--gray-65);
 }
 
+.issueHeader {
+  display: flex;
+  align-items: stretch;
+}
+
 .issueButton {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,6 +34,25 @@
 
 .issueButtonExpanded {
   border-bottom: 1px solid var(--gray-65);
+}
+
+.editButton {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 16px;
+  border: none;
+  border-left: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: background 0.15s ease;
+}
+
+.editButton:hover {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--crit-orange);
 }
 
 .issueLabel {

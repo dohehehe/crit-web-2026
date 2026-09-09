@@ -18,3 +18,11 @@ export function buildPostCreateHref(sectionId, { categoryId, issueId } = {}) {
   if (issueId) params.set("issueId", issueId);
   return `/admin/posts/new?${params.toString()}`;
 }
+
+export function buildIssueCreateHref() {
+  return "/admin/issues/new";
+}
+
+export function buildIssueEditHref(issueId) {
+  return `/admin/issues/${issueId}`;
+}

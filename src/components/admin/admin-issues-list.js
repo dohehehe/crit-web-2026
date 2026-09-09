@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { buildPostCreateHref } from "@/lib/admin/section-mode";
+import {
+  buildIssueEditHref,
+  buildPostCreateHref,
+} from "@/lib/admin/section-mode";
 import { AdminPostsTable } from "./admin-posts-table";
 import styles from "./admin-issues-list.module.css";
 
@@ -64,27 +67,35 @@ export function AdminIssuesList({ issues, posts, sectionId }) {
 
         return (
           <li key={issue.id} className={styles.item}>
-            <button
-              type="button"
-              className={`${styles.issueButton} ${isExpanded ? styles.issueButtonExpanded : ""}`}
-              aria-expanded={isExpanded}
-              onClick={() => toggleIssue(issue.id)}
-            >
-              <span className={`${styles.issueLabel} p-bold`}>{formatIssueLabel(issue)}</span>
-              <span className={`${styles.meta} caption gray-65`}>
-                <span
-                  className={`${styles.status} ${
-                    issue.is_active ? styles.statusActive : styles.statusInactive
-                  }`}
-                >
-                  {formatActiveStatus(Boolean(issue.is_active))}
+            <div className={styles.issueHeader}>
+              <button
+                type="button"
+                className={`${styles.issueButton} ${isExpanded ? styles.issueButtonExpanded : ""}`}
+                aria-expanded={isExpanded}
+                onClick={() => toggleIssue(issue.id)}
+              >
+                <span className={`${styles.issueLabel} p-bold`}>{formatIssueLabel(issue)}</span>
+                <span className={`${styles.meta} caption gray-65`}>
+                  <span
+                    className={`${styles.status} ${
+                      issue.is_active ? styles.statusActive : styles.statusInactive
+                    }`}
+                  >
+                    {formatActiveStatus(Boolean(issue.is_active))}
+                  </span>
+                  <span>{issuePosts.length}개</span>
+                  <span className={styles.chevron} aria-hidden="true">
+                    {isExpanded ? "−" : "+"}
+                  </span>
                 </span>
-                <span>{issuePosts.length}개</span>
-                <span className={styles.chevron} aria-hidden="true">
-                  {isExpanded ? "−" : "+"}
-                </span>
-              </span>
-            </button>
+              </button>
+              <Link
+                href={buildIssueEditHref(issue.id)}
+                className={`${styles.editButton} caption`}
+              >
+                수정
+              </Link>
+            </div>
 
             {isExpanded && (
               <div className={styles.postsPanel}>

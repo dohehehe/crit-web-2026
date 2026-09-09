@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
-import { buildPostCreateHref, getSectionMode } from "@/lib/admin/section-mode";
+import {
+  buildIssueCreateHref,
+  buildPostCreateHref,
+  getSectionMode,
+} from "@/lib/admin/section-mode";
 import { AdminSectionTabs } from "./admin-section-tabs";
 import { AdminCategoryTabs } from "./admin-category-tabs";
 import { AdminIssuesList } from "./admin-issues-list";
@@ -152,16 +156,22 @@ export function AdminPostsPanel() {
           </p>
         )}
 
-        {selectedSectionId && !isListLoading && !listError && sectionMode !== "journal" && (
+        {selectedSectionId && !isListLoading && !listError && (
           <div className={styles.toolbar}>
-            <Link
-              href={buildPostCreateHref(selectedSectionId, {
-                categoryId: sectionMode === "current" ? selectedCategoryId : null,
-              })}
-              className={`${styles.createButton} caption`}
-            >
-              + 새 게시물
-            </Link>
+            {sectionMode === "journal" ? (
+              <Link href={buildIssueCreateHref()} className={`${styles.createButton} caption`}>
+                + 새 이슈
+              </Link>
+            ) : (
+              <Link
+                href={buildPostCreateHref(selectedSectionId, {
+                  categoryId: sectionMode === "current" ? selectedCategoryId : null,
+                })}
+                className={`${styles.createButton} caption`}
+              >
+                + 새 게시물
+              </Link>
+            )}
           </div>
         )}
 
