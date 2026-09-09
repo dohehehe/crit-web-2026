@@ -1,6 +1,6 @@
 .nav {
-  border-bottom: 2px solid var(--black);
-  background: var(--white);
+  /* border-bottom: px solid var(--black); */
+  background: var(--crit-orange);
 }
 
 .inner {
@@ -16,12 +16,9 @@
 
 .brand {
   text-decoration: none;
-  color: var(--black);
+  color: var(--white);
 }
 
-.brand:hover {
-  color: var(--crit-orange);
-}
 
 .list {
   display: flex;

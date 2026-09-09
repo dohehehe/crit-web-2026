@@ -20,8 +20,8 @@ export function AdminNav() {
   return (
     <nav className={styles.nav} aria-label="관리자 메뉴">
       <div className={styles.inner}>
-        <Link href="/admin/contents" className={`${styles.brand} title-2`}>
-          CRIT Admin
+        <Link href="/admin" className={`${styles.brand} menu-en`}>
+          CRIT 관리자
         </Link>
         <ul className={styles.list}>
           {NAV_ITEMS.map((item) => {
