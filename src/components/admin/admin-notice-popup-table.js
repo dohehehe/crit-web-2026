@@ -1,57 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import { sortPostsByDateDesc } from "@/lib/admin/sortPostsByDate";
 import styles from "./admin-posts-table.module.css";
 
 function formatActiveStatus(isActive) {
   return isActive ? "공개" : "비공개";
 }
 
-function formatPostDate(date) {
-  if (!date) {
+function formatCreatedAt(value) {
+  if (!value) {
     return "—";
   }
 
-  return date;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return date.toLocaleDateString("ko-KR");
 }
 
-export function AdminPostsTable({ posts }) {
+export function AdminNoticePopupTable({ popups }) {
   const { mutate } = useApiMutation("PATCH");
   const [activeById, setActiveById] = useState({});
   const [pendingIds, setPendingIds] = useState(() => new Set());
-  const sortedPosts = useMemo(() => sortPostsByDateDesc(posts), [posts]);
 
   useEffect(() => {
     setActiveById(
-      Object.fromEntries(sortedPosts.map((post) => [post.id, Boolean(post.is_active)]))
+      Object.fromEntries(popups.map((popup) => [popup.id, Boolean(popup.is_active)]))
     );
-  }, [sortedPosts]);
+  }, [popups]);
 
-  async function handleToggle(postId) {
-    const current = activeById[postId] ?? false;
+  async function handleToggle(popupId) {
+    const current = activeById[popupId] ?? false;
     const next = !current;
 
-    setActiveById((prev) => ({ ...prev, [postId]: next }));
-    setPendingIds((prev) => new Set(prev).add(postId));
+    setActiveById((prev) => ({ ...prev, [popupId]: next }));
+    setPendingIds((prev) => new Set(prev).add(popupId));
 
     try {
-      await mutate(`posts/${postId}`, { is_active: next });
+      await mutate(`notice_popup/${popupId}`, { is_active: next });
     } catch {
-      setActiveById((prev) => ({ ...prev, [postId]: current }));
+      setActiveById((prev) => ({ ...prev, [popupId]: current }));
     } finally {
       setPendingIds((prev) => {
         const nextPending = new Set(prev);
-        nextPending.delete(postId);
+        nextPending.delete(popupId);
         return nextPending;
       });
     }
   }
 
-  if (sortedPosts.length === 0) {
-    return <p className={`${styles.empty} caption gray-65`}>표시할 게시물이 없습니다.</p>;
+  if (popups.length === 0) {
+    return <p className={`${styles.empty} caption gray-65`}>표시할 팝업이 없습니다.</p>;
   }
 
   return (
@@ -63,10 +66,7 @@ export function AdminPostsTable({ posts }) {
               Date
             </th>
             <th scope="col" className="caption">
-              Title
-            </th>
-            <th scope="col" className="caption">
-              Author
+              Link URL
             </th>
             <th scope="col" className="caption">
               공개
@@ -74,28 +74,27 @@ export function AdminPostsTable({ posts }) {
           </tr>
         </thead>
         <tbody>
-          {sortedPosts.map((post) => {
-            const isActive = activeById[post.id] ?? Boolean(post.is_active);
-            const isPending = pendingIds.has(post.id);
+          {popups.map((popup) => {
+            const isActive = activeById[popup.id] ?? Boolean(popup.is_active);
+            const isPending = pendingIds.has(popup.id);
 
             return (
-              <tr key={post.id}>
-                <td className={`p ${styles.dateCell}`}>{formatPostDate(post.date)}</td>
+              <tr key={popup.id}>
+                <td className={`p ${styles.dateCell}`}>{formatCreatedAt(popup.created_at)}</td>
                 <td className="p">
-                  <Link href={`/admin/contents/posts/${post.id}`} className={styles.titleLink}>
-                    {post.title ?? "—"}
+                  <Link href={`/admin/notice/popup/${popup.id}`} className={styles.titleLink}>
+                    {popup.link_url ?? "—"}
                   </Link>
                 </td>
-                <td className="p">{post.authors?.name ?? "—"}</td>
                 <td className="p">
                   <button
                     type="button"
                     role="switch"
                     aria-checked={isActive}
-                    aria-label={`${post.title ?? "게시물"} ${formatActiveStatus(isActive)}`}
+                    aria-label={`팝업 ${formatActiveStatus(isActive)}`}
                     className={`${styles.toggle} ${isActive ? styles.toggleOn : styles.toggleOff}`}
                     disabled={isPending}
-                    onClick={() => handleToggle(post.id)}
+                    onClick={() => handleToggle(popup.id)}
                   >
                     <span className={styles.toggleTrack}>
                       <span className={styles.toggleThumb} />

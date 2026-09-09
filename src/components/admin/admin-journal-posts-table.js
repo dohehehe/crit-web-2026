@@ -136,7 +136,7 @@ export function AdminJournalPostsTable({ posts, onPostsChanged }) {
                 </td>
                 <td className={`p ${styles.dateCell}`}>{formatPostDate(post.date)}</td>
                 <td className="p">
-                  <Link href={`/admin/posts/${post.id}`} className={styles.titleLink}>
+                  <Link href={`/admin/contents/posts/${post.id}`} className={styles.titleLink}>
                     {post.title ?? "—"}
                   </Link>
                 </td>

@@ -138,7 +138,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         await createIssue("issues", payload);
       }
 
-      router.push("/admin");
+      router.push("/admin/contents");
     } catch {
       // mutation error state handles display
     }
@@ -261,7 +261,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
           {isSaving ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
         </button>
-        <Link href="/admin" className={`${styles.cancelButton} caption`}>
+        <Link href="/admin/contents" className={`${styles.cancelButton} caption`}>
           취소
         </Link>
       </div>

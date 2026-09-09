@@ -223,7 +223,7 @@ function PostFormFields({
         return;
       }
 
-      router.push("/admin");
+      router.push("/admin/contents");
     } catch {
       // mutation error state handles display
     }
@@ -241,7 +241,7 @@ function PostFormFields({
 
     try {
       await deletePost(`posts/${postId}`);
-      router.push("/admin");
+      router.push("/admin/contents");
     } catch {
       // mutation error state handles display
     }
@@ -485,7 +485,7 @@ function PostFormFields({
           <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
             {isSaving && !isDeleting ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
           </button>
-          <Link href="/admin" className={`${styles.cancelButton} caption`}>
+          <Link href="/admin/contents" className={`${styles.cancelButton} caption`}>
             취소
           </Link>
         </div>

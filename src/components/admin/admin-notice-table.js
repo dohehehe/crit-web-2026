@@ -1,57 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import { sortPostsByDateDesc } from "@/lib/admin/sortPostsByDate";
 import styles from "./admin-posts-table.module.css";
 
 function formatActiveStatus(isActive) {
   return isActive ? "공개" : "비공개";
 }
 
-function formatPostDate(date) {
-  if (!date) {
+function formatCreatedAt(value) {
+  if (!value) {
     return "—";
   }
 
-  return date;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return date.toLocaleDateString("ko-KR");
 }
 
-export function AdminPostsTable({ posts }) {
+export function AdminNoticeTable({ notices }) {
   const { mutate } = useApiMutation("PATCH");
   const [activeById, setActiveById] = useState({});
   const [pendingIds, setPendingIds] = useState(() => new Set());
-  const sortedPosts = useMemo(() => sortPostsByDateDesc(posts), [posts]);
 
   useEffect(() => {
     setActiveById(
-      Object.fromEntries(sortedPosts.map((post) => [post.id, Boolean(post.is_active)]))
+      Object.fromEntries(notices.map((notice) => [notice.id, Boolean(notice.is_active)]))
     );
-  }, [sortedPosts]);
+  }, [notices]);
 
-  async function handleToggle(postId) {
-    const current = activeById[postId] ?? false;
+  async function handleToggle(noticeId) {
+    const current = activeById[noticeId] ?? false;
     const next = !current;
 
-    setActiveById((prev) => ({ ...prev, [postId]: next }));
-    setPendingIds((prev) => new Set(prev).add(postId));
+    setActiveById((prev) => ({ ...prev, [noticeId]: next }));
+    setPendingIds((prev) => new Set(prev).add(noticeId));
 
     try {
-      await mutate(`posts/${postId}`, { is_active: next });
+      await mutate(`notice/${noticeId}`, { is_active: next });
     } catch {
-      setActiveById((prev) => ({ ...prev, [postId]: current }));
+      setActiveById((prev) => ({ ...prev, [noticeId]: current }));
     } finally {
       setPendingIds((prev) => {
         const nextPending = new Set(prev);
-        nextPending.delete(postId);
+        nextPending.delete(noticeId);
         return nextPending;
       });
     }
   }
 
-  if (sortedPosts.length === 0) {
-    return <p className={`${styles.empty} caption gray-65`}>표시할 게시물이 없습니다.</p>;
+  if (notices.length === 0) {
+    return <p className={`${styles.empty} caption gray-65`}>표시할 공지가 없습니다.</p>;
   }
 
   return (
@@ -66,36 +69,32 @@ export function AdminPostsTable({ posts }) {
               Title
             </th>
             <th scope="col" className="caption">
-              Author
-            </th>
-            <th scope="col" className="caption">
               공개
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedPosts.map((post) => {
-            const isActive = activeById[post.id] ?? Boolean(post.is_active);
-            const isPending = pendingIds.has(post.id);
+          {notices.map((notice) => {
+            const isActive = activeById[notice.id] ?? Boolean(notice.is_active);
+            const isPending = pendingIds.has(notice.id);
 
             return (
-              <tr key={post.id}>
-                <td className={`p ${styles.dateCell}`}>{formatPostDate(post.date)}</td>
+              <tr key={notice.id}>
+                <td className={`p ${styles.dateCell}`}>{formatCreatedAt(notice.created_at)}</td>
                 <td className="p">
-                  <Link href={`/admin/contents/posts/${post.id}`} className={styles.titleLink}>
-                    {post.title ?? "—"}
+                  <Link href={`/admin/notice/${notice.id}`} className={styles.titleLink}>
+                    {notice.title ?? "—"}
                   </Link>
                 </td>
-                <td className="p">{post.authors?.name ?? "—"}</td>
                 <td className="p">
                   <button
                     type="button"
                     role="switch"
                     aria-checked={isActive}
-                    aria-label={`${post.title ?? "게시물"} ${formatActiveStatus(isActive)}`}
+                    aria-label={`${notice.title ?? "공지"} ${formatActiveStatus(isActive)}`}
                     className={`${styles.toggle} ${isActive ? styles.toggleOn : styles.toggleOff}`}
                     disabled={isPending}
-                    onClick={() => handleToggle(post.id)}
+                    onClick={() => handleToggle(notice.id)}
                   >
                     <span className={styles.toggleTrack}>
                       <span className={styles.toggleThumb} />

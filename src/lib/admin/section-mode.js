@@ -56,13 +56,13 @@ export function buildPostCreateHref(sectionId, { categoryId, issueId } = {}) {
   const params = new URLSearchParams({ sectionId });
   if (categoryId) params.set("categoryId", categoryId);
   if (issueId) params.set("issueId", issueId);
-  return `/admin/posts/new?${params.toString()}`;
+  return `/admin/contents/posts/new?${params.toString()}`;
 }
 
 export function buildIssueCreateHref() {
-  return "/admin/issues/new";
+  return "/admin/contents/issues/new";
 }
 
 export function buildIssueEditHref(issueId) {
-  return `/admin/issues/${issueId}`;
+  return `/admin/contents/issues/${issueId}`;
 }
