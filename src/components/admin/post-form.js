@@ -8,7 +8,9 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
 import EditorClient from "./EditorClient";
+import { KeywordInput } from "./KeywordInput";
 import styles from "./post-form.module.css";
 
 const POST_SELECT =
@@ -67,6 +69,22 @@ function emptyForm(defaults = {}) {
   };
 }
 
+function mapPostKeywords(items) {
+  return (items ?? [])
+    .map((item) => {
+      const keyword = item.keywords;
+      if (!keyword?.name) {
+        return null;
+      }
+
+      return {
+        id: keyword.id,
+        name: keyword.name,
+      };
+    })
+    .filter(Boolean);
+}
+
 function postToForm(post) {
   return {
     title: post.title ?? "",
@@ -90,6 +108,7 @@ function PostFormFields({
   postId,
   initialValues,
   initialContent,
+  initialKeywords,
   section,
   sectionMode,
   categories,
@@ -107,7 +126,9 @@ function PostFormFields({
   const { uploadImageToServer } = useImageUpload();
 
   const [form, setForm] = useState(initialValues);
+  const [keywords, setKeywords] = useState(initialKeywords);
   const [editorError, setEditorError] = useState(null);
+  const [keywordError, setKeywordError] = useState(null);
   const [thumbnailError, setThumbnailError] = useState(null);
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
 
@@ -145,6 +166,7 @@ function PostFormFields({
   async function handleSubmit(event) {
     event.preventDefault();
     setEditorError(null);
+    setKeywordError(null);
 
     let content = null;
 
@@ -179,14 +201,24 @@ function PostFormFields({
     };
 
     try {
+      const keywordNames = keywords.map((keyword) => keyword.name);
+      let savedPostId = postId;
+
       if (isEdit) {
         await updatePost(`posts/${postId}`, payload);
-        router.push("/admin");
+      } else {
+        const created = await createPost("posts", payload);
+        savedPostId = created.id;
+      }
+
+      try {
+        await syncPostKeywords(savedPostId, keywordNames);
+      } catch (error) {
+        setKeywordError(error.message ?? "키워드를 저장하지 못했습니다.");
         return;
       }
 
-      const created = await createPost("posts", payload);
-      router.push(`/admin/posts/${created.id}`);
+      router.push(isEdit ? "/admin" : `/admin/posts/${savedPostId}`);
     } catch {
       // mutation error state handles display
     }
@@ -262,6 +294,18 @@ function PostFormFields({
             onChange={(event) => updateField("date", event.target.value)}
           />
         </label>
+
+        <div className={styles.field}>
+          <span className="caption">키워드</span>
+          <KeywordInput
+            value={keywords}
+            onChange={setKeywords}
+            disabled={isSaving}
+          />
+          {keywordError && (
+            <p className={`${styles.error} caption`}>{keywordError}</p>
+          )}
+        </div>
 
       </div>
 
@@ -464,6 +508,18 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
     enabled: sectionMode === "journal",
   });
 
+  const { data: postKeywordsData, isLoading: postKeywordsLoading } = useAdminQuery(
+    "post_keywords",
+    {
+      params: {
+        "eq.post_id": postId,
+        select: "keyword_id,keywords(id,name)",
+        limit: 50,
+      },
+      enabled: isEdit && Boolean(postId),
+    }
+  );
+
   const { data: authorsData, isLoading: authorsLoading } = useAdminQuery("authors", {
     params: {
       select: "id,name",
@@ -479,6 +535,7 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
   const isLoadingMeta =
     sectionsLoading ||
     authorsLoading ||
+    (isEdit && postKeywordsLoading) ||
     (sectionMode === "current" && categoriesLoading) ||
     (sectionMode === "journal" && issuesLoading);
 
@@ -514,6 +571,10 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
     ? parseContent(postData.content)
     : null;
 
+  const initialKeywords = isEdit
+    ? mapPostKeywords(postKeywordsData?.items)
+    : [];
+
   const formKey = isEdit
     ? postId
     : `${sectionId}-${defaultCategoryId ?? ""}-${defaultIssueId ?? ""}`;
@@ -525,6 +586,7 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
       postId={postId}
       initialValues={initialValues}
       initialContent={initialContent}
+      initialKeywords={initialKeywords}
       section={section}
       sectionMode={sectionMode}
       categories={categories}

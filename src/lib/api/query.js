@@ -39,6 +39,13 @@ function parseFilters(searchParams) {
       if (values.length > 0) {
         filters.push({ op: "in", column, values });
       }
+      continue;
+    }
+
+    if (key.startsWith("ilike.")) {
+      const column = key.slice(6);
+      if (!column || !value) continue;
+      filters.push({ op: "ilike", column, value });
     }
   }
 
@@ -49,6 +56,8 @@ export function applyListQuery(query, { limit, offset, order, filters }) {
   for (const filter of filters) {
     if (filter.op === "in") {
       query = query.in(filter.column, filter.values);
+    } else if (filter.op === "ilike") {
+      query = query.ilike(filter.column, `%${filter.value}%`);
     } else {
       query = query.eq(filter.column, filter.value);
     }
