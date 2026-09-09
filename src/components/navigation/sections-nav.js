@@ -28,15 +28,12 @@ export function SectionsNav() {
 
   return (
     <nav className={styles.nav} aria-label="Sections">
-      <ul className={styles.list}>
+      <ul className={`${styles.list} menu-en`}>
         {sections.map((section) => (
           <li key={section.id} className={styles.item}>
             <a href={`/${section.slug}`} className={styles.link}>
               {section.slug}
             </a>
-            {section.name ? (
-              <span className={styles.name}>{section.name}</span>
-            ) : null}
           </li>
         ))}
       </ul>

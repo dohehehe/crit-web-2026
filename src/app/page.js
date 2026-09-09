@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SectionsNav } from "@/components/sections-nav";
+import { SectionsNav } from "@/components/navigation/sections-nav";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -9,8 +9,8 @@ export default function Home() {
         <Image
           src="/logo-black.svg"
           alt="CRIT"
-          width={80}
-          height={24}
+          width={400}
+          height={129}
           priority
         />
       </header>
