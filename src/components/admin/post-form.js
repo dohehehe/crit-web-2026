@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import EditorClient from "./EditorClient";
@@ -97,17 +98,48 @@ function PostFormFields({
 }) {
   const router = useRouter();
   const editorRef = useRef(null);
+  const thumbnailInputRef = useRef(null);
   const isEdit = mode === "edit";
   const isWorkshop = section?.slug === "Workshop";
 
   const { mutate: createPost, isLoading: isCreating, error: createError } = useApiMutation("POST");
   const { mutate: updatePost, isLoading: isUpdating, error: updateError } = useApiMutation("PATCH");
+  const { uploadImageToServer } = useImageUpload();
 
   const [form, setForm] = useState(initialValues);
   const [editorError, setEditorError] = useState(null);
+  const [thumbnailError, setThumbnailError] = useState(null);
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
 
   function updateField(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function handleThumbnailUpload(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setThumbnailError(null);
+    setIsUploadingThumbnail(true);
+
+    try {
+      const result = await uploadImageToServer(file);
+
+      if (result.success && result.file?.url) {
+        updateField("thumnail_img", result.file.url);
+        return;
+      }
+
+      setThumbnailError(result.error ?? "썸네일 업로드에 실패했습니다.");
+    } catch (error) {
+      setThumbnailError(error.message ?? "썸네일 업로드에 실패했습니다.");
+    } finally {
+      setIsUploadingThumbnail(false);
+      event.target.value = "";
+    }
   }
 
   async function handleSubmit(event) {
@@ -287,15 +319,39 @@ function PostFormFields({
           )}
         </div>
 
-        <label className={styles.field}>
-          <span className="caption">Thumbnail URL</span>
+        <div className={styles.field}>
+          <span className="caption">Thumbnail</span>
           <input
-            className={styles.input}
-            type="url"
-            value={form.thumnail_img}
-            onChange={(event) => updateField("thumnail_img", event.target.value)}
+            ref={thumbnailInputRef}
+            className={styles.hiddenFileInput}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={handleThumbnailUpload}
           />
-        </label>
+          <button
+            type="button"
+            className={`${styles.thumbnailButton} caption`}
+            onClick={() => thumbnailInputRef.current?.click()}
+            disabled={isUploadingThumbnail || isSaving}
+          >
+            {isUploadingThumbnail
+              ? "업로드 중…"
+              : form.thumnail_img
+                ? "이미지 변경"
+                : "이미지 추가"}
+          </button>
+          {form.thumnail_img ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={form.thumnail_img}
+              alt="썸네일 미리보기"
+              className={styles.thumbnailPreview}
+            />
+          ) : null}
+          {thumbnailError && (
+            <p className={`${styles.error} caption`}>{thumbnailError}</p>
+          )}
+        </div>
       </div>
 
       {sectionMode === "posts" && (

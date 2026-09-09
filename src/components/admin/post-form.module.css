@@ -94,3 +94,35 @@
 .error {
   color: var(--crit-orange);
 }
+
+.hiddenFileInput {
+  display: none;
+}
+
+.thumbnailButton {
+  align-self: flex-start;
+  padding: 10px 16px;
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  font: inherit;
+}
+
+.thumbnailButton:hover:not(:disabled) {
+  background: var(--black);
+  color: var(--white);
+}
+
+.thumbnailButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.thumbnailPreview {
+  display: block;
+  width: 160px;
+  height: auto;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+}
