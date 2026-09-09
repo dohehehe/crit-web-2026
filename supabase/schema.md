@@ -2,7 +2,7 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-09-09T07:30:56.946Z
+- Updated: 2026-09-09T09:00:31.157Z
 - Tables: 12
 
 ## `authors`
@@ -47,6 +47,7 @@
 | `description` | jsonb | no |  |  |
 | `file_url` | text | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
+| `is_active` | boolean | no |  |  |
 | `issue_number` | text | no |  |  |
 | `slug` | text | no |  |  |
 | `title` | text | no |  |  |
@@ -97,10 +98,12 @@
 | `category_id` | uuid | no | gen_random_uuid() | FK → categories.id |
 | `content` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
+| `date` | date | no |  |  |
 | `end_at` | timestamp with time zone | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
 | `is_active` | boolean | no |  |  |
 | `issue_id` | uuid | no | gen_random_uuid() | FK → issues.id |
+| `section_id` | uuid | no | gen_random_uuid() | FK → sections.id |
 | `slug` | text | no |  |  |
 | `start_at` | timestamp with time zone | no |  |  |
 | `subtitle` | text | no |  |  |

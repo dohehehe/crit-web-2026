@@ -1,0 +1,26 @@
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-65);
+}
+
+.tab {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--black);
+  text-decoration-line: underline;
+  text-underline-offset: 35%;
+}
+
+.tab:hover {
+  opacity: 0.6;
+}
+
+.tabActive {
+  color: var(--crit-orange);
+  text-decoration-thickness: 2px;
+}
