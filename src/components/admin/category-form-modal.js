@@ -48,7 +48,7 @@ export function CategoryFormModal({
     }
 
     setForm(isEdit && category ? categoryToForm(category) : emptyForm());
-    setSlugTouched(false);
+    setSlugTouched(isEdit);
   }, [open, isEdit, category]);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export function CategoryFormModal({
     setForm((prev) => {
       const next = { ...prev, [name]: value };
 
-      if (name === "name" && !slugTouched) {
+      if (name === "name" && !isEdit && !slugTouched) {
         next.slug = slugifyKeyword(value);
       }
 

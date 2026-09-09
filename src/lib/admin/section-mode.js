@@ -36,6 +36,10 @@ export function sectionUsesWorkshopStatusTabs(sectionMode) {
   return sectionMode === "workshop";
 }
 
+export function sectionUsesCategoryManagement(sectionMode) {
+  return sectionMode === "journal" || sectionMode === "workshop";
+}
+
 export function sectionHasMediaFields(sectionMode) {
   return (
     sectionMode === "posts" ||

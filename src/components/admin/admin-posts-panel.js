@@ -7,12 +7,14 @@ import {
   buildIssueCreateHref,
   buildPostCreateHref,
   getSectionMode,
+  sectionUsesCategoryManagement,
   sectionUsesCategoryTabs,
   sectionUsesWorkshopStatusTabs,
 } from "@/lib/admin/section-mode";
 import { filterPostsByWorkshopStatus } from "@/lib/admin/workshop-status";
 import { AdminSectionTabs } from "./admin-section-tabs";
 import { AdminCategoryBar } from "./admin-category-bar";
+import { AdminCategoryManager } from "./admin-category-manager";
 import { AdminWorkshopStatusTabs } from "./admin-workshop-status-tabs";
 import { AdminIssuesList } from "./admin-issues-list";
 import { AdminPostsTable } from "./admin-posts-table";
@@ -50,7 +52,9 @@ export function AdminPostsPanel() {
       order: "sort_order.asc",
       limit: 100,
     },
-    enabled: Boolean(selectedSectionId) && sectionUsesCategoryTabs(sectionMode),
+    enabled:
+      Boolean(selectedSectionId) &&
+      (sectionUsesCategoryTabs(sectionMode) || sectionUsesCategoryManagement(sectionMode)),
   });
 
   const categories = categoriesData?.items ?? [];
@@ -128,7 +132,10 @@ export function AdminPostsPanel() {
     return <p className={`${styles.status} caption gray-65`}>등록된 섹션이 없습니다.</p>;
   }
 
-  const listError = categoriesError ?? issuesError ?? postsError;
+  const listError =
+    (sectionUsesCategoryTabs(sectionMode) ? categoriesError : null) ??
+    issuesError ??
+    postsError;
   const isListLoading =
     Boolean(selectedSectionId) &&
     (postsLoading ||
@@ -170,6 +177,26 @@ export function AdminPostsPanel() {
             onSelect={setSelectedCategoryId}
             onChanged={refetchCategories}
           />
+        )}
+
+        {selectedSectionId && sectionUsesCategoryManagement(sectionMode) && (
+          <>
+            {categoriesLoading && (
+              <p className={`${styles.status} caption gray-65`}>카테고리 불러오는 중…</p>
+            )}
+            {categoriesError && (
+              <p className={`${styles.status} caption`}>
+                카테고리를 불러오지 못했습니다: {categoriesError.message}
+              </p>
+            )}
+            {!categoriesLoading && !categoriesError && (
+              <AdminCategoryManager
+                sectionId={selectedSectionId}
+                categories={categories}
+                onChanged={refetchCategories}
+              />
+            )}
+          </>
         )}
 
         {selectedSectionId &&
