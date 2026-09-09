@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T09:00:31.157Z",
+  "generatedAt": "2026-09-09T14:43:59.273Z",
   "projectUrl": null,
   "tables": [
     {
@@ -465,6 +465,13 @@
         {
           "name": "slug",
           "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "sort_order",
+          "type": "numeric",
           "required": false,
           "default": null,
           "notes": []

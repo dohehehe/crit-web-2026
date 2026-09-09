@@ -97,3 +97,34 @@
 .titleLink:hover {
   color: var(--crit-orange);
 }
+
+.reorderCell {
+  white-space: nowrap;
+  width: 72px;
+}
+
+.reorderButtons {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.reorderButton {
+  min-width: 28px;
+  padding: 4px 6px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.reorderButton:hover:not(:disabled) {
+  border-color: var(--crit-orange);
+  color: var(--crit-orange);
+}
+
+.reorderButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}

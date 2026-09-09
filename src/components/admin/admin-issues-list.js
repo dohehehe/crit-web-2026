@@ -6,7 +6,7 @@ import {
   buildIssueEditHref,
   buildPostCreateHref,
 } from "@/lib/admin/section-mode";
-import { AdminPostsTable } from "./admin-posts-table";
+import { AdminJournalPostsTable } from "./admin-journal-posts-table";
 import styles from "./admin-issues-list.module.css";
 
 const UNASSIGNED_ISSUE_ID = "__unassigned__";
@@ -23,7 +23,7 @@ function formatActiveStatus(isActive) {
   return isActive ? "활성" : "비활성";
 }
 
-export function AdminIssuesList({ issues, posts, sectionId }) {
+export function AdminIssuesList({ issues, posts, sectionId, onPostsChanged }) {
   const [expandedIds, setExpandedIds] = useState(() => new Set());
 
   const postsByIssueId = useMemo(() => {
@@ -109,7 +109,10 @@ export function AdminIssuesList({ issues, posts, sectionId }) {
                     </Link>
                   </div>
                 )}
-                <AdminPostsTable posts={issuePosts} />
+                <AdminJournalPostsTable
+                  posts={issuePosts}
+                  onPostsChanged={onPostsChanged}
+                />
               </div>
             )}
           </li>
@@ -147,7 +150,10 @@ export function AdminIssuesList({ issues, posts, sectionId }) {
                   </Link>
                 </div>
               )}
-              <AdminPostsTable posts={unassignedPosts} />
+              <AdminJournalPostsTable
+                posts={unassignedPosts}
+                onPostsChanged={onPostsChanged}
+              />
             </div>
           )}
         </li>

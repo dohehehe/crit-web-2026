@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import { sortPostsByDateDesc } from "@/lib/admin/sortPostsByDate";
+import {
+  getPostSortOrderUpdates,
+  sortPostsBySortOrder,
+} from "@/lib/admin/sortPostsBySortOrder";
 import styles from "./admin-posts-table.module.css";
 
 function formatActiveStatus(isActive) {
@@ -18,11 +21,12 @@ function formatPostDate(date) {
   return date;
 }
 
-export function AdminPostsTable({ posts }) {
+export function AdminJournalPostsTable({ posts, onPostsChanged }) {
   const { mutate } = useApiMutation("PATCH");
   const [activeById, setActiveById] = useState({});
   const [pendingIds, setPendingIds] = useState(() => new Set());
-  const sortedPosts = useMemo(() => sortPostsByDateDesc(posts), [posts]);
+  const [reorderingIds, setReorderingIds] = useState(() => new Set());
+  const sortedPosts = useMemo(() => sortPostsBySortOrder(posts), [posts]);
 
   useEffect(() => {
     setActiveById(
@@ -50,6 +54,28 @@ export function AdminPostsTable({ posts }) {
     }
   }
 
+  async function handleMove(index, direction) {
+    const updates = getPostSortOrderUpdates(sortedPosts, index, direction);
+
+    if (!updates) {
+      return;
+    }
+
+    const movingIds = new Set(updates.map((update) => update.id));
+    setReorderingIds(movingIds);
+
+    try {
+      await Promise.all(
+        updates.map((update) => mutate(`posts/${update.id}`, { sort_order: update.sort_order }))
+      );
+      await onPostsChanged?.();
+    } catch {
+      // refetch on next interaction
+    } finally {
+      setReorderingIds(new Set());
+    }
+  }
+
   if (sortedPosts.length === 0) {
     return <p className={`${styles.empty} caption gray-65`}>표시할 게시물이 없습니다.</p>;
   }
@@ -59,6 +85,9 @@ export function AdminPostsTable({ posts }) {
       <table className={styles.table}>
         <thead>
           <tr>
+            <th scope="col" className="caption">
+              순서
+            </th>
             <th scope="col" className="caption">
               Date
             </th>
@@ -74,12 +103,37 @@ export function AdminPostsTable({ posts }) {
           </tr>
         </thead>
         <tbody>
-          {sortedPosts.map((post) => {
+          {sortedPosts.map((post, index) => {
             const isActive = activeById[post.id] ?? Boolean(post.is_active);
             const isPending = pendingIds.has(post.id);
+            const isReordering = reorderingIds.has(post.id);
+            const isFirst = index === 0;
+            const isLast = index === sortedPosts.length - 1;
 
             return (
               <tr key={post.id}>
+                <td className={`p ${styles.reorderCell}`}>
+                  <div className={styles.reorderButtons}>
+                    <button
+                      type="button"
+                      className={`${styles.reorderButton} caption`}
+                      aria-label={`${post.title ?? "게시물"} 위로`}
+                      disabled={isFirst || isReordering}
+                      onClick={() => handleMove(index, -1)}
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.reorderButton} caption`}
+                      aria-label={`${post.title ?? "게시물"} 아래로`}
+                      disabled={isLast || isReordering}
+                      onClick={() => handleMove(index, 1)}
+                    >
+                      ↓
+                    </button>
+                  </div>
+                </td>
                 <td className={`p ${styles.dateCell}`}>{formatPostDate(post.date)}</td>
                 <td className="p">
                   <Link href={`/admin/posts/${post.id}`} className={styles.titleLink}>
@@ -94,7 +148,7 @@ export function AdminPostsTable({ posts }) {
                     aria-checked={isActive}
                     aria-label={`${post.title ?? "게시물"} ${formatActiveStatus(isActive)}`}
                     className={`${styles.toggle} ${isActive ? styles.toggleOn : styles.toggleOff}`}
-                    disabled={isPending}
+                    disabled={isPending || isReordering}
                     onClick={() => handleToggle(post.id)}
                   >
                     <span className={styles.toggleTrack}>

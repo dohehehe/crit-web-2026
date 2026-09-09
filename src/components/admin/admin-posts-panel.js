@@ -9,6 +9,7 @@ import {
   getSectionMode,
   sectionUsesCategoryManagement,
   sectionUsesCategoryTabs,
+  sectionUsesIssuePostSortOrder,
   sectionUsesWorkshopStatusTabs,
 } from "@/lib/admin/section-mode";
 import { filterPostsByWorkshopStatus } from "@/lib/admin/workshop-status";
@@ -76,13 +77,20 @@ export function AdminPostsPanel() {
 
   const postsParams = useMemo(() => {
     const base = {
-      select: sectionUsesWorkshopStatusTabs(sectionMode)
-        ? "id,title,date,is_active,issue_id,authors(name),start_at,end_at"
-        : "id,title,date,is_active,issue_id,authors(name)",
-      order: "created_at.desc",
+      select: "id,title,date,is_active,issue_id,authors(name)",
+      order: "date.desc",
       limit: 100,
       "eq.section_id": selectedSectionId,
     };
+
+    if (sectionUsesWorkshopStatusTabs(sectionMode)) {
+      base.select = "id,title,date,is_active,issue_id,authors(name),start_at,end_at";
+    }
+
+    if (sectionUsesIssuePostSortOrder(sectionMode)) {
+      base.select = "id,title,date,is_active,issue_id,authors(name),sort_order";
+      base.order = "sort_order.asc";
+    }
 
     if (sectionUsesCategoryTabs(sectionMode) && selectedCategoryId) {
       return { ...base, "eq.category_id": selectedCategoryId };
@@ -95,6 +103,7 @@ export function AdminPostsPanel() {
     data: postsData,
     isLoading: postsLoading,
     error: postsError,
+    refetch: refetchPosts,
   } = useAdminQuery("posts", {
     params: postsParams,
     enabled: Boolean(selectedSectionId),
@@ -240,7 +249,12 @@ export function AdminPostsPanel() {
 
         {showPostsTable && <AdminPostsTable posts={visiblePosts} />}
         {showJournalIssuesList && (
-          <AdminIssuesList issues={issues} posts={posts} sectionId={selectedSectionId} />
+          <AdminIssuesList
+            issues={issues}
+            posts={posts}
+            sectionId={selectedSectionId}
+            onPostsChanged={refetchPosts}
+          />
         )}
       </div>
     </div>

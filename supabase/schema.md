@@ -2,7 +2,7 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-09-09T09:00:31.157Z
+- Updated: 2026-09-09T14:43:59.273Z
 - Tables: 12
 
 ## `authors`
@@ -105,6 +105,7 @@
 | `issue_id` | uuid | no | gen_random_uuid() | FK → issues.id |
 | `section_id` | uuid | no | gen_random_uuid() | FK → sections.id |
 | `slug` | text | no |  |  |
+| `sort_order` | numeric | no |  |  |
 | `start_at` | timestamp with time zone | no |  |  |
 | `subtitle` | text | no |  |  |
 | `thumnail_img` | text | no |  |  |

@@ -36,6 +36,10 @@ export function sectionUsesWorkshopStatusTabs(sectionMode) {
   return sectionMode === "workshop";
 }
 
+export function sectionUsesIssuePostSortOrder(sectionMode) {
+  return sectionMode === "journal";
+}
+
 export function sectionUsesCategoryManagement(sectionMode) {
   return sectionMode === "journal" || sectionMode === "workshop";
 }
