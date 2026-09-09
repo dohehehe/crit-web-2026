@@ -1,13 +1,17 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 :root {
+  /* Breakpoints: desktop > 1020px | tablet ≤ 1020px | mobile ≤ 479px */
+  --breakpoint-tablet: 1020px;
+  --breakpoint-mobile: 479px;
+
   /* Colors */
   --crit-orange: rgba(255, 100, 0, 1);
   --white: rgba(255, 255, 255, 1);
   --black: rgba(0, 0, 0, 1);
   --gray-65: rgba(166, 166, 166, 1);
 
-  /* Typography */
+  /* Typography — desktop (> 1020px) */
   --menu-en-weight: 600;
   --menu-en-style: normal;
   --menu-en-size: 24px;
@@ -70,6 +74,17 @@
   --mobile-title-1-size: 40px;
   --mobile-title-1-line-height: 48px;
   --mobile-title-1-letter-spacing: 0.01em;
+}
+
+/* Tablet (480px ~ 1020px): desktop typography applies until overrides are added */
+
+@media (max-width: 479px) {
+  :root {
+    /* Typography — mobile (≤ 479px) */
+    --title-1-size: var(--mobile-title-1-size);
+    --title-1-line-height: var(--mobile-title-1-line-height);
+    --title-1-letter-spacing: var(--mobile-title-1-letter-spacing);
+  }
 }
 
 html {
