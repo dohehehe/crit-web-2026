@@ -107,6 +107,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             image: {
               class: ImageTool,
+              inlineToolbar: ["link", "bold", "italic"],
               config: {
                 captionPlaceholder: "이미지 설명을 입력하세요",
                 buttonContent: "이미지 선택",
