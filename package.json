@@ -6,16 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "supabase:check": "node scripts/supabase-check.mjs",
+    "supabase:schema": "node scripts/supabase-schema.mjs",
+    "supabase:schema:watch": "node scripts/supabase-schema-watch.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.109.0",
+    "dotenv": "^17.4.2",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "ws": "^8.21.3"
   },
   "devDependencies": {
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.3.4"
+    "eslint-config-next": "16.3.4",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2"
   }
 }
