@@ -12,13 +12,15 @@ import {
   sectionHasMediaFields,
 } from "@/lib/admin/section-mode";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import { findOrCreateAuthor } from "@/lib/authors/findOrCreateAuthor";
 import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
+import { AuthorInput } from "@/components/admin/shared/author/AuthorInput";
 import { KeywordInput } from "@/components/admin/shared/keyword/KeywordInput";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const POST_SELECT =
-  "id,title,subtitle,slug,content,section_id,category_id,issue_id,author_id,date,thumnail_img,video_url,workshop_url,start_at,end_at";
+  "id,title,subtitle,slug,content,section_id,category_id,issue_id,author_id,authors(id,name),date,thumnail_img,video_url,workshop_url,start_at,end_at";
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);
@@ -63,13 +65,24 @@ function emptyForm(defaults = {}) {
     section_id: defaults.sectionId ?? "",
     category_id: defaults.categoryId ?? "",
     issue_id: defaults.issueId ?? "",
-    author_id: "",
     date: "",
     thumnail_img: "",
     video_url: "",
     workshop_url: "",
     start_at: "",
     end_at: "",
+  };
+}
+
+function mapPostAuthor(post) {
+  const author = post.authors;
+  if (!author?.name) {
+    return null;
+  }
+
+  return {
+    id: author.id ?? null,
+    name: author.name,
   };
 }
 
@@ -97,7 +110,6 @@ function postToForm(post) {
     section_id: post.section_id ?? "",
     category_id: post.category_id ?? "",
     issue_id: post.issue_id ?? "",
-    author_id: post.author_id ?? "",
     date: post.date ?? "",
     thumnail_img: post.thumnail_img ?? "",
     video_url: post.video_url ?? "",
@@ -113,11 +125,11 @@ function PostFormFields({
   initialValues,
   initialContent,
   initialKeywords,
+  initialAuthor,
   section,
   sectionMode,
   categories,
   issues,
-  authors,
 }) {
   const router = useRouter();
   const editorRef = useRef(null);
@@ -132,8 +144,10 @@ function PostFormFields({
 
   const [form, setForm] = useState(initialValues);
   const [keywords, setKeywords] = useState(initialKeywords);
+  const [author, setAuthor] = useState(initialAuthor);
   const [editorError, setEditorError] = useState(null);
   const [keywordError, setKeywordError] = useState(null);
+  const [authorError, setAuthorError] = useState(null);
   const [thumbnailError, setThumbnailError] = useState(null);
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
 
@@ -172,8 +186,10 @@ function PostFormFields({
     event.preventDefault();
     setEditorError(null);
     setKeywordError(null);
+    setAuthorError(null);
 
     let content = null;
+    let authorId = null;
 
     try {
       if (!editorRef.current?.isReady?.()) {
@@ -187,6 +203,15 @@ function PostFormFields({
       return;
     }
 
+    try {
+      if (author?.name?.trim()) {
+        authorId = await findOrCreateAuthor(author.name);
+      }
+    } catch (error) {
+      setAuthorError(error.message ?? "작가를 저장하지 못했습니다.");
+      return;
+    }
+
     const payload = {
       title: form.title.trim() || null,
       subtitle: form.subtitle.trim() || null,
@@ -195,7 +220,7 @@ function PostFormFields({
       section_id: form.section_id || null,
       category_id: form.category_id || null,
       issue_id: form.issue_id || null,
-      author_id: form.author_id || null,
+      author_id: authorId,
       date: form.date || null,
       thumnail_img: form.thumnail_img.trim() || null,
       video_url: form.video_url.trim() || null,
@@ -292,21 +317,17 @@ function PostFormFields({
           />
         </label>
 
-        <label className={styles.field}>
+        <div className={styles.field}>
           <span className="caption">Author</span>
-          <select
-            className={styles.select}
-            value={form.author_id}
-            onChange={(event) => updateField("author_id", event.target.value)}
-          >
-            <option value="">선택 안 함</option>
-            {authors.map((author) => (
-              <option key={author.id} value={author.id}>
-                {author.name ?? author.id}
-              </option>
-            ))}
-          </select>
-        </label>
+          <AuthorInput
+            value={author}
+            onChange={setAuthor}
+            disabled={isSaving}
+          />
+          {authorError && (
+            <p className={`${styles.error} caption`}>{authorError}</p>
+          )}
+        </div>
 
         <label className={styles.field}>
           <span className="caption">Date</span>
@@ -560,21 +581,11 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
     }
   );
 
-  const { data: authorsData, isLoading: authorsLoading } = useAdminQuery("authors", {
-    params: {
-      select: "id,name",
-      order: "name.asc",
-      limit: 200,
-    },
-  });
-
   const categories = categoriesData?.items ?? [];
   const issues = issuesData?.items ?? [];
-  const authors = authorsData?.items ?? [];
 
   const isLoadingMeta =
     sectionsLoading ||
-    authorsLoading ||
     (isEdit && postKeywordsLoading) ||
     (sectionHasCategories(sectionMode) && categoriesLoading) ||
     (sectionMode === "journal" && issuesLoading);
@@ -615,6 +626,8 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
     ? mapPostKeywords(postKeywordsData?.items)
     : [];
 
+  const initialAuthor = isEdit ? mapPostAuthor(postData) : null;
+
   const formKey = isEdit
     ? postId
     : `${sectionId}-${defaultCategoryId ?? ""}-${defaultIssueId ?? ""}`;
@@ -627,11 +640,11 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
       initialValues={initialValues}
       initialContent={initialContent}
       initialKeywords={initialKeywords}
+      initialAuthor={initialAuthor}
       section={section}
       sectionMode={sectionMode}
       categories={categories}
       issues={issues}
-      authors={authors}
     />
   );
 }
