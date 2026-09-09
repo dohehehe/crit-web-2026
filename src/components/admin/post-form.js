@@ -123,10 +123,11 @@ function PostFormFields({
   const editorRef = useRef(null);
   const thumbnailInputRef = useRef(null);
   const isEdit = mode === "edit";
-  const isWorkshop = section?.slug === "Workshop";
+  const isWorkshop = sectionMode === "workshop";
 
   const { mutate: createPost, isLoading: isCreating, error: createError } = useApiMutation("POST");
   const { mutate: updatePost, isLoading: isUpdating, error: updateError } = useApiMutation("PATCH");
+  const { mutate: deletePost, isLoading: isDeleting, error: deleteError } = useApiMutation("DELETE");
   const { uploadImageToServer } = useImageUpload();
 
   const [form, setForm] = useState(initialValues);
@@ -222,14 +223,32 @@ function PostFormFields({
         return;
       }
 
-      router.push(isEdit ? "/admin" : `/admin/posts/${savedPostId}`);
+      router.push("/admin");
     } catch {
       // mutation error state handles display
     }
   }
 
-  const isSaving = isCreating || isUpdating;
-  const submitError = createError ?? updateError;
+  async function handleDelete() {
+    if (!isEdit || !postId) {
+      return;
+    }
+
+    const label = form.title.trim() || "이 게시물";
+    if (!window.confirm(`${label}을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`)) {
+      return;
+    }
+
+    try {
+      await deletePost(`posts/${postId}`);
+      router.push("/admin");
+    } catch {
+      // mutation error state handles display
+    }
+  }
+
+  const isSaving = isCreating || isUpdating || isDeleting;
+  const submitError = createError ?? updateError ?? deleteError;
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -406,15 +425,17 @@ function PostFormFields({
         <div className={styles.section}>
           <h2 className={`${styles.sectionTitle} p-bold`}>미디어 · 링크</h2>
 
-          <label className={styles.field}>
-            <span className="caption">Video URL</span>
-            <input
-              className={styles.input}
-              type="url"
-              value={form.video_url}
-              onChange={(event) => updateField("video_url", event.target.value)}
-            />
-          </label>
+          {!isWorkshop && (
+            <label className={styles.field}>
+              <span className="caption">Video URL</span>
+              <input
+                className={styles.input}
+                type="url"
+                value={form.video_url}
+                onChange={(event) => updateField("video_url", event.target.value)}
+              />
+            </label>
+          )}
 
           {isWorkshop && (
             <>
@@ -453,16 +474,31 @@ function PostFormFields({
       )}
 
       {submitError && (
-        <p className={`${styles.error} caption`}>저장하지 못했습니다: {submitError.message}</p>
+        <p className={`${styles.error} caption`}>
+          {deleteError ? "삭제하지 못했습니다: " : "저장하지 못했습니다: "}
+          {submitError.message}
+        </p>
       )}
 
       <div className={styles.actions}>
-        <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
-          {isSaving ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
-        </button>
-        <Link href="/admin" className={`${styles.cancelButton} caption`}>
-          취소
-        </Link>
+        <div className={styles.primaryActions}>
+          <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
+            {isSaving && !isDeleting ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
+          </button>
+          <Link href="/admin" className={`${styles.cancelButton} caption`}>
+            취소
+          </Link>
+        </div>
+        {isEdit && (
+          <button
+            type="button"
+            className={`${styles.deleteButton} caption`}
+            onClick={handleDelete}
+            disabled={isSaving}
+          >
+            {isDeleting ? "삭제 중…" : "삭제"}
+          </button>
+        )}
       </div>
     </form>
   );

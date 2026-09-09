@@ -16,16 +16,32 @@ export function getSectionMode(section) {
   if (matchesSection(section, JOURNAL_CRIT_SECTION_SLUG)) return "journal";
   if (matchesSection(section, CURRENT_SECTION_SLUG)) return "current";
   if (matchesSection(section, CHANNEL_SECTION_SLUG)) return "channel";
-  if (matchesSection(section, WORKSHOP_SECTION_SLUG)) return "posts";
+  if (matchesSection(section, WORKSHOP_SECTION_SLUG)) return "workshop";
   return "posts";
 }
 
 export function sectionHasCategories(sectionMode) {
+  return (
+    sectionMode === "current" ||
+    sectionMode === "channel" ||
+    sectionMode === "workshop"
+  );
+}
+
+export function sectionUsesCategoryTabs(sectionMode) {
   return sectionMode === "current" || sectionMode === "channel";
 }
 
+export function sectionUsesWorkshopStatusTabs(sectionMode) {
+  return sectionMode === "workshop";
+}
+
 export function sectionHasMediaFields(sectionMode) {
-  return sectionMode === "posts" || sectionMode === "channel";
+  return (
+    sectionMode === "posts" ||
+    sectionMode === "channel" ||
+    sectionMode === "workshop"
+  );
 }
 
 export function buildPostCreateHref(sectionId, { categoryId, issueId } = {}) {

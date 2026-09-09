@@ -119,6 +119,18 @@ export async function handleDelete(table, id) {
   try {
     const supabase = createAdminClient();
 
+    if (table === "posts") {
+      const { error: keywordsError } = await supabase
+        .from("post_keywords")
+        .delete()
+        .eq("post_id", id);
+
+      if (keywordsError) {
+        const mapped = mapSupabaseError(keywordsError);
+        return jsonError(mapped.message, mapped.status);
+      }
+    }
+
     const { data, error } = await supabase
       .from(table)
       .delete()

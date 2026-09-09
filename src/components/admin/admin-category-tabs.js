@@ -2,7 +2,7 @@
 
 import styles from "./admin-category-tabs.module.css";
 
-export function AdminCategoryTabs({ categories, selectedId, onSelect }) {
+export function AdminCategoryTabs({ categories, selectedId, onSelect, onEditCategory }) {
   return (
     <div className={styles.tabs} role="tablist" aria-label="카테고리">
       <button
@@ -16,6 +16,7 @@ export function AdminCategoryTabs({ categories, selectedId, onSelect }) {
       </button>
       {categories.map((category) => {
         const isSelected = category.id === selectedId;
+        const isInactive = category.is_active === false;
 
         return (
           <button
@@ -23,8 +24,11 @@ export function AdminCategoryTabs({ categories, selectedId, onSelect }) {
             type="button"
             role="tab"
             aria-selected={isSelected}
-            className={`${styles.tab} tag-category${isSelected ? ` ${styles.tabActive}` : ""}`}
+            className={`${styles.tab} tag-category${isSelected ? ` ${styles.tabActive}` : ""}${
+              isInactive ? ` ${styles.tabInactive}` : ""
+            }`}
             onClick={() => onSelect(category.id)}
+            onDoubleClick={() => onEditCategory?.(category)}
           >
             {category.name || category.slug}
           </button>

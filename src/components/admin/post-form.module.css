@@ -47,14 +47,29 @@
 }
 
 .actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 16px 0 24px;
+  background: var(--white);
+  border-top: 1px solid var(--gray-65);
+}
+
+.primaryActions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  padding-top: 8px;
 }
 
 .submitButton,
-.cancelButton {
+.cancelButton,
+.deleteButton {
   padding: 10px 20px;
   border: 1px solid var(--black);
   cursor: pointer;
@@ -84,6 +99,22 @@
 .cancelButton:hover {
   background: var(--black);
   color: var(--white);
+}
+
+.deleteButton {
+  flex-shrink: 0;
+  background: var(--white);
+  border-color: var(--crit-orange);
+  color: var(--crit-orange);
+}
+
+.deleteButton:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.deleteButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 .status,

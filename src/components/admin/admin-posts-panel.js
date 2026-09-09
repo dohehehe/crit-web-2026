@@ -7,10 +7,13 @@ import {
   buildIssueCreateHref,
   buildPostCreateHref,
   getSectionMode,
-  sectionHasCategories,
+  sectionUsesCategoryTabs,
+  sectionUsesWorkshopStatusTabs,
 } from "@/lib/admin/section-mode";
+import { filterPostsByWorkshopStatus } from "@/lib/admin/workshop-status";
 import { AdminSectionTabs } from "./admin-section-tabs";
-import { AdminCategoryTabs } from "./admin-category-tabs";
+import { AdminCategoryBar } from "./admin-category-bar";
+import { AdminWorkshopStatusTabs } from "./admin-workshop-status-tabs";
 import { AdminIssuesList } from "./admin-issues-list";
 import { AdminPostsTable } from "./admin-posts-table";
 import styles from "./admin-posts-panel.module.css";
@@ -18,6 +21,7 @@ import styles from "./admin-posts-panel.module.css";
 export function AdminPostsPanel() {
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedWorkshopStatus, setSelectedWorkshopStatus] = useState(null);
 
   const {
     data: sectionsData,
@@ -38,14 +42,15 @@ export function AdminPostsPanel() {
     data: categoriesData,
     isLoading: categoriesLoading,
     error: categoriesError,
+    refetch: refetchCategories,
   } = useAdminQuery("categories", {
     params: {
       "eq.section_id": selectedSectionId,
-      select: "id,name,slug,sort_order",
+      select: "id,name,slug,sort_order,is_active",
       order: "sort_order.asc",
       limit: 100,
     },
-    enabled: Boolean(selectedSectionId) && sectionHasCategories(sectionMode),
+    enabled: Boolean(selectedSectionId) && sectionUsesCategoryTabs(sectionMode),
   });
 
   const categories = categoriesData?.items ?? [];
@@ -67,13 +72,15 @@ export function AdminPostsPanel() {
 
   const postsParams = useMemo(() => {
     const base = {
-      select: "id,title,date,is_active,issue_id,authors(name)",
+      select: sectionUsesWorkshopStatusTabs(sectionMode)
+        ? "id,title,date,is_active,issue_id,authors(name),start_at,end_at"
+        : "id,title,date,is_active,issue_id,authors(name)",
       order: "created_at.desc",
       limit: 100,
       "eq.section_id": selectedSectionId,
     };
 
-    if (sectionHasCategories(sectionMode) && selectedCategoryId) {
+    if (sectionUsesCategoryTabs(sectionMode) && selectedCategoryId) {
       return { ...base, "eq.category_id": selectedCategoryId };
     }
 
@@ -91,9 +98,18 @@ export function AdminPostsPanel() {
 
   const posts = postsData?.items ?? [];
 
+  const visiblePosts = useMemo(() => {
+    if (!sectionUsesWorkshopStatusTabs(sectionMode)) {
+      return posts;
+    }
+
+    return filterPostsByWorkshopStatus(posts, selectedWorkshopStatus);
+  }, [posts, sectionMode, selectedWorkshopStatus]);
+
   function handleSectionSelect(sectionId) {
     setSelectedSectionId(sectionId);
     setSelectedCategoryId(null);
+    setSelectedWorkshopStatus(null);
   }
 
   if (sectionsLoading) {
@@ -117,10 +133,12 @@ export function AdminPostsPanel() {
     Boolean(selectedSectionId) &&
     (postsLoading ||
       (sectionMode === "journal" && issuesLoading) ||
-      (sectionHasCategories(sectionMode) && categoriesLoading));
+      (sectionUsesCategoryTabs(sectionMode) && categoriesLoading));
 
   const showPostsTable =
-    (sectionHasCategories(sectionMode) || sectionMode === "posts") &&
+    (sectionUsesCategoryTabs(sectionMode) ||
+      sectionUsesWorkshopStatusTabs(sectionMode) ||
+      sectionMode === "posts") &&
     selectedSectionId &&
     !isListLoading &&
     !listError;
@@ -142,13 +160,25 @@ export function AdminPostsPanel() {
         )}
 
         {selectedSectionId &&
-          sectionHasCategories(sectionMode) &&
+          sectionUsesCategoryTabs(sectionMode) &&
           !isListLoading &&
           !listError && (
-          <AdminCategoryTabs
+          <AdminCategoryBar
+            sectionId={selectedSectionId}
             categories={categories}
             selectedId={selectedCategoryId}
             onSelect={setSelectedCategoryId}
+            onChanged={refetchCategories}
+          />
+        )}
+
+        {selectedSectionId &&
+          sectionUsesWorkshopStatusTabs(sectionMode) &&
+          !isListLoading &&
+          !listError && (
+          <AdminWorkshopStatusTabs
+            selectedStatus={selectedWorkshopStatus}
+            onSelect={setSelectedWorkshopStatus}
           />
         )}
 
@@ -171,7 +201,7 @@ export function AdminPostsPanel() {
             ) : (
               <Link
                 href={buildPostCreateHref(selectedSectionId, {
-                  categoryId: sectionHasCategories(sectionMode) ? selectedCategoryId : null,
+                  categoryId: sectionUsesCategoryTabs(sectionMode) ? selectedCategoryId : null,
                 })}
                 className={`${styles.createButton} caption`}
               >
@@ -181,7 +211,7 @@ export function AdminPostsPanel() {
           </div>
         )}
 
-        {showPostsTable && <AdminPostsTable posts={posts} />}
+        {showPostsTable && <AdminPostsTable posts={visiblePosts} />}
         {showJournalIssuesList && (
           <AdminIssuesList issues={issues} posts={posts} sectionId={selectedSectionId} />
         )}
