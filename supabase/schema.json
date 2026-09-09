@@ -1,0 +1,629 @@
+{
+  "generatedAt": "2026-09-09T07:30:56.946Z",
+  "projectUrl": null,
+  "tables": [
+    {
+      "name": "authors",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "section_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → sections.id"
+          ]
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "sort_order",
+          "type": "numeric",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "info",
+      "columns": [
+        {
+          "name": "content",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "insta",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "youtube",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "issues",
+      "columns": [
+        {
+          "name": "cover_img",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "description",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "file_url",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "issue_number",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "keywords",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "notice",
+      "columns": [
+        {
+          "name": "content",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "notice_popup",
+      "columns": [
+        {
+          "name": "content",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "link_url",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "post_keywords",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "keyword_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → keywords.id"
+          ]
+        },
+        {
+          "name": "post_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → posts.id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "posts",
+      "columns": [
+        {
+          "name": "author_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → authors.id"
+          ]
+        },
+        {
+          "name": "category_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → categories.id"
+          ]
+        },
+        {
+          "name": "content",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "end_at",
+          "type": "timestamp with time zone",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "issue_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → issues.id"
+          ]
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "start_at",
+          "type": "timestamp with time zone",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "subtitle",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "thumnail_img",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "video_url",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "workshop_url",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "roles",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "sections",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "sort_order",
+          "type": "numeric",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "role_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → roles.id"
+          ]
+        }
+      ]
+    }
+  ]
+}
