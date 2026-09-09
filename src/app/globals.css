@@ -1,10 +1,7 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "./breakpoints.css";
 
 :root {
-  /* Breakpoints: desktop > 1020px | tablet ≤ 1020px | mobile ≤ 479px */
-  --breakpoint-tablet: 1020px;
-  --breakpoint-mobile: 479px;
-
   /* Colors */
   --crit-orange: rgba(255, 100, 0, 1);
   --white: rgba(255, 255, 255, 1);
@@ -77,8 +74,7 @@
 }
 
 /* Tablet (480px ~ 1020px): desktop typography applies until overrides are added */
-
-@media (max-width: 479px) {
+@media (max-width: var(--breakpoint-mobile)) {
   :root {
     /* Typography — mobile (≤ 479px) */
     --title-1-size: var(--mobile-title-1-size);
@@ -107,6 +103,13 @@ body {
   letter-spacing: var(--p-letter-spacing);
   color: var(--black);
   background: var(--white);
+  padding: 0 24px;
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  body {
+    padding: 0 10px;
+  }
 }
 
 * {
