@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
-import styles from "./Editor.module.css";
+import styles from "@/components/admin/shared/editor/Editor.module.css";
 
 const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) {
   const editorInstanceRef = useRef(null);

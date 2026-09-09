@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api/fetcher";
 import { ADMIN_SCOPE } from "@/lib/api/constants";
-import styles from "./keyword-input.module.css";
+import styles from "@/components/admin/shared/keyword/keyword-input.module.css";
 
 function normalizeKeyword(keyword) {
   if (!keyword?.name?.trim()) {

@@ -13,13 +13,13 @@ import {
   sectionUsesWorkshopStatusTabs,
 } from "@/lib/admin/section-mode";
 import { filterPostsByWorkshopStatus } from "@/lib/admin/workshop-status";
-import { AdminSectionTabs } from "./admin-section-tabs";
-import { AdminCategoryBar } from "./admin-category-bar";
-import { AdminCategoryManager } from "./admin-category-manager";
-import { AdminWorkshopStatusTabs } from "./admin-workshop-status-tabs";
-import { AdminIssuesList } from "./admin-issues-list";
-import { AdminPostsTable } from "./admin-posts-table";
-import styles from "./admin-posts-panel.module.css";
+import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
+import { AdminCategoryBar } from "@/components/admin/contents/category/admin-category-bar";
+import { AdminCategoryManager } from "@/components/admin/contents/category/admin-category-manager";
+import { AdminWorkshopStatusTabs } from "@/components/admin/contents/admin-workshop-status-tabs";
+import { AdminIssuesList } from "@/components/admin/contents/admin-issues-list";
+import { AdminPostsTable } from "@/components/admin/contents/admin-posts-table";
+import styles from "@/components/admin/shared/admin-posts-panel.module.css";
 
 export function AdminPostsPanel() {
   const [selectedSectionId, setSelectedSectionId] = useState(null);

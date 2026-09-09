@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import { AdminCategoryTabs } from "./admin-category-tabs";
-import styles from "./info-form.module.css";
+import { AdminCategoryTabs } from "@/components/admin/shared/admin-category-tabs";
+import styles from "@/components/admin/info/info-form.module.css";
 
 const INFO_SELECT =
   "id,email,insta,youtube,info_text,subscription_text,submission_text";

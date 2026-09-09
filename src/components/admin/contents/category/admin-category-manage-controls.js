@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AdminCategoryManageTabs } from "./admin-category-manage-tabs";
-import { CategoryFormModal } from "./category-form-modal";
-import styles from "./admin-category-manage-controls.module.css";
+import { AdminCategoryManageTabs } from "@/components/admin/contents/category/admin-category-manage-tabs";
+import { CategoryFormModal } from "@/components/admin/contents/category/category-form-modal";
+import styles from "@/components/admin/contents/category/admin-category-manage-controls.module.css";
 
 export function AdminCategoryManageControls({
   sectionId,

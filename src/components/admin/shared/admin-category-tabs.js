@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./admin-category-tabs.module.css";
+import styles from "@/components/admin/shared/admin-category-tabs.module.css";
 
 export function AdminCategoryTabs({
   categories,

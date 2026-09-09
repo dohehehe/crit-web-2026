@@ -1,5 +1,5 @@
-import { AdminInfoPanel } from "@/components/admin/admin-info-panel";
-import styles from "../contents/page.module.css";
+import { AdminInfoPanel } from "@/components/admin/info/admin-info-panel";
+import styles from "@/app/admin/contents/page.module.css";
 
 export const metadata = {
   title: "정보 관리",

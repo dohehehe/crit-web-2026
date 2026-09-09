@@ -1,5 +1,5 @@
-import { AdminNoticePanel } from "@/components/admin/admin-notice-panel";
-import styles from "../contents/page.module.css";
+import { AdminNoticePanel } from "@/components/admin/notice/admin-notice-panel";
+import styles from "@/app/admin/contents/page.module.css";
 
 export const metadata = {
   title: "공지 관리",

@@ -1,4 +1,4 @@
-import { AdminNav } from "@/components/admin/admin-nav";
+import { AdminNav } from "@/components/admin/layout/admin-nav";
 
 export const metadata = {
   title: {

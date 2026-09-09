@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { IssueForm } from "@/components/admin/issue-form";
-import styles from "../../posts/post-page.module.css";
+import { IssueForm } from "@/components/admin/contents/issue-form";
+import styles from "@/app/admin/contents/posts/post-page.module.css";
 
 export const metadata = {
   title: "이슈 수정",

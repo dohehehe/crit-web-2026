@@ -1,5 +1,5 @@
-import { AdminPostsPanel } from "@/components/admin/admin-posts-panel";
-import styles from "./page.module.css";
+import { AdminPostsPanel } from "@/components/admin/contents/admin-posts-panel";
+import styles from "@/app/admin/contents/page.module.css";
 
 export const metadata = {
   title: "콘텐츠 관리",

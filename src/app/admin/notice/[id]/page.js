@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { NoticeForm } from "@/components/admin/notice-form";
-import styles from "../../admin-page.module.css";
+import { NoticeForm } from "@/components/admin/notice/notice-form";
+import styles from "@/app/admin/admin-page.module.css";
 
 export const metadata = {
   title: "공지 수정",

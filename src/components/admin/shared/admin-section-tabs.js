@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./admin-section-tabs.module.css";
+import styles from "@/components/admin/shared/admin-section-tabs.module.css";
 
 export function AdminSectionTabs({ sections, selectedId, onSelect }) {
   return (

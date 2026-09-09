@@ -1,8 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useState } from "react";
-import EditorImpl from "./Editor";
-import styles from "./Editor.module.css";
+import EditorImpl from "@/components/admin/shared/editor/Editor";
+import styles from "@/components/admin/shared/editor/Editor.module.css";
 
 const EditorClient = forwardRef(function EditorClient(props, ref) {
   const [mounted, setMounted] = useState(false);

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import styles from "./admin-nav.module.css";
+import styles from "@/components/admin/layout/admin-nav.module.css";
 
 const NAV_ITEMS = [
   { href: "/admin/contents", label: "콘텐츠", match: "/admin/contents" },

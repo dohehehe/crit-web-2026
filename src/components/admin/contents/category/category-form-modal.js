@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { slugifyKeyword } from "@/lib/keywords/slugify";
-import styles from "./category-form-modal.module.css";
+import styles from "@/components/admin/contents/category/category-form-modal.module.css";
 
 function emptyForm() {
   return {

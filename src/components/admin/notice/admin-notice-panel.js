@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
-import { AdminSectionTabs } from "./admin-section-tabs";
-import { AdminNoticeTable } from "./admin-notice-table";
-import { AdminNoticePopupTable } from "./admin-notice-popup-table";
-import styles from "./admin-posts-panel.module.css";
+import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
+import { AdminNoticeTable } from "@/components/admin/notice/admin-notice-table";
+import { AdminNoticePopupTable } from "@/components/admin/notice/admin-notice-popup-table";
+import styles from "@/components/admin/shared/admin-posts-panel.module.css";
 
 const NOTICE_TABS = [
   { id: "notice", label: "공지" },

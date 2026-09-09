@@ -6,8 +6,8 @@ import {
   buildIssueEditHref,
   buildPostCreateHref,
 } from "@/lib/admin/section-mode";
-import { AdminJournalPostsTable } from "./admin-journal-posts-table";
-import styles from "./admin-issues-list.module.css";
+import { AdminJournalPostsTable } from "@/components/admin/contents/admin-journal-posts-table";
+import styles from "@/components/admin/contents/admin-issues-list.module.css";
 
 const UNASSIGNED_ISSUE_ID = "__unassigned__";
 

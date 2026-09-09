@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { PostForm } from "@/components/admin/post-form";
-import styles from "../post-page.module.css";
+import { PostForm } from "@/components/admin/contents/post-form";
+import styles from "@/app/admin/contents/posts/post-page.module.css";
 
 export const metadata = {
   title: "게시물 수정",

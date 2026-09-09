@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { NoticePopupForm } from "@/components/admin/notice-popup-form";
-import styles from "../../../admin-page.module.css";
+import { NoticePopupForm } from "@/components/admin/notice/notice-popup-form";
+import styles from "@/app/admin/admin-page.module.css";
 
 export const metadata = {
   title: "새 팝업",

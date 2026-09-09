@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AdminCategoryManageControls } from "./admin-category-manage-controls";
-import styles from "./admin-category-manager.module.css";
+import { AdminCategoryManageControls } from "@/components/admin/contents/category/admin-category-manage-controls";
+import styles from "@/components/admin/contents/category/admin-category-manager.module.css";
 
 export function AdminCategoryManager({ sectionId, categories, onChanged }) {
   const [selectedId, setSelectedId] = useState(null);

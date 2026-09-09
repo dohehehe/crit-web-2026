@@ -4,7 +4,7 @@ import {
   WORKSHOP_STATUS,
   WORKSHOP_STATUS_LABELS,
 } from "@/lib/admin/workshop-status";
-import styles from "./admin-category-tabs.module.css";
+import styles from "@/components/admin/shared/admin-category-tabs.module.css";
 
 const STATUS_TABS = [
   WORKSHOP_STATUS.RECRUITING,

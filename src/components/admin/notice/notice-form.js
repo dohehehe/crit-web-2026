@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
-import EditorClient from "./EditorClient";
-import styles from "./post-form.module.css";
+import EditorClient from "@/components/admin/shared/editor/EditorClient";
+import styles from "@/components/admin/shared/post-form.module.css";
 
 const NOTICE_SELECT = "id,title,content,is_active,date";
 

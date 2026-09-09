@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
-import { AdminSectionTabs } from "./admin-section-tabs";
-import { InfoForm } from "./info-form";
-import { AdminUsersTable } from "./admin-users-table";
-import styles from "./admin-posts-panel.module.css";
+import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
+import { InfoForm } from "@/components/admin/info/info-form";
+import { AdminUsersTable } from "@/components/admin/info/admin-users-table";
+import styles from "@/components/admin/shared/admin-posts-panel.module.css";
 
 const INFO_TABS = [
   { id: "info", label: "정보" },

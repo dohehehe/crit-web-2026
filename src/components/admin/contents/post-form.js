@@ -13,9 +13,9 @@ import {
 } from "@/lib/admin/section-mode";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
-import EditorClient from "./EditorClient";
-import { KeywordInput } from "./KeywordInput";
-import styles from "./post-form.module.css";
+import EditorClient from "@/components/admin/shared/editor/EditorClient";
+import { KeywordInput } from "@/components/admin/shared/keyword/KeywordInput";
+import styles from "@/components/admin/shared/post-form.module.css";
 
 const POST_SELECT =
   "id,title,subtitle,slug,content,section_id,category_id,issue_id,author_id,date,thumnail_img,video_url,workshop_url,start_at,end_at";

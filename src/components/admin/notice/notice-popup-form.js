@@ -8,8 +8,8 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { POPUP_IMAGE_UPLOAD_OPTIONS } from "@/lib/imageUpload/constants";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
-import EditorClient from "./EditorClient";
-import styles from "./post-form.module.css";
+import EditorClient from "@/components/admin/shared/editor/EditorClient";
+import styles from "@/components/admin/shared/post-form.module.css";
 
 const POPUP_SELECT = "id,content,link_url,thumbnail_img,is_active";
 

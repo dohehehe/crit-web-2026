@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./admin-posts-table.module.css";
+import styles from "@/components/admin/shared/admin-posts-table.module.css";
 
 function formatCreatedAt(value) {
   if (!value) {

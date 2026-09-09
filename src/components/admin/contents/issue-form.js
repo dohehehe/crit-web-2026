@@ -7,8 +7,8 @@ import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
-import EditorClient from "./EditorClient";
-import styles from "./issue-form.module.css";
+import EditorClient from "@/components/admin/shared/editor/EditorClient";
+import styles from "@/components/admin/contents/issue-form.module.css";
 
 const ISSUE_SELECT =
   "id,title,slug,issue_number,description,cover_img,file_url,is_active";
