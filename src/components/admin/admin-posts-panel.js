@@ -7,6 +7,7 @@ import {
   buildIssueCreateHref,
   buildPostCreateHref,
   getSectionMode,
+  sectionHasCategories,
 } from "@/lib/admin/section-mode";
 import { AdminSectionTabs } from "./admin-section-tabs";
 import { AdminCategoryTabs } from "./admin-category-tabs";
@@ -44,7 +45,7 @@ export function AdminPostsPanel() {
       order: "sort_order.asc",
       limit: 100,
     },
-    enabled: Boolean(selectedSectionId) && sectionMode === "current",
+    enabled: Boolean(selectedSectionId) && sectionHasCategories(sectionMode),
   });
 
   const categories = categoriesData?.items ?? [];
@@ -72,7 +73,7 @@ export function AdminPostsPanel() {
       "eq.section_id": selectedSectionId,
     };
 
-    if (sectionMode === "current" && selectedCategoryId) {
+    if (sectionHasCategories(sectionMode) && selectedCategoryId) {
       return { ...base, "eq.category_id": selectedCategoryId };
     }
 
@@ -114,10 +115,12 @@ export function AdminPostsPanel() {
   const listError = categoriesError ?? issuesError ?? postsError;
   const isListLoading =
     Boolean(selectedSectionId) &&
-    (postsLoading || (sectionMode === "journal" && issuesLoading));
+    (postsLoading ||
+      (sectionMode === "journal" && issuesLoading) ||
+      (sectionHasCategories(sectionMode) && categoriesLoading));
 
   const showPostsTable =
-    (sectionMode === "current" || sectionMode === "posts") &&
+    (sectionHasCategories(sectionMode) || sectionMode === "posts") &&
     selectedSectionId &&
     !isListLoading &&
     !listError;
@@ -138,7 +141,10 @@ export function AdminPostsPanel() {
           <p className={`${styles.status} caption gray-65`}>섹션을 선택하면 목록이 표시됩니다.</p>
         )}
 
-        {selectedSectionId && sectionMode === "current" && !categoriesLoading && (
+        {selectedSectionId &&
+          sectionHasCategories(sectionMode) &&
+          !isListLoading &&
+          !listError && (
           <AdminCategoryTabs
             categories={categories}
             selectedId={selectedCategoryId}
@@ -165,7 +171,7 @@ export function AdminPostsPanel() {
             ) : (
               <Link
                 href={buildPostCreateHref(selectedSectionId, {
-                  categoryId: sectionMode === "current" ? selectedCategoryId : null,
+                  categoryId: sectionHasCategories(sectionMode) ? selectedCategoryId : null,
                 })}
                 className={`${styles.createButton} caption`}
               >

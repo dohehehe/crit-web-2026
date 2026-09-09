@@ -3,13 +3,29 @@ const JOURNAL_CRIT_SECTION_SLUG = "Journal Crit";
 const CHANNEL_SECTION_SLUG = "Channel";
 const WORKSHOP_SECTION_SLUG = "Workshop";
 
+function sectionKey(section) {
+  return (section?.slug ?? section?.name ?? "").trim().toLowerCase();
+}
+
+function matchesSection(section, ...keys) {
+  const key = sectionKey(section);
+  return keys.some((value) => key === value.trim().toLowerCase());
+}
+
 export function getSectionMode(section) {
-  if (section?.slug === JOURNAL_CRIT_SECTION_SLUG) return "journal";
-  if (section?.slug === CURRENT_SECTION_SLUG) return "current";
-  if (section?.slug === CHANNEL_SECTION_SLUG || section?.slug === WORKSHOP_SECTION_SLUG) {
-    return "posts";
-  }
+  if (matchesSection(section, JOURNAL_CRIT_SECTION_SLUG)) return "journal";
+  if (matchesSection(section, CURRENT_SECTION_SLUG)) return "current";
+  if (matchesSection(section, CHANNEL_SECTION_SLUG)) return "channel";
+  if (matchesSection(section, WORKSHOP_SECTION_SLUG)) return "posts";
   return "posts";
+}
+
+export function sectionHasCategories(sectionMode) {
+  return sectionMode === "current" || sectionMode === "channel";
+}
+
+export function sectionHasMediaFields(sectionMode) {
+  return sectionMode === "posts" || sectionMode === "channel";
 }
 
 export function buildPostCreateHref(sectionId, { categoryId, issueId } = {}) {

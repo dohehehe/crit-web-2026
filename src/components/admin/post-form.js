@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
-import { getSectionMode } from "@/lib/admin/section-mode";
+import {
+  getSectionMode,
+  sectionHasCategories,
+  sectionHasMediaFields,
+} from "@/lib/admin/section-mode";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
 import EditorClient from "./EditorClient";
@@ -309,11 +313,11 @@ function PostFormFields({
 
       </div>
 
-      {(sectionMode === "current" || sectionMode === "journal") && (
+      {(sectionHasCategories(sectionMode) || sectionMode === "journal") && (
         <div className={styles.section}>
           <h2 className={`${styles.sectionTitle} p-bold`}>분류</h2>
 
-          {sectionMode === "current" && (
+          {sectionHasCategories(sectionMode) && (
             <label className={styles.field}>
               <span className="caption">Category</span>
               <select
@@ -398,7 +402,7 @@ function PostFormFields({
         </div>
       </div>
 
-      {sectionMode === "posts" && (
+      {sectionHasMediaFields(sectionMode) && (
         <div className={styles.section}>
           <h2 className={`${styles.sectionTitle} p-bold`}>미디어 · 링크</h2>
 
@@ -496,7 +500,7 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
       order: "sort_order.asc",
       limit: 100,
     },
-    enabled: Boolean(effectiveSectionId) && sectionMode === "current",
+    enabled: Boolean(effectiveSectionId) && sectionHasCategories(sectionMode),
   });
 
   const { data: issuesData, isLoading: issuesLoading } = useAdminQuery("issues", {
@@ -536,7 +540,7 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
     sectionsLoading ||
     authorsLoading ||
     (isEdit && postKeywordsLoading) ||
-    (sectionMode === "current" && categoriesLoading) ||
+    (sectionHasCategories(sectionMode) && categoriesLoading) ||
     (sectionMode === "journal" && issuesLoading);
 
   if (isEdit && postLoading) {
