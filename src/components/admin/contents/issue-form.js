@@ -164,7 +164,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         </label>
 
         <label className={styles.field}>
-          <span className="caption">Title</span>
+          <span className="caption">제목</span>
           <input
             className={styles.input}
             type="text"
@@ -175,7 +175,8 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         </label>
 
         <label className={styles.field}>
-          <span className="caption">Slug</span>
+          <span className="caption">영문 제목</span>
+          <span className="caption gray-65">(영문 제목은 주소창의 URL에 사용됩니다.)</span>
           <input
             className={styles.input}
             type="text"
@@ -198,15 +199,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         <h2 className={`${styles.sectionTitle} p-bold`}>콘텐츠</h2>
 
         <div className={styles.field}>
-          <span className="caption">Description</span>
-          <EditorClient ref={editorRef} data={initialDescription} />
-          {editorError && (
-            <p className={`${styles.error} caption`}>{editorError}</p>
-          )}
-        </div>
-
-        <div className={styles.field}>
-          <span className="caption">Cover Image</span>
+          <span className="caption">표지 이미지</span>
           <input
             ref={coverInputRef}
             className={styles.hiddenFileInput}
@@ -240,15 +233,23 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         </div>
 
         <label className={styles.field}>
-          <span className="caption">File URL</span>
+          <span className="caption">파일 링크</span>
           <input
             className={styles.input}
             type="url"
             value={form.file_url}
             onChange={(event) => updateField("file_url", event.target.value)}
-            placeholder="PDF 또는 파일 링크"
+            placeholder="파일 링크"
           />
         </label>
+
+        <div className={styles.field}>
+          <span className="caption">소개</span>
+          <EditorClient ref={editorRef} data={initialDescription} />
+          {editorError && (
+            <p className={`${styles.error} caption`}>{editorError}</p>
+          )}
+        </div>
       </div>
 
       {submitError && (

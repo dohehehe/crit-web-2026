@@ -131,7 +131,7 @@ function NoticeFormFields({ mode, noticeId, initialValues, initialContent }) {
         <h2 className={`${styles.sectionTitle} p-bold`}>기본 정보</h2>
 
         <label className={styles.field}>
-          <span className="caption">Title</span>
+          <span className="caption">제목</span>
           <input
             className={styles.input}
             type="text"
@@ -142,7 +142,7 @@ function NoticeFormFields({ mode, noticeId, initialValues, initialContent }) {
         </label>
 
         <label className={styles.field}>
-          <span className="caption">Date</span>
+          <span className="caption">날짜</span>
           <input
             className={styles.input}
             type="date"
@@ -165,7 +165,6 @@ function NoticeFormFields({ mode, noticeId, initialValues, initialContent }) {
         <h2 className={`${styles.sectionTitle} p-bold`}>콘텐츠</h2>
 
         <div className={styles.field}>
-          <span className="caption">Content</span>
           <EditorClient ref={editorRef} data={initialContent} />
           {editorError && (
             <p className={`${styles.error} caption`}>{editorError}</p>

@@ -277,81 +277,12 @@ function PostFormFields({
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles.section}>
-        <h2 className={`${styles.sectionTitle} p-bold`}>기본 정보</h2>
 
-        {section && (
-          <p className="caption gray-65">
-            섹션: <span className="p-bold black">{section.name || section.slug}</span>
-          </p>
-        )}
-
-        <label className={styles.field}>
-          <span className="caption">Title</span>
-          <input
-            className={styles.input}
-            type="text"
-            value={form.title}
-            onChange={(event) => updateField("title", event.target.value)}
-            required
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span className="caption">Subtitle</span>
-          <input
-            className={styles.input}
-            type="text"
-            value={form.subtitle}
-            onChange={(event) => updateField("subtitle", event.target.value)}
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span className="caption">English Title</span>
-          <input
-            className={styles.input}
-            type="text"
-            value={form.slug}
-            onChange={(event) => updateField("slug", event.target.value)}
-          />
-        </label>
-
-        <div className={styles.field}>
-          <span className="caption">Author</span>
-          <AuthorInput
-            value={author}
-            onChange={setAuthor}
-            disabled={isSaving}
-          />
-          {authorError && (
-            <p className={`${styles.error} caption`}>{authorError}</p>
-          )}
-        </div>
-
-        <label className={styles.field}>
-          <span className="caption">Date</span>
-          <input
-            className={styles.input}
-            type="date"
-            value={form.date}
-            onChange={(event) => updateField("date", event.target.value)}
-          />
-        </label>
-
-        <div className={styles.field}>
-          <span className="caption">키워드</span>
-          <KeywordInput
-            value={keywords}
-            onChange={setKeywords}
-            disabled={isSaving}
-          />
-          {keywordError && (
-            <p className={`${styles.error} caption`}>{keywordError}</p>
-          )}
-        </div>
-
-      </div>
+      {section && (
+        <p className="p-bold black">
+          대분류: <span className="p-bold crit-orange">{section.name} {section.slug}</span>
+        </p>
+      )}
 
       {(sectionHasCategories(sectionMode) || sectionMode === "journal") && (
         <div className={styles.section}>
@@ -359,7 +290,7 @@ function PostFormFields({
 
           {sectionHasCategories(sectionMode) && (
             <label className={styles.field}>
-              <span className="caption">Category</span>
+              <span className="caption">카테고리</span>
               <select
                 className={styles.select}
                 value={form.category_id}
@@ -397,18 +328,101 @@ function PostFormFields({
       )}
 
       <div className={styles.section}>
-        <h2 className={`${styles.sectionTitle} p-bold`}>콘텐츠</h2>
+        <h2 className={`${styles.sectionTitle} p-bold`}>기본 정보</h2>
+
+
+        <label className={styles.field}>
+          <span className="caption">제목</span>
+          <input
+            className={styles.input}
+            type="text"
+            value={form.title}
+            onChange={(event) => updateField("title", event.target.value)}
+            required
+          />
+        </label>
+
+        <label className={styles.field}>
+          <span className="caption">영문 제목</span>
+          <span className="caption gray-65">(영문 제목은 주소창의 URL에 사용됩니다.)</span>
+          <input
+            className={styles.input}
+            type="text"
+            value={form.slug}
+            onChange={(event) => updateField("slug", event.target.value)}
+          />
+        </label>
+
+        <label className={styles.field}>
+          <span className="caption">부제목</span>
+          <input
+            className={styles.input}
+            type="text"
+            value={form.subtitle}
+            onChange={(event) => updateField("subtitle", event.target.value)}
+          />
+        </label>
 
         <div className={styles.field}>
-          <span className="caption">Content</span>
-          <EditorClient ref={editorRef} data={initialContent} />
-          {editorError && (
-            <p className={`${styles.error} caption`}>{editorError}</p>
+          <span className="caption">작성자</span>
+          <AuthorInput
+            value={author}
+            onChange={setAuthor}
+            disabled={isSaving}
+          />
+          {authorError && (
+            <p className={`${styles.error} caption`}>{authorError}</p>
+          )}
+        </div>
+
+        <label className={styles.field}>
+          <span className="caption">날짜</span>
+          <input
+            className={styles.input}
+            type="date"
+            value={form.date}
+            onChange={(event) => updateField("date", event.target.value)}
+          />
+        </label>
+
+        {isWorkshop && (
+          <>
+            <label className={styles.field}>
+              <span className="caption">모집 시작일</span>
+              <input
+                className={styles.input}
+                type="datetime-local"
+                value={form.start_at}
+                onChange={(event) => updateField("start_at", event.target.value)}
+              />
+            </label>
+
+            <label className={styles.field}>
+              <span className="caption">모집 종료일</span>
+              <input
+                className={styles.input}
+                type="datetime-local"
+                value={form.end_at}
+                onChange={(event) => updateField("end_at", event.target.value)}
+              />
+            </label>
+          </>
+        )}
+
+        <div className={styles.field}>
+          <span className="caption">키워드</span>
+          <KeywordInput
+            value={keywords}
+            onChange={setKeywords}
+            disabled={isSaving}
+          />
+          {keywordError && (
+            <p className={`${styles.error} caption`}>{keywordError}</p>
           )}
         </div>
 
         <div className={styles.field}>
-          <span className="caption">Thumbnail</span>
+          <span className="caption">대표 이미지</span>
           <input
             ref={thumbnailInputRef}
             className={styles.hiddenFileInput}
@@ -448,7 +462,7 @@ function PostFormFields({
 
           {!isWorkshop && (
             <label className={styles.field}>
-              <span className="caption">Video URL</span>
+              <span className="caption">유튜브 링크</span>
               <input
                 className={styles.input}
                 type="url"
@@ -461,7 +475,7 @@ function PostFormFields({
           {isWorkshop && (
             <>
               <label className={styles.field}>
-                <span className="caption">Workshop URL</span>
+                <span className="caption">신청 폼 링크</span>
                 <input
                   className={styles.input}
                   type="url"
@@ -469,30 +483,21 @@ function PostFormFields({
                   onChange={(event) => updateField("workshop_url", event.target.value)}
                 />
               </label>
-
-              <label className={styles.field}>
-                <span className="caption">Start</span>
-                <input
-                  className={styles.input}
-                  type="datetime-local"
-                  value={form.start_at}
-                  onChange={(event) => updateField("start_at", event.target.value)}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span className="caption">End</span>
-                <input
-                  className={styles.input}
-                  type="datetime-local"
-                  value={form.end_at}
-                  onChange={(event) => updateField("end_at", event.target.value)}
-                />
-              </label>
             </>
           )}
         </div>
       )}
+
+      <div className={styles.section}>
+        <h2 className={`${styles.sectionTitle} p-bold`}>콘텐츠</h2>
+
+        <div className={styles.field}>
+          <EditorClient ref={editorRef} data={initialContent} />
+          {editorError && (
+            <p className={`${styles.error} caption`}>{editorError}</p>
+          )}
+        </div>
+      </div>
 
       {submitError && (
         <p className={`${styles.error} caption`}>

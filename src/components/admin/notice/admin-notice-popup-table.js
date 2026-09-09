@@ -63,10 +63,10 @@ export function AdminNoticePopupTable({ popups }) {
         <thead>
           <tr>
             <th scope="col" className="caption">
-              Date
+              날짜
             </th>
             <th scope="col" className="caption">
-              Link URL
+              연결 링크
             </th>
             <th scope="col" className="caption">
               공개

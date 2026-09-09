@@ -163,7 +163,7 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
         <h2 className={`${styles.sectionTitle} p-bold`}>기본 정보</h2>
 
         <label className={styles.field}>
-          <span className="caption">Link URL</span>
+          <span className="caption">연결 링크</span>
           <input
             className={styles.input}
             type="url"
@@ -183,7 +183,7 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
         </label>
 
         <div className={styles.field}>
-          <span className="caption">Thumbnail</span>
+          <span className="caption">이미지</span>
           <input
             ref={thumbnailInputRef}
             className={styles.hiddenFileInput}
@@ -217,16 +217,12 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
         </div>
       </div>
 
-      <div className={styles.section}>
-        <h2 className={`${styles.sectionTitle} p-bold`}>콘텐츠</h2>
-
-        <div className={styles.field}>
-          <span className="caption">Content</span>
-          <EditorClient ref={editorRef} data={initialContent} />
-          {editorError && (
-            <p className={`${styles.error} caption`}>{editorError}</p>
-          )}
-        </div>
+      <div className={styles.field}>
+        <span className="caption">내용</span>
+        <EditorClient ref={editorRef} data={initialContent} />
+        {editorError && (
+          <p className={`${styles.error} caption`}>{editorError}</p>
+        )}
       </div>
 
       {submitError && (

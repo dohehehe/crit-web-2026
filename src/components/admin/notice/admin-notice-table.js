@@ -58,10 +58,10 @@ export function AdminNoticeTable({ notices }) {
         <thead>
           <tr>
             <th scope="col" className="caption">
-              Date
+              날짜
             </th>
             <th scope="col" className="caption">
-              Title
+              제목
             </th>
             <th scope="col" className="caption">
               공개
