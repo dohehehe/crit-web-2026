@@ -1,7 +1,21 @@
+.tabsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.trailingTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
 }
 
 .tab {

@@ -131,6 +131,18 @@ export async function handleDelete(table, id) {
       }
     }
 
+    if (table === "keywords") {
+      const { error: postKeywordsError } = await supabase
+        .from("post_keywords")
+        .delete()
+        .eq("keyword_id", id);
+
+      if (postKeywordsError) {
+        const mapped = mapSupabaseError(postKeywordsError);
+        return jsonError(mapped.message, mapped.status);
+      }
+    }
+
     const { data, error } = await supabase
       .from(table)
       .delete()

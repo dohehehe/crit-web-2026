@@ -13,7 +13,12 @@ import {
   sectionUsesWorkshopStatusTabs,
 } from "@/lib/admin/section-mode";
 import { filterPostsByWorkshopStatus } from "@/lib/admin/workshop-status";
+import {
+  isKeywordsTabSelected,
+  KEYWORDS_TAB,
+} from "@/lib/admin/keywords-tab";
 import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
+import { AdminKeywordsTable } from "@/components/admin/contents/admin-keywords-table";
 import { AdminCategoryBar } from "@/components/admin/contents/category/admin-category-bar";
 import { AdminCategoryManager } from "@/components/admin/contents/category/admin-category-manager";
 import { AdminWorkshopStatusTabs } from "@/components/admin/contents/admin-workshop-status-tabs";
@@ -38,8 +43,26 @@ export function AdminPostsPanel() {
   });
 
   const sections = sectionsData?.items ?? [];
-  const selectedSection = sections.find((section) => section.id === selectedSectionId) ?? null;
+  const isKeywordsView = isKeywordsTabSelected(selectedSectionId);
+  const selectedSection =
+    sections.find((section) => section.id === selectedSectionId) ?? null;
   const sectionMode = getSectionMode(selectedSection);
+
+  const {
+    data: keywordsData,
+    isLoading: keywordsLoading,
+    error: keywordsError,
+    refetch: refetchKeywords,
+  } = useAdminQuery("keywords", {
+    params: {
+      select: "id,name,slug,post_keywords(count)",
+      order: "name.asc",
+      limit: 100,
+    },
+    enabled: isKeywordsView,
+  });
+
+  const keywords = keywordsData?.items ?? [];
 
   const {
     data: categoriesData,
@@ -55,6 +78,7 @@ export function AdminPostsPanel() {
     },
     enabled:
       Boolean(selectedSectionId) &&
+      !isKeywordsView &&
       (sectionUsesCategoryTabs(sectionMode) || sectionUsesCategoryManagement(sectionMode)),
   });
 
@@ -70,7 +94,7 @@ export function AdminPostsPanel() {
       order: "issue_number.desc",
       limit: 100,
     },
-    enabled: Boolean(selectedSectionId) && sectionMode === "journal",
+    enabled: Boolean(selectedSectionId) && !isKeywordsView && sectionMode === "journal",
   });
 
   const issues = issuesData?.items ?? [];
@@ -106,7 +130,7 @@ export function AdminPostsPanel() {
     refetch: refetchPosts,
   } = useAdminQuery("posts", {
     params: postsParams,
-    enabled: Boolean(selectedSectionId),
+    enabled: Boolean(selectedSectionId) && !isKeywordsView,
   });
 
   const posts = postsData?.items ?? [];
@@ -147,11 +171,13 @@ export function AdminPostsPanel() {
     postsError;
   const isListLoading =
     Boolean(selectedSectionId) &&
+    !isKeywordsView &&
     (postsLoading ||
       (sectionMode === "journal" && issuesLoading) ||
       (sectionUsesCategoryTabs(sectionMode) && categoriesLoading));
 
   const showPostsTable =
+    !isKeywordsView &&
     (sectionUsesCategoryTabs(sectionMode) ||
       sectionUsesWorkshopStatusTabs(sectionMode) ||
       sectionMode === "posts") &&
@@ -160,7 +186,11 @@ export function AdminPostsPanel() {
     !listError;
 
   const showJournalIssuesList =
-    sectionMode === "journal" && selectedSectionId && !isListLoading && !listError;
+    !isKeywordsView &&
+    sectionMode === "journal" &&
+    selectedSectionId &&
+    !isListLoading &&
+    !listError;
 
   return (
     <div className={styles.panel}>
@@ -168,6 +198,7 @@ export function AdminPostsPanel() {
         sections={sections}
         selectedId={selectedSectionId}
         onSelect={handleSectionSelect}
+        trailingTabs={[KEYWORDS_TAB]}
       />
 
       <div className={styles.content} role="tabpanel">
@@ -175,7 +206,22 @@ export function AdminPostsPanel() {
           <p className={`${styles.status} caption gray-65`}>섹션을 선택하면 목록이 표시됩니다.</p>
         )}
 
+        {isKeywordsView && keywordsLoading && (
+          <p className={`${styles.status} caption gray-65`}>키워드 불러오는 중…</p>
+        )}
+
+        {isKeywordsView && keywordsError && (
+          <p className={`${styles.status} caption`}>
+            키워드를 불러오지 못했습니다: {keywordsError.message}
+          </p>
+        )}
+
+        {isKeywordsView && !keywordsLoading && !keywordsError && (
+          <AdminKeywordsTable keywords={keywords} onChanged={refetchKeywords} />
+        )}
+
         {selectedSectionId &&
+          !isKeywordsView &&
           sectionUsesCategoryTabs(sectionMode) &&
           !isListLoading &&
           !listError && (
@@ -188,7 +234,7 @@ export function AdminPostsPanel() {
           />
         )}
 
-        {selectedSectionId && sectionUsesCategoryManagement(sectionMode) && (
+        {selectedSectionId && !isKeywordsView && sectionUsesCategoryManagement(sectionMode) && (
           <>
             {categoriesLoading && (
               <p className={`${styles.status} caption gray-65`}>카테고리 불러오는 중…</p>
@@ -209,6 +255,7 @@ export function AdminPostsPanel() {
         )}
 
         {selectedSectionId &&
+          !isKeywordsView &&
           sectionUsesWorkshopStatusTabs(sectionMode) &&
           !isListLoading &&
           !listError && (
@@ -218,17 +265,17 @@ export function AdminPostsPanel() {
           />
         )}
 
-        {selectedSectionId && isListLoading && (
+        {selectedSectionId && !isKeywordsView && isListLoading && (
           <p className={`${styles.status} caption gray-65`}>목록 불러오는 중…</p>
         )}
 
-        {selectedSectionId && listError && (
+        {selectedSectionId && !isKeywordsView && listError && (
           <p className={`${styles.status} caption`}>
             목록을 불러오지 못했습니다: {listError.message}
           </p>
         )}
 
-        {selectedSectionId && !isListLoading && !listError && (
+        {selectedSectionId && !isKeywordsView && !isListLoading && !listError && (
           <div className={styles.toolbar}>
             {sectionMode === "journal" ? (
               <Link href={buildIssueCreateHref()} className={`${styles.createButton} caption`}>
