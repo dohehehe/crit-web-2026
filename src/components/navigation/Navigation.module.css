@@ -14,6 +14,11 @@
   gap: 6px;
 }
 
+.headerJournal {
+  background: var(--crit-orange);
+  top: var(--header-sticky-top, -145px);
+}
+
 .logoLink {
   display: inline-block;
   line-height: 0;
@@ -21,6 +26,17 @@
 
 .logo {
   height: auto;
+}
+
+.logoLinkJournal {
+  display: block;
+  width: 100%;
+}
+
+.logoJournal {
+  width: 100%;
+  height: auto;
+  padding-top: 12px;
 }
 
 .navContainer {
@@ -130,6 +146,10 @@
     background: none;
     flex-direction: row;
     padding-bottom: 0px;
+  }
+
+  .headerJournal {
+    background: var(--crit-orange);
   }
 
   .logo {
