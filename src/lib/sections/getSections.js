@@ -1,9 +1,10 @@
 import "server-only";
 
+import { cache } from "react";
 import { sectionPathSlug } from "@/lib/sections/getSectionHref";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export async function getSections() {
+export const getSections = cache(async () => {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("sections")
@@ -16,7 +17,7 @@ export async function getSections() {
   }
 
   return data ?? [];
-}
+});
 
 export async function getSectionByPathSlug(pathSlug) {
   const normalized = pathSlug.trim().toLowerCase();

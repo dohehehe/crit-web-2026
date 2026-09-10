@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   padding: 10px 24px;
+  padding-bottom: 0px;
   width: 100vw;
   position: sticky;
-  top: -142px;
+  top: -145px;
   margin-left: -24px;
   z-index: 100;
   background: var(--white);
@@ -67,16 +68,19 @@
   .header {
     margin-left: -10px;
     padding: 7px 10px;
+    padding-bottom: 0px;
   }
 
   .navContainer {
     padding: 10px 0;
+    padding-bottom: 5px;
   }
 
   .navContainer.open {
     flex-direction: column-reverse;
     align-items: stretch;
     gap: 20px;
+    padding-bottom: 20px;
   }
 
   .navContainer.open .navActions {
@@ -127,6 +131,7 @@
     margin-left: 0;
     background: none;
     flex-direction: row;
+    padding-bottom: 0px;
   }
 
   .logo {
@@ -138,14 +143,15 @@
     top: 0;
     right: 0;
     z-index: 100;
-    background: var(--white);
     padding: 6px 10px;
+    background: none;
   }
 
   .navContainer.open {
     width: 100vw;
     height: 100dvh;
     left: 0;
+    background: var(--white);
   }
 
   .navContent {

@@ -148,8 +148,9 @@ a {
   text-decoration-line: underline;
   text-decoration-style: solid;
   text-underline-offset: 35%;
-  text-decoration-thickness: from-font;
+  text-decoration-thickness: 1.4px;
   text-decoration-skip-ink: auto;
+  text-decoration-color: var(--crit-orange);
 }
 
 .tag-keyword {
