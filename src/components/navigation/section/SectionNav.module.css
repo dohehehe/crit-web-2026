@@ -1,0 +1,35 @@
+@import "../../../app/breakpoints.css";
+
+.sectionList {
+  display: flex;
+  align-items: center;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .sectionList.menuOpen {}
+
+
+  .sectionList.menuOpen .list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .sectionList.menuOpen .list a {
+    font-size: 52px;
+    line-height: 52px;
+    letter-spacing: 0%;
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {}

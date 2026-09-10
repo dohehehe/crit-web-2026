@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
 import { getSectionHref } from "@/lib/sections/getSectionHref";
-import styles from "@/components/navigation/SectionNav.module.css";
+import styles from "@/components/navigation/section/SectionNav.module.css";
 
 function getSectionLabel(section, isActive) {
   if (isActive) {
@@ -15,10 +16,23 @@ function getSectionLabel(section, isActive) {
 
 export function SectionNavList({ sections }) {
   const pathname = usePathname();
+  const { isOpen } = useNavigationMenu();
 
   return (
-    <div className={styles.sectionList} aria-label="Sections">
+    <div
+      className={`${styles.sectionList}${isOpen ? ` ${styles.menuOpen}` : ""}`}
+      aria-label="Sections"
+    >
       <ul className={styles.list}>
+        {/* <li className={styles.item}>
+          <Link
+            href="/"
+            className={isOpen && isActive ? "menu-kr" : "menu-en"}
+            aria-current={isActive ? "page" : undefined}
+          >
+            Home
+          </Link>
+        </li> */}
         {sections.map((section) => {
           const href = getSectionHref(section);
           const isActive = pathname === href;
@@ -27,7 +41,7 @@ export function SectionNavList({ sections }) {
             <li key={section.id} className={styles.item}>
               <Link
                 href={href}
-                className="menu-en"
+                className={isOpen && isActive ? "menu-kr" : "menu-en"}
                 aria-current={isActive ? "page" : undefined}
               >
                 {getSectionLabel(section, isActive)}

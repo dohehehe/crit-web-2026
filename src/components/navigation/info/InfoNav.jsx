@@ -2,19 +2,31 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
 import {
   getInfoNavLabel,
   INFO_NAV_ITEMS,
   isInfoNavActive,
 } from "@/lib/navigation/infoNavItems";
-import styles from "@/components/navigation/InfoNav.module.css";
+import styles from "@/components/navigation/info/InfoNav.module.css";
 
 export function InfoNav() {
   const pathname = usePathname();
+  const { isOpen, closeMenu, closeSearch } = useNavigationMenu();
+
+  useEffect(() => {
+    closeMenu();
+    closeSearch();
+  }, [pathname, closeMenu, closeSearch]);
 
   return (
-    <div className={styles.infoList} aria-label="Info">
-      <ul className={styles.list}>
+    <div
+      id="info-nav"
+      className={`${styles.infoPanel}${isOpen ? ` ${styles.open}` : ""}`}
+      aria-label="Info"
+    >
+      <ul className={styles.infoList}>
         {INFO_NAV_ITEMS.map((item) => {
           const isActive = isInfoNavActive(pathname, item.href);
 
@@ -22,8 +34,9 @@ export function InfoNav() {
             <li key={item.href} className={styles.item}>
               <Link
                 href={item.href}
-                className={"tag-keyword"}
+                className="tag-keyword"
                 aria-current={isActive ? "page" : undefined}
+                onClick={closeMenu}
               >
                 {getInfoNavLabel(item, isActive)}
               </Link>

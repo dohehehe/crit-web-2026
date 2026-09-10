@@ -1,4 +1,4 @@
-import { SectionNavList } from "@/components/navigation/SectionNavList";
+import { SectionNavList } from "@/components/navigation/section/SectionNavList";
 import { getSections } from "@/lib/sections/getSections";
 
 export async function SectionNav() {
