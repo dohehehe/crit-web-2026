@@ -1,0 +1,157 @@
+@import "../../app/breakpoints.css";
+
+.main {
+  padding: 0 24px;
+  background: var(--crit-orange);
+}
+
+.article {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  box-shadow: inset 0 0 10px 10px pink;
+  padding-top: 60px;
+  margin-bottom: 52px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.issueNumber {
+  display: inline-block;
+  color: var(--black);
+}
+
+.title {
+  margin: 0;
+  word-break: keep-all;
+}
+
+.media {
+  width: min(100%, 500px);
+  margin: 0 auto 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cover {
+  width: 100%;
+}
+
+.coverImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.download {
+  color: var(--black);
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1.4px;
+  text-decoration-skip-ink: auto;
+  text-decoration-color: var(--black);
+}
+
+.contents {}
+
+.posts {
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-top: 1px solid var(--black);
+}
+
+.postsTitle {
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: journal-post;
+}
+
+.postItem {
+  counter-increment: journal-post;
+}
+
+.empty {
+  margin: 0;
+}
+
+.aside {
+  width: 100vw;
+  background: var(--black);
+  margin-left: -24px;
+  padding: 0 24px;
+  color: var(--crit-orange);
+  display: flex;
+}
+
+.asideTitle {
+  padding-top: 10px;
+}
+
+.asideList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 800px;
+}
+
+.asideItem {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: solid 1px var(--crit-orange);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.asideLink {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--crit-orange);
+  text-decoration: none;
+}
+
+.asideIssueNumber {
+  color: var(--crit-orange);
+}
+
+.asideTitle {
+  color: var(--crit-orange);
+}
+
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding: 0 10px;
+  }
+
+  .aside {
+    padding: 0 10px;
+    margin-left: -10px;
+  }
+}

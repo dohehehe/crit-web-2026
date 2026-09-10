@@ -1,20 +1,11 @@
-@import "../../app/breakpoints.css";
+@import "../breakpoints.css";
 
 .main {
   padding: 0 24px;
-}
-
-.journal {
   background: var(--crit-orange);
 }
 
-/* .main {
-  padding: 24px 0 80px;
-}
-
-.heading {
-  margin-bottom: 32px;
-} */
+.journal {}
 
 @media (max-width: var(--breakpoint-mobile)) {
   .main {
