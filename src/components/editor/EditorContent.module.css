@@ -1,3 +1,5 @@
+@import "../../app/breakpoints.css";
+
 .content {
   display: flex;
   flex-direction: column;
@@ -147,9 +149,27 @@
   display: block;
 }
 
+.galleryItem:first-child .galleryItemCaption {
+  padding-left: 4px;
+}
+
 .galleryCaption {
   display: block;
   margin-top: 4px;
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .galleryTrack {
+    min-height: 200px;
+  }
+
+  .galleryImage {
+    height: 200px;
+  }
+
+  .galleryNav {
+    top: 100px;
+  }
 }
 
 .embedBlock {

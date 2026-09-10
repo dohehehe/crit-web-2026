@@ -1,5 +1,9 @@
 const ITEM_CAPTION_SELECTOR = "[data-gallery-item-caption]";
 
+function enableCaptionInlineToolbar(captionNode) {
+  captionNode.dataset.inlineToolbar = "true";
+}
+
 function createItemCaptionElement(api, readOnly, caption = "") {
   const captionNode = document.createElement("div");
 
@@ -9,13 +13,20 @@ function createItemCaptionElement(api, readOnly, caption = "") {
   captionNode.dataset.placeholder = api.i18n.t("Image caption");
   captionNode.innerHTML = caption;
 
+  if (!readOnly) {
+    enableCaptionInlineToolbar(captionNode);
+  }
+
   return captionNode;
 }
 
-function wrapImageWithCaption(ui, api, readOnly, file) {
-  const { itemsContainer } = ui.nodes;
-  const imageContainer = itemsContainer.lastElementChild;
-
+function wrapImageContainerWithCaption(
+  itemsContainer,
+  api,
+  readOnly,
+  imageContainer,
+  caption = "",
+) {
   if (!imageContainer || imageContainer.dataset.galleryItem) {
     return;
   }
@@ -26,8 +37,19 @@ function wrapImageWithCaption(ui, api, readOnly, file) {
   itemWrapper.dataset.galleryItem = "true";
   itemsContainer.replaceChild(itemWrapper, imageContainer);
   itemWrapper.appendChild(imageContainer);
-  itemWrapper.appendChild(
-    createItemCaptionElement(api, readOnly, file?.caption ?? ""),
+  itemWrapper.appendChild(createItemCaptionElement(api, readOnly, caption));
+}
+
+function wrapImageWithCaption(ui, api, readOnly, file) {
+  const { itemsContainer } = ui.nodes;
+  const imageContainer = itemsContainer.lastElementChild;
+
+  wrapImageContainerWithCaption(
+    itemsContainer,
+    api,
+    readOnly,
+    imageContainer,
+    file?.caption ?? "",
   );
 }
 
@@ -43,6 +65,42 @@ export async function loadGalleryTool() {
     constructor(options) {
       super(options);
       this.patchItemCaptions();
+      this.wrapExistingItemCaptions();
+      this.patchBlockCaptionInlineToolbar();
+    }
+
+    patchBlockCaptionInlineToolbar() {
+      if (this.readOnly || !this.ui?.nodes?.caption) {
+        return;
+      }
+
+      enableCaptionInlineToolbar(this.ui.nodes.caption);
+    }
+
+    wrapExistingItemCaptions() {
+      const { itemsContainer } = this.ui.nodes;
+      const files = this._data?.files ?? [];
+      const children = Array.from(itemsContainer.children);
+
+      children.forEach((child, index) => {
+        if (child.dataset.galleryItem) {
+          const captionNode = child.querySelector(ITEM_CAPTION_SELECTOR);
+
+          if (captionNode && !this.readOnly) {
+            enableCaptionInlineToolbar(captionNode);
+          }
+
+          return;
+        }
+
+        wrapImageContainerWithCaption(
+          itemsContainer,
+          this.api,
+          this.readOnly,
+          child,
+          files[index]?.caption ?? "",
+        );
+      });
     }
 
     patchItemCaptions() {

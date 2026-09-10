@@ -168,6 +168,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             gallery: {
               class: GalleryTool,
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 sortableJs: Sortable,
                 buttonContent: "슬라이더 이미지 추가",
