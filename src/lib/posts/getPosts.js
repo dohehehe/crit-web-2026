@@ -4,9 +4,10 @@ import { cache } from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   DEFAULT_POST_LIST_LIMIT,
+  POST_DETAIL_SELECT,
   POST_LIST_SELECT,
 } from "@/lib/posts/constants";
-import { normalizePosts } from "@/lib/posts/normalizePost";
+import { normalizePostDetail, normalizePosts } from "@/lib/posts/normalizePost";
 
 function applyOrder(query, orderBy) {
   if (orderBy === "sort_order") {
@@ -74,4 +75,36 @@ export async function getPostsByIssue(issueId, options = {}) {
     issueId,
     orderBy: options.orderBy ?? "sort_order",
   });
+}
+
+function isUuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
+export async function getPostDetail({ sectionId, postSlug, issueId } = {}) {
+  if (!sectionId || !postSlug) {
+    return null;
+  }
+
+  const supabase = createAdminClient();
+
+  let query = supabase
+    .from("posts")
+    .select(POST_DETAIL_SELECT)
+    .eq("is_active", true)
+    .eq("section_id", sectionId);
+
+  if (issueId) {
+    query = query.eq("issue_id", issueId);
+  }
+
+  query = isUuid(postSlug) ? query.eq("id", postSlug) : query.eq("slug", postSlug);
+
+  const { data, error } = await query.maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return normalizePostDetail(data);
 }

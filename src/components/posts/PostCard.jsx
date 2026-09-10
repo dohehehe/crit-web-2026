@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getSectionMode } from "@/lib/admin/section-mode";
+import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostCard.module.css";
 
 export function PostCard({ post }) {
@@ -7,6 +9,7 @@ export function PostCard({ post }) {
   const isJournalSection = section && getSectionMode(section) === "journal";
 
   return (
+    <Link href={getPostPath(post)} className={styles.cardLink}>
     <article className={styles.card}>
       {section?.slug ? (
         <span
@@ -56,5 +59,6 @@ export function PostCard({ post }) {
 
 
     </article>
+    </Link>
   );
 }

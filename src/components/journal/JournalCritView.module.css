@@ -2,7 +2,6 @@
 
 .main {
   padding: 0 24px;
-  background: var(--crit-orange);
 }
 
 .article {
@@ -88,6 +87,28 @@
 
 .postItem {
   counter-increment: journal-post;
+}
+
+.postLink {
+  display: block;
+  color: var(--black);
+  text-decoration: none;
+}
+
+.postLink:hover,
+.postLink:focus-visible {
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1.4px;
+}
+
+.subtitle {
+  margin: 0;
+}
+
+.author {
+  margin: 0;
 }
 
 .empty {

@@ -1,0 +1,67 @@
+@import "../../app/breakpoints.css";
+
+.article {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding-top: 60px;
+  margin-bottom: 52px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.backLink {
+  display: inline-block;
+  color: var(--black);
+  text-decoration: none;
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1.4px;
+}
+
+.title {
+  margin: 0;
+  word-break: keep-all;
+}
+
+.subtitle {
+  margin: 0;
+}
+
+.author {
+  margin: 0;
+}
+
+.media {
+  width: min(100%, 500px);
+  margin: 0 auto 28px;
+}
+
+.thumbnail {
+  width: 100%;
+}
+
+.thumbnailImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.contents {
+  margin-bottom: 56px;
+}
+
+.empty {
+  margin: 0;
+}

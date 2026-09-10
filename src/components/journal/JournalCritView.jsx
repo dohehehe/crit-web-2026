@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { EditorContent } from "@/components/editor/EditorContent";
+import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
+import { getPostPath } from "@/lib/routes/posts";
 import styles from "./JournalCritView.module.css";
 
 export function JournalCritView({ issue, posts, previousIssues = [] }) {
@@ -52,8 +54,13 @@ export function JournalCritView({ issue, posts, previousIssues = [] }) {
             <h3 className={`tag-keyword ${styles.postsTitle}`}>Contents</h3>
             <ol className={styles.postList}>
               {posts.map((post) => (
-                <li key={post.id} className={`p-bold ${styles.postItem}`}>
-                  {post.title}
+                <li key={post.id} className={styles.postItem}>
+                  <Link
+                    href={getPostPath(post, { issueNumber: issue.issueNumber })}
+                    className={`p-bold ${styles.postLink}`}
+                  >
+                    {post.title}
+                  </Link>
                 </li>
               ))}
             </ol>
@@ -67,7 +74,7 @@ export function JournalCritView({ issue, posts, previousIssues = [] }) {
           <ol className={styles.asideList}>
             {previousIssues.map((pastIssue) => (
               <li key={pastIssue.id} className={styles.asideItem}>
-                <Link href={`/journal-crit/${pastIssue.issueNumber}`} className={styles.asideLink}>
+                <Link href={getJournalCritIssuePath(pastIssue.issueNumber)} className={styles.asideLink}>
                   {pastIssue.issueNumber ? (
                     <span className={`${styles.asideIssueNumber} tag-keyword`}>Issue {pastIssue.issueNumber}</span>
                   ) : null}
