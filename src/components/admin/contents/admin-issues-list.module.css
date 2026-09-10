@@ -1,0 +1,120 @@
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  border: 1px solid var(--gray-65);
+}
+
+.issueHeader {
+  display: flex;
+  align-items: stretch;
+}
+
+.issueButton {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: none;
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+}
+
+.issueButton:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.issueButtonExpanded {
+  border-bottom: 1px solid var(--gray-65);
+}
+
+.editButton {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 16px;
+  border: none;
+  border-left: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: background 0.15s ease;
+}
+
+.editButton:hover {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--crit-orange);
+}
+
+.issueLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.statusActive {
+  background: rgba(255, 100, 0, 0.12);
+  color: var(--crit-orange);
+}
+
+.statusInactive {
+  background: rgba(166, 166, 166, 0.2);
+  color: var(--gray-65);
+}
+
+.chevron {
+  width: 16px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.postsPanel {
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.issueToolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.createButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--crit-orange);
+  background: var(--crit-orange);
+  color: var(--white);
+  transition: opacity 0.15s ease;
+}
+
+.createButton:hover {
+  opacity: 0.9;
+}
+
+.empty {
+  padding: 8px 0;
+}

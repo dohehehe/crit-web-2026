@@ -1,0 +1,98 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--gray-65);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.chipRemove:hover {
+  color: var(--black);
+}
+
+.searchWrap {
+  position: relative;
+}
+
+.guide {
+  line-height: 1.4;
+}
+
+.guideDetail {
+  display: block;
+  margin-top: 2px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+}
+
+.input:focus {
+  outline: 2px solid var(--crit-orange);
+  outline-offset: 0;
+  border-color: var(--crit-orange);
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestion {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.suggestion:hover,
+.suggestionActive {
+  background: var(--black);
+  color: var(--white);
+}

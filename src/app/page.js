@@ -1,20 +1,15 @@
-import Image from "next/image";
-import { SectionsNav } from "@/components/sections-nav";
+import { PostList } from "@/components/posts/PostList";
+import { getPosts } from "@/lib/posts/getPosts";
 import styles from "./page.module.css";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const posts = await getPosts();
+
   return (
     <main className={styles.main}>
-      <header className={styles.header}>
-        <Image
-          src="/logo-black.svg"
-          alt="CRIT"
-          width={80}
-          height={24}
-          priority
-        />
-      </header>
-      <SectionsNav />
+      <PostList posts={posts} />
     </main>
   );
 }

@@ -1,0 +1,126 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  max-width: 820px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionTitle {
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--black);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+}
+
+.input:focus {
+  outline: 2px solid var(--crit-orange);
+  outline-offset: 0;
+  border-color: var(--crit-orange);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 10px 20px;
+  border: 1px solid var(--black);
+  cursor: pointer;
+  font: inherit;
+}
+
+.submitButton {
+  background: var(--crit-orange);
+  border-color: var(--crit-orange);
+  color: var(--white);
+}
+
+.submitButton:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.cancelButton {
+  background: var(--white);
+  color: var(--black);
+}
+
+.cancelButton:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+.status,
+.error {
+  padding: 8px 0;
+}
+
+.error {
+  color: var(--crit-orange);
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.coverButton {
+  align-self: flex-start;
+  padding: 10px 16px;
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  font: inherit;
+}
+
+.coverButton:hover:not(:disabled) {
+  background: var(--black);
+  color: var(--white);
+}
+
+.coverButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.coverPreview {
+  display: block;
+  width: 200px;
+  height: auto;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+}

@@ -1,0 +1,102 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  /* max-width: 600px; */
+}
+
+.section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 5px 8px 4px 7px;
+  background: var(--black);
+}
+
+.sectionJournal {
+  background: var(--crit-orange);
+}
+
+.sectionName {
+  display: none;
+}
+
+.card:hover .sectionSlug {
+  display: none;
+}
+
+.card:hover .sectionName {
+  display: inline;
+}
+
+
+.thumbnail {
+  position: relative;
+  width: 100%;
+}
+
+.thumbnail::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  height: 100%;
+  width: auto;
+  aspect-ratio: 866 / 1000;
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  background: var(--white);
+  mix-blend-mode: difference;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .thumbnail::after {
+  opacity: 1;
+}
+
+.thumbnailJournal::after {
+  background: var(--crit-orange);
+  mix-blend-mode: difference;
+}
+
+.thumbnailPlaceholder {
+  aspect-ratio: 16 / 10;
+  background: var(--gray-65);
+  opacity: 0.2;
+}
+
+.thumbnailImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(1);
+  transition: filter 0.3s ease;
+}
+
+.card:hover .thumbnailImage {
+  filter: saturate(0);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+
+.title {
+  margin: 0;
+}
+
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 6px;
+  list-style: none;
+}

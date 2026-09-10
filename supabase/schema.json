@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T07:30:56.946Z",
+  "generatedAt": "2026-09-09T14:43:59.273Z",
   "projectUrl": null,
   "tables": [
     {
@@ -190,6 +190,13 @@
           "notes": [
             "PK"
           ]
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
         },
         {
           "name": "issue_number",
@@ -408,6 +415,13 @@
           "notes": []
         },
         {
+          "name": "date",
+          "type": "date",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
           "name": "end_at",
           "type": "timestamp with time zone",
           "required": false,
@@ -440,8 +454,24 @@
           ]
         },
         {
+          "name": "section_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → sections.id"
+          ]
+        },
+        {
           "name": "slug",
           "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "sort_order",
+          "type": "numeric",
           "required": false,
           "default": null,
           "notes": []
