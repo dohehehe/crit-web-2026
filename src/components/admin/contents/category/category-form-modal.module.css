@@ -1,0 +1,123 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.dialog {
+  width: 100%;
+  max-width: 440px;
+  background: var(--white);
+  border: 1px solid var(--black);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 20px 0;
+}
+
+.closeButton {
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--gray-65);
+}
+
+.closeButton:hover {
+  color: var(--black);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+}
+
+.input:focus {
+  outline: 2px solid var(--crit-orange);
+  outline-offset: 0;
+  border-color: var(--crit-orange);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.submitButton,
+.cancelButton,
+.deleteButton {
+  padding: 10px 16px;
+  border: 1px solid var(--black);
+  cursor: pointer;
+  font: inherit;
+}
+
+.submitButton {
+  background: var(--crit-orange);
+  border-color: var(--crit-orange);
+  color: var(--white);
+}
+
+.submitButton:hover:not(:disabled),
+.cancelButton:hover:not(:disabled),
+.deleteButton:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.submitButton:disabled,
+.cancelButton:disabled,
+.deleteButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.cancelButton {
+  background: var(--white);
+  color: var(--black);
+}
+
+.deleteButton {
+  margin-left: auto;
+  background: var(--white);
+  border-color: var(--crit-orange);
+  color: var(--crit-orange);
+}
+
+.error {
+  color: var(--crit-orange);
+}

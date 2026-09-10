@@ -1,0 +1,44 @@
+.tabsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.trailingTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.tab {
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tab:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+.tabActive {
+  background: var(--crit-orange);
+  border-color: var(--crit-orange);
+  color: var(--white);
+}
+
+.tabActive:hover {
+  background: var(--crit-orange);
+  color: var(--white);
+}

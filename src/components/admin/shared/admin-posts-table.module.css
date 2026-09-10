@@ -1,0 +1,125 @@
+.wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--gray-65);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-65);
+  vertical-align: top;
+}
+
+.table th {
+  background: var(--white);
+  border-bottom-width: 2px;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.toggle:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  transition: background-color 0.15s ease;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--white);
+  transition: transform 0.15s ease;
+}
+
+.toggleOn .toggleTrack {
+  background: var(--crit-orange);
+}
+
+.toggleOn .toggleThumb {
+  transform: translateX(18px);
+}
+
+.toggleOff .toggleTrack {
+  background: var(--gray-65);
+}
+
+.toggleOn .toggleLabel {
+  color: var(--crit-orange);
+}
+
+.toggleOff .toggleLabel {
+  color: var(--gray-65);
+}
+
+.dateCell {
+  white-space: nowrap;
+  color: var(--gray-65);
+}
+
+.empty {
+  padding: 24px 0;
+}
+
+.titleLink:hover {
+  color: var(--crit-orange);
+}
+
+.reorderCell {
+  white-space: nowrap;
+  width: 72px;
+}
+
+.reorderButtons {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.reorderButton {
+  min-width: 28px;
+  padding: 4px 6px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.reorderButton:hover:not(:disabled) {
+  border-color: var(--crit-orange);
+  color: var(--crit-orange);
+}
+
+.reorderButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}

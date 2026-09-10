@@ -1,12 +1,85 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "./breakpoints.css";
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colors */
+  --crit-orange: rgba(255, 100, 0, 1);
+  --white: rgba(255, 255, 255, 1);
+  --black: rgba(0, 0, 0, 1);
+  --gray-65: rgba(166, 166, 166, 1);
+
+  /* Typography — desktop (> 1020px) */
+  --menu-en-weight: 600;
+  --menu-en-style: normal;
+  --menu-en-size: 24px;
+  --menu-en-line-height: 24px;
+  --menu-en-letter-spacing: 0.02em;
+
+  --menu-kr-weight: 700;
+  --menu-kr-style: normal;
+  --menu-kr-size: 22px;
+  --menu-kr-line-height: 24px;
+  --menu-kr-letter-spacing: 0;
+
+  --tag-category-weight: 500;
+  --tag-category-style: normal;
+  --tag-category-size: 16px;
+  --tag-category-line-height: 16px;
+  --tag-category-letter-spacing: 0.03em;
+
+  --tag-keyword-weight: 500;
+  --tag-keyword-style: normal;
+  --tag-keyword-size: 16px;
+  --tag-keyword-line-height: 16px;
+  --tag-keyword-letter-spacing: 0.03em;
+
+  --thumb-title-weight: 600;
+  --thumb-title-style: normal;
+  --thumb-title-size: 26px;
+  --thumb-title-line-height: 36px;
+  --thumb-title-letter-spacing: 0;
+
+  --title-1-weight: 600;
+  --title-1-style: normal;
+  --title-1-size: 52px;
+  --title-1-line-height: 62px;
+  --title-1-letter-spacing: 0.01em;
+
+  --p-weight: 500;
+  --p-style: normal;
+  --p-size: 16px;
+  --p-line-height: 26px;
+  --p-letter-spacing: 0.04em;
+
+  --p-bold-weight: 700;
+  --p-bold-style: normal;
+
+  --footer-weight: 400;
+  --footer-style: normal;
+  --footer-size: 14px;
+  --footer-line-height: 20px;
+  --footer-letter-spacing: 0;
+
+  --caption-weight: 500;
+  --caption-style: normal;
+  --caption-size: 14px;
+  --caption-line-height: 20px;
+  --caption-letter-spacing: 0;
+
+  --mobile-title-1-weight: 600;
+  --mobile-title-1-style: normal;
+  --mobile-title-1-size: 40px;
+  --mobile-title-1-line-height: 48px;
+  --mobile-title-1-letter-spacing: 0.01em;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Tablet (480px ~ 1020px): desktop typography applies until overrides are added */
+@media (max-width: var(--breakpoint-mobile)) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Typography — mobile (≤ 479px) */
+    --title-1-size: var(--mobile-title-1-size);
+    --title-1-line-height: var(--mobile-title-1-line-height);
+    --title-1-letter-spacing: var(--mobile-title-1-letter-spacing);
   }
 }
 
@@ -17,18 +90,25 @@ html {
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
 }
 
 body {
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: var(--p-size);
+  font-weight: var(--p-weight);
+  font-style: var(--p-style);
+  line-height: var(--p-line-height);
+  letter-spacing: var(--p-letter-spacing);
+  color: var(--black);
+  background: var(--white);
+  padding: 0 24px;
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  body {
+    padding: 0 10px;
+  }
 }
 
 * {
@@ -42,8 +122,126 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Text styles */
+.menu-en {
+  font-weight: var(--menu-en-weight);
+  font-style: var(--menu-en-style);
+  font-size: var(--menu-en-size);
+  line-height: var(--menu-en-line-height);
+  letter-spacing: var(--menu-en-letter-spacing);
+}
+
+.menu-kr {
+  font-weight: var(--menu-kr-weight);
+  font-style: var(--menu-kr-style);
+  font-size: var(--menu-kr-size);
+  line-height: var(--menu-kr-line-height);
+  letter-spacing: var(--menu-kr-letter-spacing);
+}
+
+.tag-category {
+  font-weight: var(--tag-category-weight);
+  font-style: var(--tag-category-style);
+  font-size: var(--tag-category-size);
+  line-height: var(--tag-category-line-height);
+  letter-spacing: var(--tag-category-letter-spacing);
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1.4px;
+  text-decoration-skip-ink: auto;
+  text-decoration-color: var(--crit-orange);
+}
+
+.tag-keyword {
+  font-weight: var(--tag-keyword-weight);
+  font-style: var(--tag-keyword-style);
+  font-size: var(--tag-keyword-size);
+  line-height: var(--tag-keyword-line-height);
+  letter-spacing: var(--tag-keyword-letter-spacing);
+}
+
+.thumb-title {
+  font-weight: var(--thumb-title-weight);
+  font-style: var(--thumb-title-style);
+  font-size: var(--thumb-title-size);
+  line-height: var(--thumb-title-line-height);
+  letter-spacing: var(--thumb-title-letter-spacing);
+}
+
+.title-1 {
+  font-weight: var(--title-1-weight);
+  font-style: var(--title-1-style);
+  font-size: var(--title-1-size);
+  line-height: var(--title-1-line-height);
+  letter-spacing: var(--title-1-letter-spacing);
+}
+
+.p {
+  font-weight: var(--p-weight);
+  font-style: var(--p-style);
+  font-size: var(--p-size);
+  line-height: var(--p-line-height);
+  letter-spacing: var(--p-letter-spacing);
+}
+
+.p-bold {
+  font-weight: var(--p-bold-weight);
+  font-style: var(--p-bold-style);
+  font-size: var(--p-size);
+  line-height: var(--p-line-height);
+  letter-spacing: var(--p-letter-spacing);
+}
+
+.footer {
+  font-weight: var(--footer-weight);
+  font-style: var(--footer-style);
+  font-size: var(--footer-size);
+  line-height: var(--footer-line-height);
+  letter-spacing: var(--footer-letter-spacing);
+}
+
+.caption {
+  font-weight: var(--caption-weight);
+  font-style: var(--caption-style);
+  font-size: var(--caption-size);
+  line-height: var(--caption-line-height);
+  letter-spacing: var(--caption-letter-spacing);
+}
+
+.mobile-title-1 {
+  font-weight: var(--mobile-title-1-weight);
+  font-style: var(--mobile-title-1-style);
+  font-size: var(--mobile-title-1-size);
+  line-height: var(--mobile-title-1-line-height);
+  letter-spacing: var(--mobile-title-1-letter-spacing);
+}
+
+/* Color utilities */
+.crit-orange {
+  color: var(--crit-orange);
+}
+
+.white {
+  color: var(--white);
+}
+
+.black {
+  color: var(--black);
+}
+
+.gray-65 {
+  color: var(--gray-65);
+}
+
+.bg-crit-orange {
+  background-color: var(--crit-orange);
+}
+
+.bg-white {
+  background-color: var(--white);
+}
+
+.bg-black {
+  background-color: var(--black);
 }

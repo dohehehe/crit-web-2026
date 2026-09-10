@@ -1,0 +1,21 @@
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  column-gap: 13px;
+  row-gap: 62px;
+  list-style: none;
+}
+
+.list>li {
+  min-width: 0;
+}
+
+.empty {
+  padding: 48px 0;
+}
+
+@media (max-width: 479px) {
+  .list {
+    grid-template-columns: 1fr;
+  }
+}
