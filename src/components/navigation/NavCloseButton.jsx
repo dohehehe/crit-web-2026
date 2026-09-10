@@ -27,7 +27,7 @@ export function NavCloseButton() {
       aria-label={isSearchOpen ? "검색 닫기" : "메뉴 닫기"}
       onClick={handleClose}
     >
-      <Image src="/close.svg" alt="Close" width={32} height={32} />
+      <Image src="/close.svg" alt="Close" width={35} height={35} />
     </button>
   );
 }

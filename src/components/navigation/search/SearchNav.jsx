@@ -36,7 +36,7 @@ export function SearchNav() {
         aria-controls="search-nav-content"
         onClick={openSearch}
       >
-        <Image src="/search.svg" alt="" width={26} height={26} aria-hidden />
+        <Image src="/search.svg" alt="" width={24} height={24} aria-hidden />
       </button>
     </form>
   );
