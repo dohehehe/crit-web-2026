@@ -122,9 +122,12 @@ function renderBlock(block, index, applyFootnotesToHtml) {
             className={styles.image}
           />
           {data?.caption ? (
-            <figcaption className={`caption ${styles.imageCaption}`}>
-              {data.caption}
-            </figcaption>
+            <figcaption
+              className={`caption ${styles.imageCaption}`}
+              dangerouslySetInnerHTML={{
+                __html: applyFootnotesToHtml(data.caption),
+              }}
+            />
           ) : null}
         </figure>
       );
@@ -138,14 +141,24 @@ function renderBlock(block, index, applyFootnotesToHtml) {
       }
 
       return (
-        <div key={index} className={styles.embed}>
-          <iframe
-            src={embedUrl}
-            title={data?.caption ?? "Embedded content"}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
+        <figure key={index} className={styles.embedBlock}>
+          <div className={styles.embed}>
+            <iframe
+              src={embedUrl}
+              title={data?.caption ?? "Embedded content"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+          {data?.caption ? (
+            <figcaption
+              className={`caption ${styles.embedCaption}`}
+              dangerouslySetInnerHTML={{
+                __html: applyFootnotesToHtml(data.caption),
+              }}
+            />
+          ) : null}
+        </figure>
       );
     }
 

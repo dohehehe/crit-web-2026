@@ -47,10 +47,19 @@
   margin-top: 8px;
 }
 
+.embedBlock {
+  margin: 0;
+}
+
 .embed {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
+}
+
+.embedCaption {
+  display: block;
+  margin-top: 8px;
 }
 
 .embed iframe {

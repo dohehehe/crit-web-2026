@@ -7,7 +7,10 @@ import {
   useRef,
 } from "react";
 import { useImageUpload } from "@/hooks/useImageUpload";
-import { loadFootnotesTune } from "@/lib/editorjs/footnotesTune";
+import {
+  loadFootnotesTune,
+  scheduleGlobalFootnoteRenumber,
+} from "@/lib/editorjs/footnotesTune";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 
@@ -72,14 +75,11 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
         editor = new EditorJS({
           holder: holderId,
           placeholder: "내용을 입력하세요...",
+          tunes: ["footnotes"],
           tools: {
-            paragraph: {
-              tunes: ["footnotes"],
-            },
             header: {
               class: Header,
               inlineToolbar: ["link", "bold", "italic"],
-              tunes: ["footnotes"],
               config: {
                 placeholder: "제목을 입력하세요",
                 levels: [2, 3, 4],
@@ -90,7 +90,6 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               class: Quote,
               inlineToolbar: true,
               shortcut: 'CMD+SHIFT+O',
-              tunes: ["footnotes"],
               config: {
                 quotePlaceholder: '인용문을 입력하세요',
                 captionPlaceholder: 'Quote\'s author',
@@ -99,7 +98,6 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             list: {
               class: List,
               inlineToolbar: ["link", "bold", "italic"],
-              tunes: ["footnotes"],
               config: {
                 defaultStyle: "ordered",
                 maxLevel: 4,
@@ -163,6 +161,16 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           },
           inlineToolbar: ["link", "bold", "italic"],
           data: normalizeEditorData(initialDataRef.current),
+          onChange: (_api, event) => {
+            const events = Array.isArray(event) ? event : [event];
+            const shouldRenumber = events.some(({ type }) =>
+              ["block-moved", "block-added", "block-removed"].includes(type),
+            );
+
+            if (shouldRenumber) {
+              scheduleGlobalFootnoteRenumber();
+            }
+          },
         });
 
         await editor.isReady;

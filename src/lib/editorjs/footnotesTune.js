@@ -2,6 +2,86 @@ const FOOTNOTE_ICON = `<svg width="16" height="16" viewBox="0 0 400 400" xmlns="
 
 const FOOTNOTE_SELECTOR = 'sup[data-tune="footnotes"]';
 
+const activeFootnotesTunes = new Set();
+let isRenumberingFootnotes = false;
+let renumberFootnotesScheduled = false;
+
+function compareDomOrder(leftNode, rightNode) {
+  if (!leftNode || !rightNode) {
+    return 0;
+  }
+
+  const position = leftNode.compareDocumentPosition(rightNode);
+
+  if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+    return -1;
+  }
+
+  if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function getSortedFootnotesTunes() {
+  return [...activeFootnotesTunes].sort((left, right) =>
+    compareDomOrder(left.wrapper, right.wrapper),
+  );
+}
+
+export function renumberAllFootnotes() {
+  if (isRenumberingFootnotes) {
+    return;
+  }
+
+  isRenumberingFootnotes = true;
+
+  try {
+    let displayNumber = 0;
+
+    getSortedFootnotesTunes().forEach((tune) => {
+      tune.syncNotesFromDom();
+
+      getFootnoteElements(tune.wrapper).forEach((sup) => {
+        const note = tune.notes.find((entry) => entry.node === sup);
+
+        if (!note) {
+          return;
+        }
+
+        displayNumber += 1;
+        note.index = displayNumber;
+      });
+    });
+  } finally {
+    isRenumberingFootnotes = false;
+  }
+}
+
+export function scheduleGlobalFootnoteRenumber() {
+  if (renumberFootnotesScheduled) {
+    return;
+  }
+
+  renumberFootnotesScheduled = true;
+
+  requestAnimationFrame(() => {
+    renumberFootnotesScheduled = false;
+    renumberAllFootnotes();
+  });
+}
+
+function registerFootnotesTune(tune) {
+  activeFootnotesTunes.add(tune);
+  scheduleGlobalFootnoteRenumber();
+}
+
+function unregisterFootnotesTune(tune) {
+  activeFootnotesTunes.delete(tune);
+  scheduleGlobalFootnoteRenumber();
+}
+
 function getRangeInWrapper(wrapper) {
   const selection = window.getSelection();
 
@@ -80,6 +160,7 @@ export async function loadFootnotesTune() {
   class FootnotesTune extends BaseFootnotesTune {
     constructor(...args) {
       super(...args);
+      this.block = args[0]?.block;
       this.notes = [];
       this.lastInsertRange = null;
       this.menuInsertRange = null;
@@ -137,6 +218,7 @@ export async function loadFootnotesTune() {
       this.notes = detachNotesFromStaticPool(BaseFootnotesTune, this.wrapper);
       this.syncNotesFromDom();
       this.bindSelectionCapture();
+      registerFootnotesTune(this);
       return wrapped;
     }
 
@@ -159,13 +241,7 @@ export async function loadFootnotesTune() {
     }
 
     updateIndices() {
-      getFootnoteElements(this.wrapper).forEach((sup, index) => {
-        const note = this.notes.find((entry) => entry.node === sup);
-
-        if (note) {
-          note.index = index + 1;
-        }
-      });
+      scheduleGlobalFootnoteRenumber();
     }
 
     contentDidMutated(mutationsList) {
@@ -202,6 +278,7 @@ export async function loadFootnotesTune() {
       super.destroy?.();
       this.observer?.disconnect();
       this.unbindSelectionCapture();
+      unregisterFootnotesTune(this);
 
       if (Array.isArray(BaseFootnotesTune.notes)) {
         BaseFootnotesTune.notes = BaseFootnotesTune.notes.filter(
