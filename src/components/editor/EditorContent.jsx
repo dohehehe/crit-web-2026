@@ -1,5 +1,7 @@
 import Image from "next/image";
+import { GallerySlider } from "@/components/editor/GallerySlider";
 import { createFootnoteContext } from "@/lib/editorjs/footnotes";
+import { getGallerySlides } from "@/lib/editorjs/gallery";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import styles from "./EditorContent.module.css";
 
@@ -130,6 +132,31 @@ function renderBlock(block, index, applyFootnotesToHtml) {
             />
           ) : null}
         </figure>
+      );
+    }
+
+    case "gallery": {
+      const slides = getGallerySlides(data).map((slide) => ({
+        url: slide.url,
+        captionHtml: slide.caption
+          ? applyFootnotesToHtml(slide.caption)
+          : "",
+      }));
+
+      if (slides.length === 0) {
+        return null;
+      }
+
+      const blockCaptionHtml = data?.caption
+        ? applyFootnotesToHtml(data.caption)
+        : "";
+
+      return (
+        <GallerySlider
+          key={index}
+          slides={slides}
+          blockCaptionHtml={blockCaptionHtml}
+        />
       );
     }
 

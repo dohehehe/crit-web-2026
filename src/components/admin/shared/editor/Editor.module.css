@@ -33,6 +33,28 @@
   text-decoration: none;
 }
 
+.wrapper :global(.image-gallery__item) {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wrapper :global(.image-gallery__item-caption) {
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  min-height: 28px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e8e8eb;
+}
+
+.wrapper :global(.image-gallery__item-caption[contenteditable="true"]:empty::before) {
+  content: attr(data-placeholder);
+  color: #707684;
+  pointer-events: none;
+}
+
 .loading {
   min-height: 300px;
   padding: 20px;
