@@ -63,7 +63,7 @@ export function JournalCritView({ issue, posts, previousIssues = [] }) {
 
       {previousIssues.length ? (
         <aside className={styles.aside} aria-label="지난 이슈">
-          <h3 className={`menu-en ${styles.asideTitle}`}>Past Issue</h3>
+          <h3 className={`menu-en ${styles.asideHeading}`}>Past Issue</h3>
           <ol className={styles.asideList}>
             {previousIssues.map((pastIssue) => (
               <li key={pastIssue.id} className={styles.asideItem}>
@@ -72,13 +72,13 @@ export function JournalCritView({ issue, posts, previousIssues = [] }) {
                     <span className={`${styles.asideIssueNumber} tag-keyword`}>Issue {pastIssue.issueNumber}</span>
                   ) : null}
                   {pastIssue.title ? (
-                    <span className={`${styles.asideTitle} thumb-title`}>{pastIssue.title}</span>
+                    <span className={`${styles.asideIssueTitle} thumb-title`}>{pastIssue.title}</span>
                   ) : null}
                 </Link>
               </li>
             ))}
           </ol>
-          <div />
+          <div aria-hidden="true" />
         </aside>
       ) : null}
     </>
