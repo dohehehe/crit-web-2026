@@ -9,7 +9,7 @@
 }
 
 .wrapper :global(.image-tool) {
-  width: 40% !important;
+  /* width: 40% !important; */
 }
 
 .wrapper :global(.image-tool__caption) {
