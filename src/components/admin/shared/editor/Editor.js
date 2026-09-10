@@ -14,6 +14,8 @@ import {
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 
+const INLINE_TOOLS = ["link", "bold", "italic", "underline", "marker"];
+
 const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) {
   const editorInstanceRef = useRef(null);
   const initialDataRef = useRef(data);
@@ -56,7 +58,9 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           { default: Header },
           { default: ImageTool },
           { default: List },
+          { default: Marker },
           { default: Quote },
+          { default: Underline },
           FootnotesTune,
         ] = await Promise.all([
           import("@editorjs/editorjs"),
@@ -64,7 +68,9 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           import("@editorjs/header"),
           import("@editorjs/image"),
           import("@editorjs/list"),
+          import("@editorjs/marker"),
           import("@editorjs/quote"),
+          import("@editorjs/underline"),
           loadFootnotesTune(),
         ]);
 
@@ -79,7 +85,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           tools: {
             header: {
               class: Header,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 placeholder: "제목을 입력하세요",
                 levels: [2, 3, 4],
@@ -97,7 +103,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             list: {
               class: List,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 defaultStyle: "ordered",
                 maxLevel: 4,
@@ -110,9 +116,11 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
                 shortcut: "CMD+SHIFT+F",
               },
             },
+            underline: Underline,
+            marker: Marker,
             embed: {
               class: Embed,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 services: {
                   youtube: true,
@@ -121,7 +129,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             image: {
               class: ImageTool,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 captionPlaceholder: "이미지 설명을 입력하세요",
                 buttonContent: "이미지 선택",
@@ -159,7 +167,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               },
             },
           },
-          inlineToolbar: ["link", "bold", "italic"],
+          inlineToolbar: INLINE_TOOLS,
           data: normalizeEditorData(initialDataRef.current),
           onChange: (_api, event) => {
             const events = Array.isArray(event) ? event : [event];

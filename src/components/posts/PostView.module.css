@@ -29,6 +29,7 @@
   display: flex;
   flex-direction: column;
   margin-top: 16px;
+  margin-bottom: 60px;
 }
 
 .title {
@@ -44,14 +45,12 @@
 
 .infoContainer {
   display: flex;
-  gap: 6px;
+  gap: 10px;
 }
 
 .author {
   margin: 0;
 }
-
-
 
 .contents {
   margin-bottom: 56px;

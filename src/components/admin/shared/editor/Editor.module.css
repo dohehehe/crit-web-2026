@@ -23,14 +23,7 @@
 .wrapper :global(i) {
   position: relative;
   display: inline-block;
-  text-decoration-style: dotted;
-  text-decoration-color: black;
-  text-decoration-thickness: 1.5px;
-  text-decoration-line: underline;
-  text-underline-position: under;
-  text-underline-offset: 2px;
-  line-height: 2.1;
-  font-style: normal;
+  font-style: italic;
 }
 
 .wrapper :global(a) {

@@ -9,7 +9,7 @@ function DocumentFootnotes({ footnotes }) {
   }
 
   return (
-    <aside className={styles.footnotesSection}>
+    <aside className={`${styles.footnotesSection} caption black`}>
       {footnotes.map((note) => (
         <p key={note.footnoteId} id={note.footnoteId} className={styles.footnoteItem}>
           <sup className={styles.footnoteMarker}>{note.superscript}</sup>
@@ -99,7 +99,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
             }}
           />
           {data?.caption ? (
-            <cite className={`caption ${styles.quoteCaption}`}>{data.caption}</cite>
+            <cite className={`p ${styles.quoteCaption}`}>— {data.caption}</cite>
           ) : null}
         </blockquote>
       );
