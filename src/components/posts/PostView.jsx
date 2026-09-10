@@ -13,35 +13,36 @@ export function PostView({ post }) {
 
   return (
     <article className={styles.article}>
-      <header className={styles.header}>
-        {backLink?.href ? (
-          <Link href={backLink.href} className={`${styles.backLink} menu-EN`}>
-            {backLink.label}
-          </Link>
-        ) : null}
-        {post.title ? <h1 className={`title-1 ${styles.title}`}>{post.title}</h1> : null}
-        {post.subtitle ? <p className={`p ${styles.subtitle}`}>{post.subtitle}</p> : null}
-        {post.author?.name ? (
-          <p className={`caption gray-65 ${styles.author}`}>{post.author.name}</p>
-        ) : null}
-      </header>
-
       {post.thumbnailImg ? (
-        <section className={styles.media}>
+        <section className={styles.thumbnailSection}>
           <div className={styles.thumbnail}>
             <Image
               src={post.thumbnailImg}
               alt={post.title ?? ""}
               width={0}
               height={0}
-              sizes="(max-width: 500px) 100vw, 500px"
+              sizes="100vw"
               className={styles.thumbnailImage}
-              style={{ width: "100%", height: "auto" }}
               priority
             />
           </div>
         </section>
       ) : null}
+
+      <header className={styles.header}>
+        {post.title ? <h1 className={`title-1 ${styles.title}`}>{post.title}</h1> : null}
+        {post.subtitle ? <h2 className={`thumb-title ${styles.subtitle}`}>{post.subtitle}</h2> : null}
+        <div className={styles.infoContainer}>
+          {post.author?.name ? (
+            <p className={`tag-keyword black ${styles.author}`}>{post.author.name}</p>
+          ) : null}
+          {post.date ? (
+            <p className={`tag-keyword gray-65 ${styles.date}`}>{post.date}</p>
+          ) : null}
+        </div>
+      </header>
+
+
 
       {post.content ? (
         <section className={styles.contents}>
