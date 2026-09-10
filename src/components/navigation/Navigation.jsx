@@ -13,6 +13,7 @@ export function Navigation() {
           alt="CRIT"
           width={400}
           height={129}
+          className={styles.logo}
           priority
         />
         <NavigationContainer>

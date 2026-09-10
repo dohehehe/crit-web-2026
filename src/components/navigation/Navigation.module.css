@@ -3,13 +3,19 @@
 .header {
   display: flex;
   flex-direction: column;
-  padding: 0px 24px;
+  padding: 6px 24px;
   width: 100vw;
-  position: fixed;
-  top: 0px;
-  left: 0;
+  position: sticky;
+  top: -140px;
+  margin-left: -24px;
   z-index: 100;
   background: var(--white);
+  box-shadow: 0 0 10px 10px green;
+  gap: 6px;
+}
+
+.logo {
+  height: auto;
 }
 
 .navContainer {
@@ -48,9 +54,15 @@
   cursor: pointer;
 }
 
+.closeButtonSearchOpen {
+  display: inline-flex;
+}
+
 @media (max-width: var(--breakpoint-tablet)) {
   .header {
-    padding: 0px 10px;
+    margin-left: -10px;
+
+    padding: 6px 10px;
   }
 
   .navContainer {
@@ -104,6 +116,19 @@
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
+  .header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin-left: 0;
+    background: none;
+    flex-direction: row;
+  }
+
+  .logo {
+    width: 186px;
+  }
+
   .navContainer {
     position: fixed;
     top: 0;
