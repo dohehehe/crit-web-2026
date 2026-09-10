@@ -1,0 +1,14 @@
+@import "../breakpoints.css";
+
+.main {
+  padding: 0 24px;
+}
+
+.journal {}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .main {
+    padding: 0 10px;
+    padding-top: 72px;
+  }
+}

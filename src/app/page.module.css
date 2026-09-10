@@ -1,3 +1,11 @@
+@import "./breakpoints.css";
+
 .main {
-  /* padding: 24px 0 80px; */
+  padding: 0 24px;
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding: 0 10px;
+  }
 }

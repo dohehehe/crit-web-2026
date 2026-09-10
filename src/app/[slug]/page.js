@@ -29,13 +29,13 @@ export default async function SectionPage({ params }) {
   }
 
   const sectionMode = getSectionMode(section);
+
   const posts = await getPostsBySection(section.id, {
     orderBy: sectionUsesIssuePostSortOrder(sectionMode) ? "sort_order" : "date",
   });
 
   return (
     <main className={styles.main}>
-      <h1 className={`title-1 ${styles.heading}`}>{section.name ?? section.slug}</h1>
       <PostList posts={posts} />
     </main>
   );

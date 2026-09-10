@@ -7,6 +7,22 @@ export const POST_LIST_SELECT = `
   sort_order,
   categories ( id, name, slug ),
   sections ( id, name, slug ),
+  issues ( issue_number ),
+  post_keywords ( keywords ( id, name, slug ) )
+`;
+
+export const POST_DETAIL_SELECT = `
+  id,
+  title,
+  subtitle,
+  slug,
+  content,
+  thumnail_img,
+  date,
+  categories ( id, name, slug ),
+  sections ( id, name, slug ),
+  issues ( issue_number ),
+  authors ( id, name ),
   post_keywords ( keywords ( id, name, slug ) )
 `;
 

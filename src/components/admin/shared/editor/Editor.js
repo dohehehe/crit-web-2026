@@ -7,8 +7,16 @@ import {
   useRef,
 } from "react";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { createEditorImageUploader } from "@/lib/editorjs/createEditorImageUploader";
+import { loadGalleryTool } from "@/lib/editorjs/galleryTool";
+import {
+  loadFootnotesTune,
+  scheduleGlobalFootnoteRenumber,
+} from "@/lib/editorjs/footnotesTune";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
+
+const INLINE_TOOLS = ["link", "bold", "italic", "underline", "marker"];
 
 const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) {
   const editorInstanceRef = useRef(null);
@@ -52,27 +60,57 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           { default: Header },
           { default: ImageTool },
           { default: List },
+          { default: Marker },
           { default: Quote },
+          { default: Sortable },
+          { default: Underline },
+          FootnotesTune,
+          GalleryTool,
         ] = await Promise.all([
           import("@editorjs/editorjs"),
           import("@editorjs/embed"),
           import("@editorjs/header"),
           import("@editorjs/image"),
           import("@editorjs/list"),
+          import("@editorjs/marker"),
           import("@editorjs/quote"),
+          import("sortablejs"),
+          import("@editorjs/underline"),
+          loadFootnotesTune(),
+          loadGalleryTool(),
         ]);
 
         if (cancelled) {
           return;
         }
 
+        const imageUploader = createEditorImageUploader((file) =>
+          uploadImageRef.current(file),
+        );
+
         editor = new EditorJS({
           holder: holderId,
           placeholder: "내용을 입력하세요...",
+          tunes: ["footnotes"],
+          i18n: {
+            messages: {
+              toolNames: {
+                Image: "단독 이미지",
+                Gallery: "이미지 슬라이더",
+              },
+              tools: {
+                gallery: {
+                  "Select an Image": "슬라이더 이미지 추가",
+                  "Gallery caption": "슬라이더 설명",
+                  "Image caption": "이미지 설명",
+                },
+              },
+            },
+          },
           tools: {
             header: {
               class: Header,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 placeholder: "제목을 입력하세요",
                 levels: [2, 3, 4],
@@ -90,15 +128,24 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             list: {
               class: List,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 defaultStyle: "ordered",
                 maxLevel: 4,
               },
             },
+            footnotes: {
+              class: FootnotesTune,
+              config: {
+                placeholder: "각주 내용을 입력하세요",
+                shortcut: "CMD+SHIFT+F",
+              },
+            },
+            underline: Underline,
+            marker: Marker,
             embed: {
               class: Embed,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 services: {
                   youtube: true,
@@ -107,46 +154,40 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             image: {
               class: ImageTool,
-              inlineToolbar: ["link", "bold", "italic"],
+              inlineToolbar: INLINE_TOOLS,
               config: {
                 captionPlaceholder: "이미지 설명을 입력하세요",
-                buttonContent: "이미지 선택",
+                buttonContent: "단독 이미지 선택",
                 features: {
                   border: false,
                   caption: true,
                   background: false,
                 },
-                uploader: {
-                  uploadByFile: async (file) => {
-                    try {
-                      const result = await uploadImageRef.current(file);
-
-                      if (result?.success && result?.file?.url) {
-                        return {
-                          success: 1,
-                          file: {
-                            url: result.file.url,
-                            width: result.file.width,
-                            height: result.file.height,
-                          },
-                        };
-                      }
-
-                      return {
-                        success: 0,
-                        error: result?.error || "업로드 실패",
-                      };
-                    } catch (error) {
-                      console.error("Editor 이미지 업로드 에러:", error);
-                      return { success: 0, error: error.message };
-                    }
-                  },
-                },
+                uploader: imageUploader,
+              },
+            },
+            gallery: {
+              class: GalleryTool,
+              inlineToolbar: INLINE_TOOLS,
+              config: {
+                sortableJs: Sortable,
+                buttonContent: "슬라이더 이미지 추가",
+                uploader: imageUploader,
               },
             },
           },
-          inlineToolbar: ["link", "bold", "italic"],
+          inlineToolbar: INLINE_TOOLS,
           data: normalizeEditorData(initialDataRef.current),
+          onChange: (_api, event) => {
+            const events = Array.isArray(event) ? event : [event];
+            const shouldRenumber = events.some(({ type }) =>
+              ["block-moved", "block-added", "block-removed"].includes(type),
+            );
+
+            if (shouldRenumber) {
+              scheduleGlobalFootnoteRenumber();
+            }
+          },
         });
 
         await editor.isReady;

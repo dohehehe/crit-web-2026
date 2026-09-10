@@ -8,11 +8,16 @@
   width: 100vw;
   position: sticky;
   top: -145px;
-  margin-left: -24px;
   z-index: 100;
   background: var(--white);
+  transition: background-color 0.4s ease;
   /* box-shadow: 0 0 10px 10px green; */
   gap: 6px;
+}
+
+.headerJournal {
+  background: var(--crit-orange);
+  top: var(--header-sticky-top, -145px);
 }
 
 .logoLink {
@@ -20,8 +25,42 @@
   line-height: 0;
 }
 
+.logoStack {
+  position: relative;
+  display: block;
+}
+
 .logo {
   height: auto;
+}
+
+.logoDefault,
+.logoJournal {
+  transition: opacity 0.7s ease;
+}
+
+.logoVisible {
+  opacity: 1;
+  position: relative;
+}
+
+.logoHidden {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.logoLinkJournal {
+  display: block;
+  width: 100%;
+}
+
+.logoJournal {
+  width: 100%;
+  height: auto;
+  padding-top: 12px;
 }
 
 .navContainer {
@@ -66,7 +105,6 @@
 
 @media (max-width: var(--breakpoint-tablet)) {
   .header {
-    margin-left: -10px;
     padding: 7px 10px;
     padding-bottom: 0px;
   }
@@ -132,6 +170,10 @@
     background: none;
     flex-direction: row;
     padding-bottom: 0px;
+  }
+
+  .headerJournal {
+    background: var(--crit-orange);
   }
 
   .logo {
