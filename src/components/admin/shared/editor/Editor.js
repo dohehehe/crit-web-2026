@@ -7,6 +7,7 @@ import {
   useRef,
 } from "react";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { loadFootnotesTune } from "@/lib/editorjs/footnotesTune";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 
@@ -53,6 +54,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           { default: ImageTool },
           { default: List },
           { default: Quote },
+          FootnotesTune,
         ] = await Promise.all([
           import("@editorjs/editorjs"),
           import("@editorjs/embed"),
@@ -60,6 +62,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           import("@editorjs/image"),
           import("@editorjs/list"),
           import("@editorjs/quote"),
+          loadFootnotesTune(),
         ]);
 
         if (cancelled) {
@@ -70,9 +73,13 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           holder: holderId,
           placeholder: "내용을 입력하세요...",
           tools: {
+            paragraph: {
+              tunes: ["footnotes"],
+            },
             header: {
               class: Header,
               inlineToolbar: ["link", "bold", "italic"],
+              tunes: ["footnotes"],
               config: {
                 placeholder: "제목을 입력하세요",
                 levels: [2, 3, 4],
@@ -83,6 +90,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               class: Quote,
               inlineToolbar: true,
               shortcut: 'CMD+SHIFT+O',
+              tunes: ["footnotes"],
               config: {
                 quotePlaceholder: '인용문을 입력하세요',
                 captionPlaceholder: 'Quote\'s author',
@@ -91,9 +99,17 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             list: {
               class: List,
               inlineToolbar: ["link", "bold", "italic"],
+              tunes: ["footnotes"],
               config: {
                 defaultStyle: "ordered",
                 maxLevel: 4,
+              },
+            },
+            footnotes: {
+              class: FootnotesTune,
+              config: {
+                placeholder: "각주 내용을 입력하세요",
+                shortcut: "CMD+SHIFT+F",
               },
             },
             embed: {

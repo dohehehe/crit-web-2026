@@ -1,8 +1,26 @@
 import Image from "next/image";
+import { createFootnoteContext } from "@/lib/editorjs/footnotes";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import styles from "./EditorContent.module.css";
 
-function renderListItems(items, ordered) {
+function DocumentFootnotes({ footnotes }) {
+  if (!footnotes?.length) {
+    return null;
+  }
+
+  return (
+    <aside className={styles.footnotesSection}>
+      {footnotes.map((note) => (
+        <p key={note.footnoteId} id={note.footnoteId} className={styles.footnoteItem}>
+          <sup className={styles.footnoteMarker}>{note.superscript}</sup>
+          <span dangerouslySetInnerHTML={{ __html: note.content }} />
+        </p>
+      ))}
+    </aside>
+  );
+}
+
+function renderListItems(items, ordered, applyFootnotesToHtml) {
   if (!items?.length) {
     return null;
   }
@@ -13,13 +31,16 @@ function renderListItems(items, ordered) {
     <ListTag className={styles.list}>
       {items.map((item, index) => {
         const content = typeof item === "string" ? item : item.content;
+        const processedContent = content ? applyFootnotesToHtml(content) : "";
 
         return (
           <li key={index}>
-            {content ? (
-              <span dangerouslySetInnerHTML={{ __html: content }} />
+            {processedContent ? (
+              <span dangerouslySetInnerHTML={{ __html: processedContent }} />
             ) : null}
-            {item?.items?.length ? renderListItems(item.items, ordered) : null}
+            {item?.items?.length
+              ? renderListItems(item.items, ordered, applyFootnotesToHtml)
+              : null}
           </li>
         );
       })}
@@ -27,7 +48,7 @@ function renderListItems(items, ordered) {
   );
 }
 
-function renderBlock(block, index) {
+function renderBlock(block, index, applyFootnotesToHtml) {
   const { type, data } = block;
 
   switch (type) {
@@ -39,7 +60,9 @@ function renderBlock(block, index) {
         <Tag
           key={index}
           className={styles.header}
-          dangerouslySetInnerHTML={{ __html: data?.text ?? "" }}
+          dangerouslySetInnerHTML={{
+            __html: applyFootnotesToHtml(data?.text ?? ""),
+          }}
         />
       );
     }
@@ -49,14 +72,20 @@ function renderBlock(block, index) {
         <p
           key={index}
           className={`p ${styles.paragraph}`}
-          dangerouslySetInnerHTML={{ __html: data?.text ?? "" }}
+          dangerouslySetInnerHTML={{
+            __html: applyFootnotesToHtml(data?.text ?? ""),
+          }}
         />
       );
 
     case "list":
       return (
         <div key={index} className={styles.listBlock}>
-          {renderListItems(data?.items, data?.style === "ordered")}
+          {renderListItems(
+            data?.items,
+            data?.style === "ordered",
+            applyFootnotesToHtml,
+          )}
         </div>
       );
 
@@ -65,7 +94,9 @@ function renderBlock(block, index) {
         <blockquote key={index} className={styles.quote}>
           <p
             className="p"
-            dangerouslySetInnerHTML={{ __html: data?.text ?? "" }}
+            dangerouslySetInnerHTML={{
+              __html: applyFootnotesToHtml(data?.text ?? ""),
+            }}
           />
           {data?.caption ? (
             <cite className={`caption ${styles.quoteCaption}`}>{data.caption}</cite>
@@ -133,5 +164,14 @@ export function EditorContent({ contents }) {
     return null;
   }
 
-  return <div className={styles.content}>{blocks.map(renderBlock)}</div>;
+  const footnoteContext = createFootnoteContext(blocks);
+
+  return (
+    <div className={styles.content}>
+      {blocks.map((block, index) =>
+        renderBlock(block, index, footnoteContext.applyToHtml),
+      )}
+      <DocumentFootnotes footnotes={footnoteContext.entries} />
+    </div>
+  );
 }

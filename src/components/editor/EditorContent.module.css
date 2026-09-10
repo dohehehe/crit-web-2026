@@ -66,3 +66,36 @@
   border-top: 1px solid var(--gray-65);
   opacity: 0.35;
 }
+
+.footnotesSection {
+  margin: 12px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-65);
+  opacity: 0.85;
+}
+
+.footnoteItem {
+  margin: 0;
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+
+.footnoteMarker {
+  margin-right: 0.35em;
+}
+
+.content :global(.footnote-ref) {
+  font-size: 0.75em;
+  line-height: 0;
+  vertical-align: super;
+}
+
+.content :global(.footnote-ref a) {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.content :global(.footnote-ref a:hover) {
+  text-decoration: underline;
+}
