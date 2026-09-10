@@ -1,0 +1,15 @@
+@import "../breakpoints.css";
+
+.shell {
+  position: relative;
+  z-index: 101;
+  margin-top: -180px;
+  min-height: 100vh;
+  background: var(--white);
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .shell {
+    margin-top: -52px;
+  }
+}

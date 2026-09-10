@@ -1,4 +1,5 @@
 import { AdminNav } from "@/components/admin/layout/admin-nav";
+import styles from "@/app/admin/admin-layout.module.css";
 
 export const metadata = {
   title: {
@@ -9,9 +10,9 @@ export const metadata = {
 
 export default function AdminLayout({ children }) {
   return (
-    <>
+    <div className={styles.shell}>
       <AdminNav />
       {children}
-    </>
+    </div>
   );
 }

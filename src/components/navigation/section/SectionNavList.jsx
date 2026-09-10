@@ -58,7 +58,9 @@ export function SectionNavList({ sections }) {
         ) : null}
         {sections.map((section) => {
           const href = getSectionHref(section);
-          const isActive = pathname === href;
+          const isActive =
+            pathname === href ||
+            (href === "/journal-crit" && pathname.startsWith("/journal-crit/"));
           const useKorean = isActive || hoveredHref === href;
 
           return (

@@ -9,7 +9,7 @@
 }
 
 .wrapper :global(.image-tool) {
-  width: 40% !important;
+  /* width: 40% !important; */
 }
 
 .wrapper :global(.image-tool__caption) {
@@ -23,14 +23,7 @@
 .wrapper :global(i) {
   position: relative;
   display: inline-block;
-  text-decoration-style: dotted;
-  text-decoration-color: black;
-  text-decoration-thickness: 1.5px;
-  text-decoration-line: underline;
-  text-underline-position: under;
-  text-underline-offset: 2px;
-  line-height: 2.1;
-  font-style: normal;
+  font-style: italic;
 }
 
 .wrapper :global(a) {
@@ -38,6 +31,51 @@
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
+}
+
+.wrapper :global(.image-gallery__item) {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wrapper :global(.image-gallery__item-caption) {
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  min-height: 28px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e8e8eb;
+}
+
+.wrapper :global(.image-gallery__item:first-child .image-gallery__item-caption) {
+  padding-left: 10px;
+}
+
+.wrapper :global(.image-gallery__item-caption[contenteditable="true"]:empty::before) {
+  content: attr(data-placeholder);
+  color: #707684;
+  pointer-events: none;
+}
+
+.wrapper :global(.image-gallery__caption[contenteditable="true"]) {
+  min-height: 28px;
+}
+
+.wrapper :global(.image-gallery__item-caption .cdx-underline),
+.wrapper :global(.image-gallery__caption .cdx-underline) {
+  text-decoration: underline;
+  text-decoration-color: rgb(43, 143, 249);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-style: dotted;
+}
+
+.wrapper :global(.image-gallery__item-caption .cdx-marker),
+.wrapper :global(.image-gallery__caption .cdx-marker) {
+  color: rgb(43, 143, 249);
+  background: none;
 }
 
 .loading {

@@ -101,13 +101,18 @@ body {
   line-height: var(--p-line-height);
   letter-spacing: var(--p-letter-spacing);
   color: var(--black);
-  background: var(--white);
-  padding: 0 24px;
+  background-color: var(--white);
+  transition: background-color 0.4s ease;
+  /* padding: 0 24px; */
+}
+
+body.bodyJournalCrit {
+  background-color: var(--crit-orange);
 }
 
 @media (max-width: var(--breakpoint-tablet)) {
   body {
-    padding: 0 10px;
+    /* padding: 0 10px; */
   }
 }
 
