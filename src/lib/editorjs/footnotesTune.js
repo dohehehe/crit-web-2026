@@ -18,6 +18,37 @@ function getRangeInWrapper(wrapper) {
   return range;
 }
 
+function isRangeInWrapper(wrapper, range) {
+  if (!wrapper || !range) {
+    return false;
+  }
+
+  try {
+    return wrapper.contains(range.startContainer);
+  } catch {
+    return false;
+  }
+}
+
+function clearWindowSelection() {
+  window.getSelection()?.removeAllRanges();
+}
+
+function applyRange(range) {
+  if (!range) {
+    return;
+  }
+
+  const selection = window.getSelection();
+
+  if (!selection) {
+    return;
+  }
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+
 function getFootnoteElements(wrapper) {
   return Array.from(wrapper.querySelectorAll(FOOTNOTE_SELECTOR));
 }
@@ -50,6 +81,54 @@ export async function loadFootnotesTune() {
     constructor(...args) {
       super(...args);
       this.notes = [];
+      this.lastInsertRange = null;
+      this.menuInsertRange = null;
+      this.handleSelectionCapture = null;
+    }
+
+    rememberSelectionRange() {
+      const range = getRangeInWrapper(this.wrapper);
+
+      if (range) {
+        this.lastInsertRange = range.cloneRange();
+      }
+    }
+
+    bindSelectionCapture() {
+      if (this.handleSelectionCapture) {
+        return;
+      }
+
+      this.handleSelectionCapture = () => {
+        this.rememberSelectionRange();
+      };
+
+      this.wrapper.addEventListener("mouseup", this.handleSelectionCapture);
+      this.wrapper.addEventListener("keyup", this.handleSelectionCapture);
+    }
+
+    unbindSelectionCapture() {
+      if (!this.handleSelectionCapture) {
+        return;
+      }
+
+      this.wrapper.removeEventListener("mouseup", this.handleSelectionCapture);
+      this.wrapper.removeEventListener("keyup", this.handleSelectionCapture);
+      this.handleSelectionCapture = null;
+    }
+
+    resolveInsertRange() {
+      this.api.selection.restore();
+
+      let range = getRangeInWrapper(this.wrapper);
+
+      if (!range && isRangeInWrapper(this.wrapper, this.lastInsertRange)) {
+        range = this.lastInsertRange;
+      }
+
+      clearWindowSelection();
+
+      return range ? range.cloneRange() : null;
     }
 
     wrap(pluginsContent) {
@@ -57,6 +136,7 @@ export async function loadFootnotesTune() {
       const wrapped = super.wrap(pluginsContent);
       this.notes = detachNotesFromStaticPool(BaseFootnotesTune, this.wrapper);
       this.syncNotesFromDom();
+      this.bindSelectionCapture();
       return wrapped;
     }
 
@@ -121,6 +201,7 @@ export async function loadFootnotesTune() {
     destroy() {
       super.destroy?.();
       this.observer?.disconnect();
+      this.unbindSelectionCapture();
 
       if (Array.isArray(BaseFootnotesTune.notes)) {
         BaseFootnotesTune.notes = BaseFootnotesTune.notes.filter(
@@ -129,23 +210,26 @@ export async function loadFootnotesTune() {
       }
 
       this.notes = [];
+      this.lastInsertRange = null;
+      this.menuInsertRange = null;
     }
 
     render() {
+      this.menuInsertRange = this.resolveInsertRange();
+
       return {
         icon: FOOTNOTE_ICON,
         title: this.api.i18n.t("Footnote"),
         name: "footnotes",
         closeOnActivate: false,
+        isDisabled: !this.menuInsertRange,
         onActivate: () => {
-          this.api.selection.restore();
-
-          const range = getRangeInWrapper(this.wrapper);
-
-          if (!range) {
+          if (!this.menuInsertRange) {
             return;
           }
 
+          const range = this.menuInsertRange.cloneRange();
+          applyRange(range);
           this.onClick(range.cloneRange());
         },
       };
