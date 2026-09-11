@@ -50,7 +50,10 @@ export default async function JournalCritIssuePage({ params }) {
     : [];
 
   return (
-    <main className={styles.main}>
+    <main
+      className={`${styles.main} ${styles.mainOrange}`}
+      data-journal-issue
+    >
       <JournalCritView issue={issue} posts={posts} previousIssues={previousIssues} />
     </main>
   );

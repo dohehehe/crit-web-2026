@@ -51,13 +51,13 @@ export function JournalCritView({ issue, posts, previousIssues = [] }) {
 
         {posts?.length ? (
           <section className={styles.posts} aria-label="이슈 게시물">
-            <h3 className={`tag-keyword ${styles.postsTitle}`}>Contents</h3>
+            {/* <h3 className={`thumb-title ${styles.postsTitle}`}>Contents</h3> */}
             <ol className={styles.postList}>
               {posts.map((post) => (
                 <li key={post.id} className={styles.postItem}>
                   <Link
                     href={getPostPath(post, { issueNumber: issue.issueNumber })}
-                    className={`p-bold ${styles.postLink}`}
+                    className={`thumb-title ${styles.postLink}`}
                   >
                     {post.title}
                   </Link>
