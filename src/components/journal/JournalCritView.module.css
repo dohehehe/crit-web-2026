@@ -6,31 +6,8 @@
 
 .mainOrange {
   position: relative;
-  isolation: isolate;
   min-height: 100vh;
-}
-
-.mainOrange::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
   background-color: var(--crit-orange);
-  opacity: 0;
-  animation: journalMainBackgroundFadeIn 0.4s ease forwards;
-}
-
-@keyframes journalMainBackgroundFadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mainOrange::before {
-    animation: none;
-    opacity: 1;
-  }
 }
 
 .article {

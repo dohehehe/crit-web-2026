@@ -17,6 +17,12 @@ export function isJournalCritPostPath(pathname) {
   return segments.length >= 2;
 }
 
+export function isJournalCritOrangeBackgroundPath(pathname) {
+  return isJournalCritPath(pathname) && !isJournalCritPostPath(pathname);
+}
+
+export const JOURNAL_ISSUE_BACKGROUND_CLASS = "journalIssueBackground";
+
 export function getJournalCritIssuePath(issueNumber) {
   return `${JOURNAL_CRIT_PATH_PREFIX}/${issueNumber}`;
 }

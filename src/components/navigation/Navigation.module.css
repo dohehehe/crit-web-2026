@@ -18,6 +18,7 @@
 .headerJournal {
   background: var(--crit-orange);
   top: var(--header-sticky-top, -145px);
+  transition: none;
 }
 
 .logoLink {

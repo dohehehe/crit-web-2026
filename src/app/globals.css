@@ -105,6 +105,8 @@ body {
   /* padding: 0 24px; */
 }
 
+html.journalIssueBackground,
+body.journalIssueBackground,
 html:has([data-journal-issue]),
 body:has([data-journal-issue]) {
   background-color: var(--crit-orange);

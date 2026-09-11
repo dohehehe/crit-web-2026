@@ -2,7 +2,11 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { isJournalCritPath } from "@/lib/routes/journalCrit";
+import {
+  isJournalCritOrangeBackgroundPath,
+  isJournalCritPath,
+  JOURNAL_ISSUE_BACKGROUND_CLASS,
+} from "@/lib/routes/journalCrit";
 import styles from "@/components/navigation/Navigation.module.css";
 
 function useJournalStickyTop(headerRef, enabled) {
@@ -62,8 +66,20 @@ function useJournalStickyTop(headerRef, enabled) {
 export function NavigationHeader({ children }) {
   const pathname = usePathname();
   const isJournalCrit = isJournalCritPath(pathname);
+  const useIssueBackground = isJournalCritOrangeBackgroundPath(pathname);
   const headerRef = useRef(null);
   const stickyTop = useJournalStickyTop(headerRef, isJournalCrit);
+
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle(
+      JOURNAL_ISSUE_BACKGROUND_CLASS,
+      useIssueBackground,
+    );
+    document.body.classList.toggle(
+      JOURNAL_ISSUE_BACKGROUND_CLASS,
+      useIssueBackground,
+    );
+  }, [useIssueBackground]);
 
   const style =
     isJournalCrit && stickyTop !== null
