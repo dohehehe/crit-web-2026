@@ -50,8 +50,10 @@ export default async function SectionPostPage({ params }) {
     notFound();
   }
 
+  const isChannelSection = getSectionMode(section) === "channel";
+
   return (
-    <main className={styles.main}>
+    <main className={styles.main} {...(isChannelSection ? { "data-channel-section": "" } : {})}>
       <PostView post={post} />
     </main>
   );

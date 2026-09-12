@@ -1,4 +1,3 @@
-import { BodyRouteTheme } from "@/components/layout/BodyRouteTheme";
 import { Navigation } from '@/components/navigation/Navigation';
 import "./globals.css";
 
@@ -11,7 +10,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko-KR">
       <body>
-        <BodyRouteTheme />
         <Navigation />
         {children}
       </body>

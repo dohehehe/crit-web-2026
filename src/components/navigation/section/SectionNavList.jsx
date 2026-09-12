@@ -60,7 +60,8 @@ export function SectionNavList({ sections }) {
           const href = getSectionHref(section);
           const isActive =
             pathname === href ||
-            (href === "/journal-crit" && pathname.startsWith("/journal-crit/"));
+            (href === "/journal-crit" && pathname.startsWith("/journal-crit/")) ||
+            (href === "/channel" && pathname.startsWith("/channel/"));
           const useKorean = isActive || hoveredHref === href;
 
           return (

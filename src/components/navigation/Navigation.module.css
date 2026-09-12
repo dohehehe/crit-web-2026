@@ -18,6 +18,12 @@
 .headerJournal {
   background: var(--crit-orange);
   top: var(--header-sticky-top, -145px);
+  transition: none;
+}
+
+.headerChannel {
+  background: var(--black);
+  color: var(--white);
 }
 
 .logoLink {
@@ -99,6 +105,10 @@
   cursor: pointer;
 }
 
+:global(html.channelBackground) .closeButton img {
+  filter: invert(1);
+}
+
 .closeButtonSearchOpen {
   display: inline-flex;
 }
@@ -152,6 +162,10 @@
     background: var(--black);
   }
 
+  .headerChannel .menuButtonIcon {
+    background: var(--white);
+  }
+
   .closeButton {
     display: inline-flex;
   }
@@ -176,6 +190,11 @@
     background: var(--crit-orange);
   }
 
+  .headerChannel {
+    background: var(--black);
+    color: var(--white);
+  }
+
   .logo {
     width: 186px;
   }
@@ -194,6 +213,11 @@
     height: 100dvh;
     left: 0;
     background: var(--white);
+  }
+
+  .headerChannel .navContainer.open {
+    background: var(--black);
+    color: var(--white);
   }
 
   .navContent {

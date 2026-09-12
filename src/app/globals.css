@@ -102,12 +102,29 @@ body {
   letter-spacing: var(--p-letter-spacing);
   color: var(--black);
   background-color: var(--white);
-  transition: background-color 0.4s ease;
   /* padding: 0 24px; */
 }
 
-body.bodyJournalCrit {
+html.journalIssueBackground,
+body.journalIssueBackground,
+html:has([data-journal-issue]),
+body:has([data-journal-issue]) {
   background-color: var(--crit-orange);
+}
+
+html.channelBackground,
+body.channelBackground,
+html:has([data-channel-section]),
+body:has([data-channel-section]) {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+html.channelBackground .black,
+body.channelBackground .black,
+html:has([data-channel-section]) .black,
+body:has([data-channel-section]) .black {
+  color: var(--white);
 }
 
 @media (max-width: var(--breakpoint-tablet)) {

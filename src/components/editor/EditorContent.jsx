@@ -3,7 +3,7 @@ import { GallerySlider } from "@/components/editor/GallerySlider";
 import { createFootnoteContext } from "@/lib/editorjs/footnotes";
 import { getGallerySlides } from "@/lib/editorjs/gallery";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
-import styles from "./EditorContent.module.css";
+import styles from "@/components/editor/EditorContent.module.css";
 
 function DocumentFootnotes({ footnotes }) {
   if (!footnotes?.length) {
