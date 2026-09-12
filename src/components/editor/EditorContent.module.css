@@ -148,6 +148,11 @@
   cursor: default;
 }
 
+:global(html.channelBackground) .galleryNav,
+:global(html:has([data-channel-section])) .galleryNav {
+  color: var(--white);
+}
+
 .galleryNavPrev {
   right: 80px;
 }

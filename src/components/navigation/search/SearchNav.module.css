@@ -76,6 +76,24 @@
   flex-shrink: 0;
 }
 
+:global(html.channelBackground) .searchButton img {
+  filter: invert(1);
+}
+
+:global(html.channelBackground) .searchInput {
+  color: var(--white);
+}
+
+:global(html.channelBackground) .searchForm.open .searchInput {
+  background: var(--black);
+  color: var(--white);
+  border-bottom-color: var(--white);
+}
+
+:global(html.channelBackground) .searchInput::placeholder {
+  color: var(--gray-65);
+}
+
 @media (max-width: var(--breakpoint-tablet)) {
 
   .searchForm.open .searchInput {

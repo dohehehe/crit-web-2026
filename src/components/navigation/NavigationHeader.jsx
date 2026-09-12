@@ -9,6 +9,7 @@ import {
   JOURNAL_MOBILE_HEADER_OFFSET_VAR,
   MOBILE_BREAKPOINT_QUERY,
 } from "@/lib/routes/journalCrit";
+import { CHANNEL_BACKGROUND_CLASS, isChannelPath } from "@/lib/routes/channel";
 import styles from "@/components/navigation/Navigation.module.css";
 
 function useJournalStickyTop(headerRef, enabled) {
@@ -121,6 +122,7 @@ function useJournalMobileHeaderOffset(headerRef, enabled) {
 export function NavigationHeader({ children }) {
   const pathname = usePathname();
   const isJournalCrit = isJournalCritPath(pathname);
+  const isChannel = isChannelPath(pathname);
   const useIssueBackground = isJournalCritOrangeBackgroundPath(pathname);
   const headerRef = useRef(null);
   const stickyTop = useJournalStickyTop(headerRef, isJournalCrit);
@@ -136,7 +138,15 @@ export function NavigationHeader({ children }) {
       JOURNAL_ISSUE_BACKGROUND_CLASS,
       useIssueBackground,
     );
-  }, [useIssueBackground]);
+    document.documentElement.classList.toggle(
+      CHANNEL_BACKGROUND_CLASS,
+      isChannel,
+    );
+    document.body.classList.toggle(
+      CHANNEL_BACKGROUND_CLASS,
+      isChannel,
+    );
+  }, [useIssueBackground, isChannel]);
 
   const style =
     isJournalCrit && stickyTop !== null
@@ -146,7 +156,7 @@ export function NavigationHeader({ children }) {
   return (
     <header
       ref={headerRef}
-      className={`${styles.header}${isJournalCrit ? ` ${styles.headerJournal}` : ""}`}
+      className={`${styles.header}${isJournalCrit ? ` ${styles.headerJournal}` : ""}${isChannel ? ` ${styles.headerChannel}` : ""}`}
       style={style}
     >
       {children}

@@ -21,6 +21,11 @@
   transition: none;
 }
 
+.headerChannel {
+  background: var(--black);
+  color: var(--white);
+}
+
 .logoLink {
   display: inline-block;
   line-height: 0;
@@ -100,6 +105,10 @@
   cursor: pointer;
 }
 
+:global(html.channelBackground) .closeButton img {
+  filter: invert(1);
+}
+
 .closeButtonSearchOpen {
   display: inline-flex;
 }
@@ -153,6 +162,10 @@
     background: var(--black);
   }
 
+  .headerChannel .menuButtonIcon {
+    background: var(--white);
+  }
+
   .closeButton {
     display: inline-flex;
   }
@@ -177,6 +190,11 @@
     background: var(--crit-orange);
   }
 
+  .headerChannel {
+    background: var(--black);
+    color: var(--white);
+  }
+
   .logo {
     width: 186px;
   }
@@ -195,6 +213,11 @@
     height: 100dvh;
     left: 0;
     background: var(--white);
+  }
+
+  .headerChannel .navContainer.open {
+    background: var(--black);
+    color: var(--white);
   }
 
   .navContent {

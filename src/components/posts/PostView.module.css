@@ -77,6 +77,11 @@
   padding-top: 12px;
 }
 
+:global(html.channelBackground) .asideItem,
+:global(html:has([data-channel-section])) .asideItem {
+  border-top-color: var(--white);
+}
+
 .asideTitle {
   padding-top: 3px;
   width: calc((100vw - 48px - 800px) / 2);
