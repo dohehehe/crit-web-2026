@@ -82,6 +82,7 @@
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  position: relative;
 }
 
 .galleryViewport::-webkit-scrollbar {
@@ -113,7 +114,7 @@
 
 .galleryNav {
   position: absolute;
-  top: 250px;
+  top: 15px;
   z-index: 1;
   display: flex;
   align-items: center;
@@ -123,13 +124,23 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  font-size: 24px;
-  line-height: 1;
-  transform: translateY(-50%);
+  color: var(--black);
+  background: none;
   cursor: pointer;
+}
+
+.galleryNavIcon {
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 22px solid transparent;
+  border-bottom: 22px solid transparent;
+  border-right: 32px solid currentColor;
+}
+
+.galleryNavIconNext {
+  border-right: 0;
+  border-left: 32px solid currentColor;
 }
 
 .galleryNav:disabled {
@@ -138,11 +149,11 @@
 }
 
 .galleryNavPrev {
-  left: 12px;
+  right: 80px;
 }
 
 .galleryNavNext {
-  right: 12px;
+  right: 24px;
 }
 
 .galleryItemCaption {
@@ -169,6 +180,7 @@
 
   .galleryNav {
     top: 100px;
+    display: none;
   }
 
   .quote {
