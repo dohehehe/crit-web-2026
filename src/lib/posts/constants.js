@@ -18,6 +18,7 @@ export const POST_DETAIL_SELECT = `
   slug,
   content,
   thumnail_img,
+  video_url,
   date,
   categories ( id, name, slug ),
   sections ( id, name, slug ),

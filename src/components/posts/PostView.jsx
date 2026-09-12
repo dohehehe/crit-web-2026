@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { EditorContent } from "@/components/editor/EditorContent";
+import { PostVideoEmbed } from "@/components/posts/PostVideoEmbed";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
 import { getPostPath } from "@/lib/routes/posts";
@@ -12,6 +13,8 @@ export function PostView({ post, issue, issuePosts = [] }) {
   }
 
   const isJournal = post.section && getSectionMode(post.section) === "journal";
+  const isChannel = post.section && getSectionMode(post.section) === "channel";
+  const showVideo = isChannel && post.videoUrl;
   const category = post.category?.name
     ? { id: post.category.id, name: post.category.name }
     : null;
@@ -21,7 +24,9 @@ export function PostView({ post, issue, issuePosts = [] }) {
   return (
     <>
       <article className={styles.article}>
-        {post.thumbnailImg ? (
+        {showVideo ? (
+          <PostVideoEmbed videoUrl={post.videoUrl} title={post.title} />
+        ) : post.thumbnailImg ? (
           <section className={styles.thumbnailSection}>
             <div className={styles.thumbnail}>
               <Image
