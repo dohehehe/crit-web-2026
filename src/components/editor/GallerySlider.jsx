@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import styles from "./EditorContent.module.css";
+import styles from "@/components/editor/EditorContent.module.css";
 
 const SCROLL_RATIO = 0.9;
 
@@ -107,7 +107,7 @@ export function GallerySlider({ slides, blockCaptionHtml }) {
               disabled={!canGoPrev}
               aria-label="Previous images"
             >
-              ‹
+              <span className={styles.galleryNavIcon} aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -116,7 +116,7 @@ export function GallerySlider({ slides, blockCaptionHtml }) {
               disabled={!canGoNext}
               aria-label="Next images"
             >
-              ›
+              <span className={`${styles.galleryNavIcon} ${styles.galleryNavIconNext}`} aria-hidden="true" />
             </button>
           </>
         ) : null}
