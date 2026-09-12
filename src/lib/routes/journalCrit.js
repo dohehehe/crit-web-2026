@@ -22,6 +22,8 @@ export function isJournalCritOrangeBackgroundPath(pathname) {
 }
 
 export const JOURNAL_ISSUE_BACKGROUND_CLASS = "journalIssueBackground";
+export const JOURNAL_MOBILE_HEADER_OFFSET_VAR = "--journal-mobile-header-offset";
+export const MOBILE_BREAKPOINT_QUERY = "(max-width: 479px)";
 
 export function getJournalCritIssuePath(issueNumber) {
   return `${JOURNAL_CRIT_PATH_PREFIX}/${issueNumber}`;

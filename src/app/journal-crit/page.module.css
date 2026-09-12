@@ -4,11 +4,16 @@
   padding: 0 24px;
 }
 
-.journal {}
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding: 0 10px;
+  }
+}
+
 
 @media (max-width: var(--breakpoint-mobile)) {
   .main {
     padding: 0 10px;
-    padding-top: 72px;
+    padding-top: var(--journal-mobile-header-offset, 0);
   }
 }

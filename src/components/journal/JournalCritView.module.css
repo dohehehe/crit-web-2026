@@ -72,12 +72,13 @@
 }
 
 .posts {
-  padding-top: 18px;
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
   /* text-align: center; */
-  gap: 24px;
+  gap: 10px;
   /* border-top: 1px solid var(--black); */
+  padding-bottom: 120px;
 }
 
 .postsTitle {
@@ -92,26 +93,32 @@
   list-style: none;
   gap: 7px;
   counter-reset: journal-post;
-  margin-left: 2px;
+  padding-left: 2px;
+  /* margin-left: 4px; */
+  /* margin-left: -60px; */
 }
 
 .postItem {
   counter-increment: journal-post;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: row;
   gap: 5px;
+  word-break: keep-all;
 }
 
 .postItem::before {
   content: '';
   display: inline-block;
-  width: 40px;
+  width: 71px;
   height: 1.3px;
-  margin-right: 13px;
+  margin-right: 18px;
   background: var(--black);
   color: var(--black);
+  flex-shrink: 0;
+  margin-top: 18px;
+  /* padding-top: 10px; */
 }
 
 .postLink {
@@ -147,64 +154,42 @@
   padding: 0 24px;
   color: var(--crit-orange);
   display: flex;
-  flex-direction: row;
-  padding-top: 3px;
-  border-top: 1px dashed var(--crit-orange);
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4px;
+  /* border-top: 1px dashed var(--crit-orange); */
 }
 
 
 .asideHeading {
-  flex: 1 1 0;
-  min-width: 0;
+  max-width: 800px;
   width: 100%;
   margin: 0;
   padding-top: 10px;
-  padding-right: 30px;
-  text-align: right;
-  /* align-self: flex-start; */
-  margin-left: 270px;
+  padding-bottom: 0px;
 }
-
-@media (max-width: 1140px) {
-  .aside {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .asideHeading {
-    max-width: 800px;
-    padding-bottom: 36px;
-    padding-top: 14px;
-    border-bottom: solid 1px var(--crit-orange);
-  }
-}
-
 
 .asideList {
   /* flex: 0 1 800px; */
   width: 100%;
   max-width: 800px;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   margin: 0;
   padding: 0;
   list-style: none;
   margin-bottom: 100px;
-}
-
-.aside>div:last-child {
-  flex: 1 1 0;
-  min-width: 0;
+  margin-top: -5px;
 }
 
 .asideItem {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px 0;
+  gap: 0x;
+  padding: 10px 0 16px 4px;
   border-bottom: solid 1px var(--crit-orange);
+  margin-left: 100px;
 
   &:last-child {
     border-bottom: none;
@@ -214,7 +199,7 @@
 .asideLink {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   color: var(--crit-orange);
   text-decoration: none;
 }
@@ -225,6 +210,7 @@
 
 .asideIssueTitle {
   color: var(--crit-orange);
+  line-height: 1.3 !important;
 }
 
 
@@ -237,4 +223,30 @@
     margin-left: -10px;
     padding: 0 10px;
   }
+
+  .asideList {
+    margin-top: 4px;
+  }
+
+  .asideItem {
+    margin-left: 0 !important;
+    padding-left: 0;
+  }
+
+  .asideLink {
+    gap: 5px;
+    padding-left: 2px;
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .main {
+    padding-top: var(--journal-mobile-header-offset, 0);
+  }
+
+  .postItem::before {
+    width: 20px;
+    margin-right: 10px;
+  }
+
 }
