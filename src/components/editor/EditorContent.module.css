@@ -170,6 +170,19 @@
   .galleryNav {
     top: 100px;
   }
+
+  .quote {
+    margin: 0;
+    padding: 0 32px;
+  }
+
+  .content h2 {
+    margin-top: 32px;
+  }
+
+  .content h3 {
+    margin-top: 28px;
+  }
 }
 
 .embedBlock {
