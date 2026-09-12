@@ -25,16 +25,62 @@
 }
 
 .videoEmbed {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   height: auto;
+  background: var(--black);
 }
 
-.videoEmbed iframe {
+.videoEmbed iframe,
+.videoFacade {
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+.videoFacade {
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+  background: var(--black);
+}
+
+.videoFacadeImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoFacadeOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease;
+}
+
+.videoFacade:hover .videoFacadeOverlay,
+.videoFacade:focus-visible .videoFacadeOverlay {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.videoPlayIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 32px solid var(--white);
+}
+
+.videoFacade:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: -2px;
 }
 
 .header {
