@@ -1,5 +1,6 @@
 export const ALLOWED_TABLES = [
   "authors",
+  "banner",
   "categories",
   "info",
   "issues",
@@ -22,6 +23,7 @@ export const TABLES_WITH_IS_ACTIVE = [
   "issues",
   "notice",
   "notice_popup",
+  "banner",
 ];
 
 export function isAllowedTable(table) {

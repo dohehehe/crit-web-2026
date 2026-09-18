@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T14:43:59.273Z",
+  "generatedAt": "2026-09-18T07:56:47.663Z",
   "projectUrl": null,
   "tables": [
     {
@@ -30,6 +30,48 @@
         },
         {
           "name": "slug",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
+      "name": "banner",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "img_url",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "link_url",
           "type": "text",
           "required": false,
           "default": null,
@@ -106,13 +148,6 @@
       "name": "info",
       "columns": [
         {
-          "name": "content",
-          "type": "jsonb",
-          "required": false,
-          "default": null,
-          "notes": []
-        },
-        {
           "name": "created_at",
           "type": "timestamp with time zone",
           "required": true,
@@ -136,8 +171,29 @@
           ]
         },
         {
+          "name": "info_text",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
           "name": "insta",
           "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "submission_text",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "subscription_text",
+          "type": "jsonb",
           "required": false,
           "default": null,
           "notes": []
@@ -274,6 +330,13 @@
           "notes": []
         },
         {
+          "name": "date",
+          "type": "date",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
           "name": "id",
           "type": "uuid",
           "required": true,
@@ -333,6 +396,13 @@
         },
         {
           "name": "link_url",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "thumbnail_img",
           "type": "text",
           "required": false,
           "default": null,

@@ -6,11 +6,13 @@ import { useAdminQuery } from "@/hooks/use-admin-query";
 import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
 import { AdminNoticeTable } from "@/components/admin/notice/admin-notice-table";
 import { AdminNoticePopupTable } from "@/components/admin/notice/admin-notice-popup-table";
+import { AdminNoticeBannerTable } from "@/components/admin/notice/admin-notice-banner-table";
 import styles from "@/components/admin/shared/admin-posts-panel.module.css";
 
 const NOTICE_TABS = [
   { id: "notice", label: "공지" },
   { id: "popup", label: "팝업" },
+  { id: "banner", label: "배너" },
 ];
 
 export function AdminNoticePanel() {
@@ -42,10 +44,50 @@ export function AdminNoticePanel() {
     enabled: selectedTab === "popup",
   });
 
+  const {
+    data: bannersData,
+    isLoading: bannersLoading,
+    error: bannersError,
+  } = useAdminQuery("banner", {
+    params: {
+      select: "id,link_url,is_active,created_at",
+      order: "created_at.desc",
+      limit: 100,
+    },
+    enabled: selectedTab === "banner",
+  });
+
   const notices = noticesData?.items ?? [];
   const popups = popupsData?.items ?? [];
-  const isLoading = selectedTab === "notice" ? noticesLoading : popupsLoading;
-  const error = selectedTab === "notice" ? noticesError : popupsError;
+  const banners = bannersData?.items ?? [];
+
+  const isLoading =
+    selectedTab === "notice"
+      ? noticesLoading
+      : selectedTab === "popup"
+        ? popupsLoading
+        : bannersLoading;
+
+  const error =
+    selectedTab === "notice"
+      ? noticesError
+      : selectedTab === "popup"
+        ? popupsError
+        : bannersError;
+
+  const createHref =
+    selectedTab === "notice"
+      ? "/admin/notice/new"
+      : selectedTab === "popup"
+        ? "/admin/notice/popup/new"
+        : "/admin/notice/banner/new";
+
+  const createLabel =
+    selectedTab === "notice"
+      ? "+ 새 공지"
+      : selectedTab === "popup"
+        ? "+ 새 팝업"
+        : "+ 새 배너";
 
   return (
     <div className={styles.panel}>
@@ -69,22 +111,14 @@ export function AdminNoticePanel() {
         {!isLoading && !error && (
           <>
             <div className={styles.toolbar}>
-              {selectedTab === "notice" ? (
-                <Link href="/admin/notice/new" className={`${styles.createButton} caption`}>
-                  + 새 공지
-                </Link>
-              ) : (
-                <Link href="/admin/notice/popup/new" className={`${styles.createButton} caption`}>
-                  + 새 팝업
-                </Link>
-              )}
+              <Link href={createHref} className={`${styles.createButton} caption`}>
+                {createLabel}
+              </Link>
             </div>
 
-            {selectedTab === "notice" ? (
-              <AdminNoticeTable notices={notices} />
-            ) : (
-              <AdminNoticePopupTable popups={popups} />
-            )}
+            {selectedTab === "notice" && <AdminNoticeTable notices={notices} />}
+            {selectedTab === "popup" && <AdminNoticePopupTable popups={popups} />}
+            {selectedTab === "banner" && <AdminNoticeBannerTable banners={banners} />}
           </>
         )}
       </div>
