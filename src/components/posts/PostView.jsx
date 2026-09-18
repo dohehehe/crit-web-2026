@@ -4,10 +4,44 @@ import { EditorContent } from "@/components/editor/EditorContent";
 import { PostVideoEmbed } from "@/components/posts/PostVideoEmbed";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
+import { getAuthorPath } from "@/lib/routes/authors";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostView.module.css";
 
-export function PostView({ post, issue, issuePosts = [] }) {
+function PostAsideBanner({ banner }) {
+  if (!banner?.imgUrl) {
+    return null;
+  }
+
+  const content = (
+    <div className={styles.banner}>
+      <Image
+        src={banner.imgUrl}
+        alt=""
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className={styles.bannerImage}
+      />
+    </div>
+  );
+
+  if (banner.linkUrl) {
+    return (
+      <a
+        href={banner.linkUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.bannerLink}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return content;
+}
+
+export function PostView({ post, issue, issuePosts = [], banner = null }) {
   if (!post) {
     return <p className={`${styles.empty} caption gray-65`}>표시할 게시물이 없습니다.</p>;
   }
@@ -47,7 +81,16 @@ export function PostView({ post, issue, issuePosts = [] }) {
           {post.subtitle ? <h2 className={`thumb-title ${styles.subtitle}`}>{post.subtitle}</h2> : null}
           <div className={styles.infoContainer}>
             {post.author?.name ? (
-              <p className={`tag-keyword black ${styles.author}`}>{post.author.name}</p>
+              post.author.id ? (
+                <Link
+                  href={getAuthorPath(post.author)}
+                  className={`tag-keyword black ${styles.author} ${styles.authorLink}`}
+                >
+                  {post.author.name}
+                </Link>
+              ) : (
+                <p className={`tag-keyword black ${styles.author}`}>{post.author.name}</p>
+              )
             ) : null}
             {post.date ? (
               <p className={`tag-keyword gray-65 ${styles.date}`}>{post.date}</p>
@@ -138,6 +181,8 @@ export function PostView({ post, issue, issuePosts = [] }) {
             ) : null}
           </div>
         ) : null}
+
+        <PostAsideBanner banner={banner} />
       </aside>
     </>
   );

@@ -280,3 +280,7 @@
   color: var(--crit-orange);
   background: none;
 }
+
+.content > *:first-child {
+  margin-top: 0;
+}

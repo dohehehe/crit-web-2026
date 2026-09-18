@@ -2,17 +2,30 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-09-09T14:43:59.273Z
-- Tables: 12
+- Updated: 2026-09-18T08:19:16.874Z
+- Tables: 13
 
 ## `authors`
 
 | Column | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
+| `content` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
+| `email` | text | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
+| `img_url` | text | no |  |  |
 | `name` | text | no |  |  |
 | `slug` | text | no |  |  |
+
+## `banner`
+
+| Column | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `created_at` | timestamp with time zone | yes | now() |  |
+| `id` | uuid | yes | gen_random_uuid() | PK |
+| `img_url` | text | no |  |  |
+| `is_active` | boolean | no |  |  |
+| `link_url` | text | no |  |  |
 
 ## `categories`
 
@@ -31,11 +44,13 @@
 
 | Column | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
-| `content` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
 | `email` | text | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
+| `info_text` | jsonb | no |  |  |
 | `insta` | text | no |  |  |
+| `submission_text` | jsonb | no |  |  |
+| `subscription_text` | jsonb | no |  |  |
 | `youtube` | text | no |  |  |
 
 ## `issues`
@@ -67,6 +82,7 @@
 | --- | --- | --- | --- | --- |
 | `content` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
+| `date` | date | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
 | `is_active` | boolean | no |  |  |
 | `title` | text | no |  |  |
@@ -80,6 +96,7 @@
 | `id` | uuid | yes | gen_random_uuid() | PK |
 | `is_active` | boolean | no |  |  |
 | `link_url` | text | no |  |  |
+| `thumbnail_img` | text | no |  |  |
 
 ## `post_keywords`
 
