@@ -1,15 +1,29 @@
 {
-  "generatedAt": "2026-09-18T07:56:47.663Z",
+  "generatedAt": "2026-09-18T08:19:16.874Z",
   "projectUrl": null,
   "tables": [
     {
       "name": "authors",
       "columns": [
         {
+          "name": "content",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
           "name": "created_at",
           "type": "timestamp with time zone",
           "required": true,
           "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "required": false,
+          "default": null,
           "notes": []
         },
         {
@@ -20,6 +34,13 @@
           "notes": [
             "PK"
           ]
+        },
+        {
+          "name": "img_url",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
         },
         {
           "name": "name",

@@ -2,15 +2,18 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-09-18T07:56:47.663Z
+- Updated: 2026-09-18T08:19:16.874Z
 - Tables: 13
 
 ## `authors`
 
 | Column | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
+| `content` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
+| `email` | text | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
+| `img_url` | text | no |  |  |
 | `name` | text | no |  |  |
 | `slug` | text | no |  |  |
 
