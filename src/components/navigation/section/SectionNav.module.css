@@ -3,21 +3,98 @@
 .sectionList {
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .list {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 16px;
   list-style: none;
   margin: 0;
   padding: 0;
+  min-width: 0;
 }
 
+.item {
+  flex-shrink: 0;
+}
+
+.sectionLink,
 .homeLink {
   display: inline-flex;
   align-items: center;
   line-height: var(--menu-en-line-height);
+}
+
+.labelStack,
+.homeIconStack {
+  display: inline-grid;
+  grid-template-columns: max-content;
+  grid-template-rows: max-content;
+}
+
+.labelEn,
+.labelKr,
+.homeIconStack img {
+  grid-area: 1 / 1;
+}
+
+.labelEn,
+.labelKr {
+  white-space: nowrap;
+}
+
+.labelEn,
+.labelKr,
+.homeIconDefault,
+.homeIconHover {
+  transition: opacity 0.15s ease;
+}
+
+.labelEn,
+.homeIconDefault {
+  opacity: 1;
+}
+
+.labelKr,
+.homeIconHover {
+  opacity: 0;
+}
+
+.sectionLink[aria-current="page"] .labelEn,
+.sectionLink:hover .labelEn,
+.sectionLink:focus-visible .labelEn {
+  opacity: 0;
+}
+
+.sectionLink[aria-current="page"] .labelKr,
+.sectionLink:hover .labelKr,
+.sectionLink:focus-visible .labelKr {
+  opacity: 1;
+}
+
+.homeLink[aria-current="page"] .homeIconDefault,
+.homeLink:hover .homeIconDefault,
+.homeLink:focus-visible .homeIconDefault {
+  opacity: 0;
+}
+
+.homeLink[aria-current="page"] .homeIconHover,
+.homeLink:hover .homeIconHover,
+.homeLink:focus-visible .homeIconHover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .labelEn,
+  .labelKr,
+  .homeIconDefault,
+  .homeIconHover {
+    transition: none;
+  }
 }
 
 .homeIcon {
@@ -38,6 +115,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    flex-wrap: nowrap;
     gap: 4px;
   }
 
