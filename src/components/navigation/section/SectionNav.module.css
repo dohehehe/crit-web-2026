@@ -14,6 +14,22 @@
   padding: 0;
 }
 
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  line-height: var(--menu-en-line-height);
+}
+
+.homeIcon {
+  display: block;
+  width: auto;
+  height: var(--menu-en-line-height);
+}
+
+:global(html.channelBackground) .homeLink .homeIcon {
+  filter: invert(1);
+}
+
 @media (max-width: var(--breakpoint-tablet)) {
   .sectionList.menuOpen {}
 
@@ -29,6 +45,15 @@
     font-size: 52px;
     line-height: 52px;
     letter-spacing: 0%;
+  }
+
+  .sectionList.menuOpen .homeLink {
+    line-height: 52px;
+  }
+
+  .sectionList.menuOpen .homeIcon {
+    height: 52px;
+    width: auto;
   }
 }
 

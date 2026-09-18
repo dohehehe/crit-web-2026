@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -10,6 +11,10 @@ import styles from "@/components/navigation/section/SectionNav.module.css";
 
 const HOME_HREF = "/";
 const HEADER_SCROLL_THRESHOLD = 140;
+const HOME_ICON_WIDTH = 30;
+const HOME_ICON_HEIGHT = 22;
+const HOME_ICON_DEFAULT = "/icon-home-Default.svg";
+const HOME_ICON_HOVER = "/icon-home-Hover.svg";
 
 function getSectionLabel(section, useKorean) {
   if (useKorean) {
@@ -19,7 +24,7 @@ function getSectionLabel(section, useKorean) {
   return section.slug ?? section.name ?? "";
 }
 
-function getHomeLabel(pathname, useKorean) {
+function getHomeAriaLabel(pathname, useKorean) {
   if (pathname === HOME_HREF || useKorean) {
     return "홈";
   }
@@ -45,14 +50,29 @@ export function SectionNavList({ sections }) {
           <li className={styles.item}>
             <Link
               href={HOME_HREF}
-              className={isHomeActive || hoveredHref === HOME_HREF ? "menu-kr" : "menu-en"}
+              className={styles.homeLink}
+              aria-label={getHomeAriaLabel(
+                pathname,
+                isHomeActive || hoveredHref === HOME_HREF,
+              )}
               aria-current={isHomeActive ? "page" : undefined}
               onMouseEnter={() => setHoveredHref(HOME_HREF)}
               onMouseLeave={() => setHoveredHref(null)}
               onFocus={() => setHoveredHref(HOME_HREF)}
               onBlur={() => setHoveredHref(null)}
             >
-              {getHomeLabel(pathname, hoveredHref === HOME_HREF)}
+              <Image
+                src={
+                  isHomeActive || hoveredHref === HOME_HREF
+                    ? HOME_ICON_HOVER
+                    : HOME_ICON_DEFAULT
+                }
+                alt=""
+                width={HOME_ICON_WIDTH}
+                height={HOME_ICON_HEIGHT}
+                className={styles.homeIcon}
+                aria-hidden
+              />
             </Link>
           </li>
         ) : null}
