@@ -9,7 +9,7 @@ export default async function Home() {
 
   return (
     <main className={styles.main}>
-      <PostList posts={posts} />
+      <PostList posts={posts} showSectionLabel />
     </main>
   );
 }
