@@ -96,7 +96,7 @@
 
 @media (max-width: var(--breakpoint-tablet)) {
   .footer {
-    padding: 20px 10px;
+    padding: 80px 10px 30px;
     word-break: keep-all;
     position: relative;
   }
