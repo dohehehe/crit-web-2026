@@ -111,6 +111,14 @@
   margin: 0;
 }
 
+.authorLink {
+  text-decoration: none;
+}
+
+.authorLink:hover {
+  color: var(--crit-orange);
+}
+
 .contents {
   margin-bottom: 60px;
 }

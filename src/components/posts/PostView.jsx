@@ -4,6 +4,7 @@ import { EditorContent } from "@/components/editor/EditorContent";
 import { PostVideoEmbed } from "@/components/posts/PostVideoEmbed";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
+import { getAuthorPath } from "@/lib/routes/authors";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostView.module.css";
 
@@ -80,7 +81,16 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           {post.subtitle ? <h2 className={`thumb-title ${styles.subtitle}`}>{post.subtitle}</h2> : null}
           <div className={styles.infoContainer}>
             {post.author?.name ? (
-              <p className={`tag-keyword black ${styles.author}`}>{post.author.name}</p>
+              post.author.id ? (
+                <Link
+                  href={getAuthorPath(post.author)}
+                  className={`tag-keyword black ${styles.author} ${styles.authorLink}`}
+                >
+                  {post.author.name}
+                </Link>
+              ) : (
+                <p className={`tag-keyword black ${styles.author}`}>{post.author.name}</p>
+              )
             ) : null}
             {post.date ? (
               <p className={`tag-keyword gray-65 ${styles.date}`}>{post.date}</p>

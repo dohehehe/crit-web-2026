@@ -1,0 +1,49 @@
+@import "../../app/breakpoints.css";
+
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+  padding-top: 60px;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.name {
+  margin: 0 0 14px;
+  word-break: keep-all;
+}
+
+.profileImage {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin-bottom: 32px;
+  /* border-radius: 50%; */
+}
+
+.content {
+  margin-bottom: 48px;
+}
+
+.postsSection {
+  padding-top: 24px;
+  border-top: 1px solid var(--black);
+}
+
+.postsTitle {
+  margin: 0 0 24px;
+}
+
+.emptyPosts {
+  margin: 0;
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .page {
+    padding-bottom: 64px;
+  }
+}
