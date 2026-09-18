@@ -225,6 +225,26 @@
   color: var(--gray-65);
 }
 
+.bannerLink {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  margin-top: 60px;
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+}
+
+.bannerImage {
+  object-fit: cover;
+  object-position: left top;
+}
+
 @media (max-width: var(--breakpoint-tablet)) {
   .aside {
     margin: 0 -10px;
@@ -257,5 +277,9 @@
 @media (max-width: var(--breakpoint-mobile)) {
   .header {
     padding-top: 12px;
+  }
+
+  .bannerLink {
+    margin-top: 100px;
   }
 }

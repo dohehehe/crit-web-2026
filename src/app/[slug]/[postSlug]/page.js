@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { PostView } from "@/components/posts/PostView";
 import { getSectionMode } from "@/lib/admin/section-mode";
+import { getRandomActiveBanner } from "@/lib/banner/getBanner";
 import { getPostDetail } from "@/lib/posts/getPosts";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
 import styles from "../page.module.css";
@@ -44,7 +45,10 @@ export default async function SectionPostPage({ params }) {
     notFound();
   }
 
-  const post = await getPostDetail({ sectionId: section.id, postSlug });
+  const [post, banner] = await Promise.all([
+    getPostDetail({ sectionId: section.id, postSlug }),
+    getRandomActiveBanner(),
+  ]);
 
   if (!post) {
     notFound();
@@ -54,7 +58,7 @@ export default async function SectionPostPage({ params }) {
 
   return (
     <main className={styles.main} {...(isChannelSection ? { "data-channel-section": "" } : {})}>
-      <PostView post={post} />
+      <PostView post={post} banner={banner} />
     </main>
   );
 }

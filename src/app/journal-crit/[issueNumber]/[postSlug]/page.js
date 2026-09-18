@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { PostView } from "@/components/posts/PostView";
 import { getIssueByNumber } from "@/lib/issues/getIssues";
+import { getRandomActiveBanner } from "@/lib/banner/getBanner";
 import { getPostDetail, getPostsByIssue } from "@/lib/posts/getPosts";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
 import styles from "@/components/journal/JournalCritView.module.css";
@@ -53,9 +54,10 @@ export default async function JournalCritPostPage({ params }) {
     notFound();
   }
 
-  const [post, issuePosts] = await Promise.all([
+  const [post, issuePosts, banner] = await Promise.all([
     getPostDetail({ sectionId: section.id, postSlug, issueId: issue.id }),
     getPostsByIssue(issue.id),
+    getRandomActiveBanner(),
   ]);
 
   if (!post) {
@@ -64,7 +66,7 @@ export default async function JournalCritPostPage({ params }) {
 
   return (
     <main className={styles.main}>
-      <PostView post={post} issue={issue} issuePosts={issuePosts} />
+      <PostView post={post} issue={issue} issuePosts={issuePosts} banner={banner} />
     </main>
   );
 }
