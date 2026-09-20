@@ -2,6 +2,8 @@
 
 .main {
   padding: 0 24px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 @media (max-width: var(--breakpoint-tablet)) {
