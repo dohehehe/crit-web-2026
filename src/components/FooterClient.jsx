@@ -5,8 +5,17 @@ import { isJournalCritPath } from "@/lib/routes/journalCrit";
 import { isChannelPath } from "@/lib/routes/channel";
 import styles from "@/components/Footer.module.css";
 
+function isAdminPreviewPath(pathname) {
+  return pathname === "/preview" || pathname.startsWith("/preview/");
+}
+
 export default function FooterClient({ email }) {
   const pathname = usePathname();
+
+  if (isAdminPreviewPath(pathname)) {
+    return null;
+  }
+
   const isJournalCrit = isJournalCritPath(pathname);
   const isChannel = isChannelPath(pathname);
 

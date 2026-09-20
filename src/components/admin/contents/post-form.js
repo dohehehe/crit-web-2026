@@ -14,6 +14,15 @@ import {
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import { findOrCreateAuthor } from "@/lib/authors/findOrCreateAuthor";
 import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
+import {
+  fetchIssueFileUrlForPreview,
+  fetchIssuePostsForPreview,
+} from "@/lib/admin/fetchIssuePreviewRelated";
+import {
+  buildPostPreviewRecord,
+  mergePostIntoIssuePosts,
+  writePostPreviewRecord,
+} from "@/lib/admin/postPreview";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import { AuthorInput } from "@/components/admin/shared/author/AuthorInput";
 import { KeywordInput } from "@/components/admin/shared/keyword/KeywordInput";
@@ -150,6 +159,7 @@ function PostFormFields({
   const [authorError, setAuthorError] = useState(null);
   const [thumbnailError, setThumbnailError] = useState(null);
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
 
   function updateField(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -254,6 +264,57 @@ function PostFormFields({
     }
   }
 
+  async function handlePreview() {
+    setEditorError(null);
+    setIsPreviewing(true);
+
+    try {
+      if (!editorRef.current?.isReady?.()) {
+        throw new Error("에디터가 아직 준비되지 않았습니다.");
+      }
+
+      const savedData = await editorRef.current.save();
+      const content = serializeEditorContent(savedData);
+
+      let issuePosts = [];
+      let issueFileUrl = null;
+
+      if (sectionMode === "journal" && form.issue_id) {
+        const [fetchedPosts, fileUrl] = await Promise.all([
+          fetchIssuePostsForPreview(form.issue_id),
+          fetchIssueFileUrlForPreview(form.issue_id),
+        ]);
+        issuePosts = mergePostIntoIssuePosts(fetchedPosts, {
+          postId,
+          title: form.title,
+          slug: form.slug,
+        });
+        issueFileUrl = fileUrl;
+      }
+
+      const record = buildPostPreviewRecord({
+        form,
+        content,
+        author,
+        keywords,
+        section,
+        sectionMode,
+        categories,
+        issues,
+        postId,
+        issuePosts,
+        issueFileUrl,
+      });
+
+      writePostPreviewRecord(record);
+      window.open("/preview/post", "_blank", "noopener,noreferrer");
+    } catch (error) {
+      setEditorError(error.message ?? "미리보기를 열지 못했습니다.");
+    } finally {
+      setIsPreviewing(false);
+    }
+  }
+
   async function handleDelete() {
     if (!isEdit || !postId) {
       return;
@@ -273,6 +334,7 @@ function PostFormFields({
   }
 
   const isSaving = isCreating || isUpdating || isDeleting;
+  const isBusy = isSaving || isPreviewing;
   const submitError = createError ?? updateError ?? deleteError;
 
   return (
@@ -368,7 +430,7 @@ function PostFormFields({
           <AuthorInput
             value={author}
             onChange={setAuthor}
-            disabled={isSaving}
+            disabled={isBusy}
           />
           {authorError && (
             <p className={`${styles.error} caption`}>{authorError}</p>
@@ -414,7 +476,7 @@ function PostFormFields({
           <KeywordInput
             value={keywords}
             onChange={setKeywords}
-            disabled={isSaving}
+            disabled={isBusy}
           />
           {keywordError && (
             <p className={`${styles.error} caption`}>{keywordError}</p>
@@ -434,7 +496,7 @@ function PostFormFields({
             type="button"
             className={`${styles.thumbnailButton} caption`}
             onClick={() => thumbnailInputRef.current?.click()}
-            disabled={isUploadingThumbnail || isSaving}
+            disabled={isUploadingThumbnail || isBusy}
           >
             {isUploadingThumbnail
               ? "업로드 중…"
@@ -508,8 +570,16 @@ function PostFormFields({
 
       <div className={styles.actions}>
         <div className={styles.primaryActions}>
-          <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
+          <button type="submit" className={`${styles.submitButton} caption`} disabled={isBusy}>
             {isSaving && !isDeleting ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
+          </button>
+          <button
+            type="button"
+            className={`${styles.previewButton} caption`}
+            onClick={handlePreview}
+            disabled={isBusy}
+          >
+            {isPreviewing ? "미리보기 여는 중…" : "미리보기"}
           </button>
           <Link href="/admin/contents" className={`${styles.cancelButton} caption`}>
             취소
@@ -520,7 +590,7 @@ function PostFormFields({
             type="button"
             className={`${styles.deleteButton} caption`}
             onClick={handleDelete}
-            disabled={isSaving}
+            disabled={isBusy}
           >
             {isDeleting ? "삭제 중…" : "삭제"}
           </button>

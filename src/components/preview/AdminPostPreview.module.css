@@ -1,0 +1,49 @@
+.banner {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 24px;
+  background: var(--black);
+  color: var(--white);
+  border-bottom: 1px solid var(--gray-65);
+}
+
+.bannerText {
+  margin: 0;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border: 1px solid var(--white);
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  font: inherit;
+}
+
+.closeButton:hover {
+  background: var(--white);
+  color: var(--black);
+}
+
+.empty {
+  margin: 48px 0;
+}
+
+.adminLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 35%;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+}
