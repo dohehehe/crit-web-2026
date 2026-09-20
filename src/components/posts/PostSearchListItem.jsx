@@ -31,8 +31,7 @@ export function PostSearchListItem({ entry }) {
             <Image
               src={thumbnailImg}
               alt=""
-              width={160}
-              height={100}
+              fill
               sizes="160px"
               className={styles.thumbnailImage}
             />
@@ -74,10 +73,10 @@ export function PostSearchListItem({ entry }) {
               ) : null}
               {keywords?.length
                 ? keywords.map((keyword) => (
-                    <li key={keyword.id} className="tag-keyword">
-                      {keyword.name}
-                    </li>
-                  ))
+                  <li key={keyword.id} className="tag-keyword">
+                    {keyword.name}
+                  </li>
+                ))
                 : null}
             </ul>
           ) : null}
