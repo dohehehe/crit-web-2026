@@ -5,18 +5,19 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
 import {
+  getInfoNavItems,
   getInfoNavLabel,
-  INFO_NAV_ITEMS,
   isInfoNavActive,
 } from "@/lib/navigation/infoNavItems";
 import { InstagramIcon } from "@/components/icons/InstagramIcon";
 import { YoutubeIcon } from "@/components/icons/YoutubeIcon";
 import styles from "@/components/navigation/info/InfoNav.module.css";
 
-export function InfoNav({ instagramHref, youtubeHref }) {
+export function InfoNav({ instagramHref, youtubeHref, isLoggedIn = false }) {
   const pathname = usePathname();
   const { isOpen, closeMenu, closeSearch } = useNavigationMenu();
   const [hoveredHref, setHoveredHref] = useState(null);
+  const navItems = getInfoNavItems(isLoggedIn);
 
   useEffect(() => {
     closeMenu();
@@ -30,7 +31,7 @@ export function InfoNav({ instagramHref, youtubeHref }) {
       aria-label="Info"
     >
       <ul className={styles.infoList}>
-        {INFO_NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const isActive = isInfoNavActive(pathname, item.href);
           const useKorean = isActive || hoveredHref === item.href;
 

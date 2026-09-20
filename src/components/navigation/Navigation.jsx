@@ -4,6 +4,7 @@ import { NavigationHeader } from "@/components/navigation/NavigationHeader";
 import { NavigationLogo } from "@/components/navigation/NavigationLogo";
 import { NavigationSub } from "@/components/navigation/NavigationSub";
 import { SectionNav } from "@/components/navigation/section/SectionNav";
+import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { getSiteInfo } from "@/lib/info/getSiteInfo";
 import { getSections } from "@/lib/sections/getSections";
 
@@ -11,6 +12,7 @@ export async function Navigation() {
   let sections = [];
   let instagramHref;
   let youtubeHref;
+  let isLoggedIn = false;
 
   try {
     sections = await getSections();
@@ -27,6 +29,12 @@ export async function Navigation() {
     youtubeHref = undefined;
   }
 
+  try {
+    isLoggedIn = Boolean(await getAuthUser());
+  } catch {
+    isLoggedIn = false;
+  }
+
   return (
     <NavigationMenuProvider>
       <NavigationHeader>
@@ -34,6 +42,7 @@ export async function Navigation() {
         <NavigationContainer
           instagramHref={instagramHref}
           youtubeHref={youtubeHref}
+          isLoggedIn={isLoggedIn}
         >
           <SectionNav />
         </NavigationContainer>

@@ -1,0 +1,103 @@
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+}
+
+.input:focus {
+  outline: 2px solid var(--crit-orange);
+  outline-offset: 0;
+  border-color: var(--crit-orange);
+}
+
+.checkboxField {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.checkboxField input {
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.checkboxLabel {
+  flex: 1;
+}
+
+.error {
+  color: var(--crit-orange);
+}
+
+.success {
+  color: var(--black);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.submit {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: var(--black);
+  color: var(--white);
+  font: inherit;
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit:not(:disabled):hover {
+  background: var(--crit-orange);
+}
+
+.footerLink {
+  text-align: center;
+}
+
+.footerLink a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footerLink a:hover {
+  color: var(--crit-orange);
+}
