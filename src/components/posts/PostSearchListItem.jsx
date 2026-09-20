@@ -1,15 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getSectionMode } from "@/lib/admin/section-mode";
-import { getPostPath } from "@/lib/routes/posts";
 import styles from "@/components/posts/PostSearch.module.css";
 
-export function PostSearchListItem({ post }) {
-  const { title, thumbnailImg, date, author, section, category, keywords } = post;
+export function PostSearchListItem({ entry }) {
+  const {
+    href,
+    title,
+    thumbnailImg,
+    date,
+    authorName,
+    section,
+    category,
+    keywords,
+    showThumbnailPlaceholder,
+  } = entry;
+
   const isJournalSection = section && getSectionMode(section) === "journal";
+  const hasMeta = Boolean(date || authorName);
+  const hasKeywords = Boolean(category?.name || keywords?.length);
 
   return (
-    <Link href={getPostPath(post)} className={styles.itemLink}>
+    <Link href={href} className={styles.itemLink}>
       <article className={styles.item}>
         {thumbnailImg ? (
           <div
@@ -35,36 +47,37 @@ export function PostSearchListItem({ post }) {
                 </span>
               </p>
             ) : null}
-
           </div>
-        ) : (
+        ) : showThumbnailPlaceholder ? (
           <div className={`${styles.thumbnail} ${styles.thumbnailPlaceholder}`} aria-hidden />
-        )}
+        ) : null}
 
         <div className={styles.body}>
           {title ? <h2 className={`${styles.title} thumb-title`}>{title}</h2> : null}
 
-          <div className={styles.metaRow}>
-            {date ? <time className={`${styles.date} caption gray-65`}>{date}</time> : null}
-            {author?.name ? (
-              <span className={`${styles.author} caption`}>{author.name}</span>
-            ) : null}
-          </div>
+          {hasMeta ? (
+            <div className={styles.metaRow}>
+              {date ? <time className={`${styles.date} caption gray-65`}>{date}</time> : null}
+              {authorName ? (
+                <span className={`${styles.author} caption`}>{authorName}</span>
+              ) : null}
+            </div>
+          ) : null}
 
-
-
-          <ul className={styles.keywords} aria-label="키워드">
-            {category?.name ? (
-              <li className={`${styles.category} tag-category`}>{category.name}</li>
-            ) : null}
-            {keywords?.length
-              ? keywords.map((keyword) => (
-                <li key={keyword.id} className="tag-keyword">
-                  {keyword.name}
-                </li>
-              ))
-              : null}
-          </ul>
+          {hasKeywords ? (
+            <ul className={styles.keywords} aria-label="키워드">
+              {category?.name ? (
+                <li className={`${styles.category} tag-category`}>{category.name}</li>
+              ) : null}
+              {keywords?.length
+                ? keywords.map((keyword) => (
+                    <li key={keyword.id} className="tag-keyword">
+                      {keyword.name}
+                    </li>
+                  ))
+                : null}
+            </ul>
+          ) : null}
         </div>
       </article>
     </Link>

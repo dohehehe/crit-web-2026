@@ -1,5 +1,5 @@
 import { PostSearchList } from "@/components/posts/PostSearchList";
-import { getPostsBySearchTag, searchPosts } from "@/lib/posts/searchPosts";
+import { searchByQuery, searchByTag } from "@/lib/search/searchContent";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -23,12 +23,12 @@ export default async function SearchPage({ searchParams }) {
   const hasQuery = Boolean(trimmedQuery);
   const hasTag = Boolean(tag);
 
-  let posts = [];
+  let entries = [];
 
   if (hasTag) {
-    posts = await getPostsBySearchTag(tag);
+    entries = await searchByTag(tag);
   } else if (hasQuery) {
-    posts = await searchPosts(trimmedQuery);
+    entries = await searchByQuery(trimmedQuery);
   }
 
   return (
@@ -43,7 +43,10 @@ export default async function SearchPage({ searchParams }) {
       {!hasQuery && !hasTag ? (
         <p className={`caption gray-65 ${styles.prompt}`}>검색어를 입력하세요.</p>
       ) : (
-        <PostSearchList key={hasTag ? `tag:${tag}` : `q:${trimmedQuery}`} posts={posts} />
+        <PostSearchList
+          key={hasTag ? `tag:${tag}` : `q:${trimmedQuery}`}
+          entries={entries}
+        />
       )}
     </main>
   );
