@@ -12,6 +12,7 @@ export function normalizePost(post) {
     category: post.categories ?? null,
     section: post.sections ?? null,
     issueNumber: post.issues?.issue_number ?? "",
+    author: post.authors ?? null,
     keywords,
   };
 }

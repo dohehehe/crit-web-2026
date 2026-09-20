@@ -6,7 +6,7 @@ import styles from "@/components/navigation/search/SearchNav.module.css";
 import Image from "next/image";
 
 export function SearchNav() {
-  const { isOpen, isSearchOpen, openSearch } = useNavigationMenu();
+  const { isOpen, isSearchOpen, openSearch, closeSearch } = useNavigationMenu();
   const inputRef = useRef(null);
   const isVisibleOnMobile = isOpen || isSearchOpen;
 
@@ -18,15 +18,20 @@ export function SearchNav() {
 
   return (
     <form
+      action="/search"
+      method="get"
       className={`${styles.searchForm}${isSearchOpen ? ` ${styles.open}` : ""}${isVisibleOnMobile ? ` ${styles.visibleOnMobile}` : ""}`}
+      onSubmit={closeSearch}
     >
       <input
         ref={inputRef}
         type="search"
+        name="q"
         placeholder="검색어를 입력하세요..."
         className={styles.searchInput}
         tabIndex={isSearchOpen ? 0 : -1}
         aria-hidden={!isSearchOpen}
+        autoComplete="off"
       />
       <button
         type="button"

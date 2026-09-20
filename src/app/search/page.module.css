@@ -1,0 +1,32 @@
+@import "../breakpoints.css";
+
+.main {
+  padding: 0 24px 48px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.header {
+  margin-bottom: 24px;
+  display: flex;
+  gap: 20px;
+}
+
+.heading {
+  /* margin: 0 0 8px; */
+}
+
+.query {
+  margin: 0;
+}
+
+.prompt {
+  padding: 48px 0;
+  margin: 0;
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding: 80px 10px 48px;
+  }
+}
