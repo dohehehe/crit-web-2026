@@ -6,6 +6,10 @@
   gap: 28px;
 }
 
+.rootCompact {
+  gap: 2px;
+}
+
 .root > *:first-child {
   margin-top: 0;
 }

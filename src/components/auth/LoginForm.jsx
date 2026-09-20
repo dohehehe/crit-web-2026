@@ -12,8 +12,8 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={styles.submit} disabled={pending}>
-      {pending ? "로그인 중…" : "로그인"}
+    <button type="submit" className={`tag-keyword ${styles.submit}`} disabled={pending}>
+      {pending ? "로그인 중…" : "로그인하기"}
     </button>
   );
 }
@@ -33,25 +33,26 @@ export function LoginForm({ registered, passwordReset }) {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className="title-1">로그인</h1>
-        <p className="p gray-65">CRIT 계정으로 로그인하세요.</p>
+        <h1 className="menu-kr">로그인</h1>
+
+
+        {registered ? (
+          <p className={`p ${styles.success}`} role="status">
+            회원가입이 완료되었습니다. 로그인해 주세요.
+          </p>
+        ) : null}
+
+
+        {passwordReset ? (
+          <p className={`p ${styles.success}`} role="status">
+            비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요.
+          </p>
+        ) : null}
       </header>
-
-      {registered ? (
-        <p className={`p ${styles.success}`} role="status">
-          회원가입이 완료되었습니다. 로그인해 주세요.
-        </p>
-      ) : null}
-
-      {passwordReset ? (
-        <p className={`p ${styles.success}`} role="status">
-          비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요.
-        </p>
-      ) : null}
 
       <form className={styles.form} action={formAction}>
         <label className={styles.field}>
-          <span className="caption">이메일</span>
+          <span className="tag-keyword">이메일</span>
           <input
             className={styles.input}
             type="email"
@@ -63,14 +64,7 @@ export function LoginForm({ registered, passwordReset }) {
 
         <label className={styles.field}>
           <span className={styles.fieldLabelRow}>
-            <span className="caption">비밀번호</span>
-            <button
-              type="button"
-              className={styles.inlineLink}
-              onClick={() => setShowForgotPassword(true)}
-            >
-              비밀번호 찾기
-            </button>
+            <span className="tag-keyword">비밀번호</span>
           </span>
           <input
             className={styles.input}
@@ -89,10 +83,16 @@ export function LoginForm({ registered, passwordReset }) {
 
         <div className={styles.actions}>
           <SubmitButton />
-          <p className={`caption ${styles.footerLink}`}>
-            계정이 없으신가요?{" "}
-            <Link href="/subscription">회원가입</Link>
-          </p>
+          <div className={styles.footerLink}>
+            <Link href="/subscription" className={`${styles.footerLinkButton} tag-keyword gray-65`}>회원가입</Link>
+            <button
+              type="button"
+              className={`${styles.footerLinkButton} tag-keyword gray-65`}
+              onClick={() => setShowForgotPassword(true)}
+            >
+              비밀번호 찾기
+            </button>
+          </div>
         </div>
       </form>
     </div>

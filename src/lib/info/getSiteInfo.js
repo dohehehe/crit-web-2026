@@ -6,6 +6,32 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 const INFO_SELECT = "email,insta,youtube,info_text";
 
+function parseEditorContents(value) {
+  if (value == null) {
+    return null;
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(trimmed);
+    } catch {
+      return { body: trimmed };
+    }
+  }
+
+  if (typeof value === "object") {
+    return value;
+  }
+
+  return null;
+}
+
 function parseInfoText(value) {
   if (value == null) {
     return null;
@@ -98,4 +124,24 @@ export const getSiteInfo = cache(async () => {
     instagramHref: normalizeInstagramHref(data.insta),
     youtubeHref: normalizeYoutubeHref(data.youtube),
   };
+});
+
+export const getSubscriptionText = cache(async () => {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("info")
+    .select("subscription_text")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return parseEditorContents(data.subscription_text);
 });

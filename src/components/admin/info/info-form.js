@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import { AdminCategoryTabs } from "@/components/admin/shared/admin-category-tabs";
 import styles from "@/components/admin/info/info-form.module.css";
 
@@ -20,21 +22,57 @@ const INFO_GROUPS = [
   {
     id: "info",
     name: "소개",
-    fields: [{ id: "info_text", label: "소개", multiline: true }],
+    fields: [{ id: "info_text", label: "소개", editor: true }],
   },
   {
     id: "subscription",
     name: "구독",
-    fields: [{ id: "subscription_text", label: "구독", multiline: true }],
+    fields: [{ id: "subscription_text", label: "구독", editor: true }],
   },
   {
     id: "submission",
     name: "투고",
-    fields: [{ id: "submission_text", label: "투고", multiline: true }],
+    fields: [{ id: "submission_text", label: "투고", editor: true }],
   },
 ];
 
-function toDisplayValue(value) {
+function parseContent(content) {
+  let value = content;
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      return null;
+    }
+
+    try {
+      value = JSON.parse(trimmed);
+    } catch {
+      value = { body: trimmed };
+    }
+  }
+
+  const blocks = normalizeBlocks(value);
+
+  if (blocks.length === 0) {
+    return null;
+  }
+
+  return { blocks };
+}
+
+function serializeEditorContent(savedData) {
+  const blocks = normalizeBlocks(savedData);
+
+  if (blocks.length === 0) {
+    return null;
+  }
+
+  return { blocks };
+}
+
+function toContactInitialValue(value) {
   if (value == null) {
     return "";
   }
@@ -43,10 +81,16 @@ function toDisplayValue(value) {
     return value;
   }
 
-  return JSON.stringify(value, null, 2);
+  return "";
 }
 
-function InfoFieldEditor({ fieldConfig, initialValue, infoId, onInfoCreated }) {
+function InfoContactFieldEditor({
+  fieldConfig,
+  initialValue,
+  infoId,
+  onInfoCreated,
+  onSaved,
+}) {
   const [value, setValue] = useState(initialValue);
   const [saveError, setSaveError] = useState(null);
   const [saved, setSaved] = useState(false);
@@ -75,6 +119,7 @@ function InfoFieldEditor({ fieldConfig, initialValue, infoId, onInfoCreated }) {
       }
 
       setSaved(true);
+      await onSaved?.();
     } catch (error) {
       setSaveError(error.message ?? "저장하지 못했습니다.");
     }
@@ -86,29 +131,99 @@ function InfoFieldEditor({ fieldConfig, initialValue, infoId, onInfoCreated }) {
     <div className={styles.editor}>
       <label className={styles.field}>
         <span className="caption">{fieldConfig.label}</span>
-        {fieldConfig.multiline ? (
-          <textarea
-            className={styles.textarea}
-            value={value}
-            rows={10}
-            onChange={(event) => {
-              setValue(event.target.value);
-              setSaved(false);
-            }}
-          />
-        ) : (
-          <input
-            className={styles.input}
-            type={fieldConfig.type ?? "text"}
-            value={value}
-            placeholder={fieldConfig.placeholder}
-            onChange={(event) => {
-              setValue(event.target.value);
-              setSaved(false);
-            }}
-          />
-        )}
+        <input
+          className={styles.input}
+          type={fieldConfig.type ?? "text"}
+          value={value}
+          placeholder={fieldConfig.placeholder}
+          onChange={(event) => {
+            setValue(event.target.value);
+            setSaved(false);
+          }}
+        />
       </label>
+      <div className={styles.fieldFooter}>
+        <button
+          type="button"
+          className={`${styles.saveButton} caption`}
+          onClick={handleSave}
+          disabled={isSaving}
+        >
+          {isSaving ? "저장 중…" : "저장"}
+        </button>
+        {saved && <span className={`${styles.savedHint} caption gray-65`}>저장됨</span>}
+        {saveError && <span className={`${styles.error} caption`}>{saveError}</span>}
+      </div>
+    </div>
+  );
+}
+
+function InfoEditorFieldEditor({
+  fieldConfig,
+  initialContent,
+  infoId,
+  onInfoCreated,
+  onSaved,
+}) {
+  const editorRef = useRef(null);
+  const [saveError, setSaveError] = useState(null);
+  const [editorError, setEditorError] = useState(null);
+  const [saved, setSaved] = useState(false);
+
+  const { mutate: createInfo, isLoading: isCreating } = useApiMutation("POST");
+  const { mutate: updateInfo, isLoading: isUpdating } = useApiMutation("PATCH");
+
+  useEffect(() => {
+    setSaveError(null);
+    setEditorError(null);
+    setSaved(false);
+  }, [fieldConfig.id, initialContent]);
+
+  async function handleSave() {
+    setSaveError(null);
+    setEditorError(null);
+    setSaved(false);
+
+    let fieldValue = null;
+
+    try {
+      if (!editorRef.current?.isReady?.()) {
+        throw new Error("에디터가 아직 준비되지 않았습니다.");
+      }
+
+      const savedData = await editorRef.current.save();
+      fieldValue = serializeEditorContent(savedData);
+    } catch (error) {
+      setEditorError(error.message ?? "에디터 내용을 저장하지 못했습니다.");
+      return;
+    }
+
+    const payload = { [fieldConfig.id]: fieldValue };
+
+    try {
+      if (infoId) {
+        await updateInfo(`info/${infoId}`, payload);
+      } else {
+        const created = await createInfo("info", payload);
+        onInfoCreated(created.id);
+      }
+
+      setSaved(true);
+      await onSaved?.();
+    } catch (error) {
+      setSaveError(error.message ?? "저장하지 못했습니다.");
+    }
+  }
+
+  const isSaving = isCreating || isUpdating;
+
+  return (
+    <div className={styles.editor}>
+      <div className={styles.field}>
+        <span className="caption">{fieldConfig.label}</span>
+        <EditorClient ref={editorRef} data={initialContent} />
+        {editorError && <span className={`${styles.error} caption`}>{editorError}</span>}
+      </div>
       <div className={styles.fieldFooter}>
         <button
           type="button"
@@ -128,6 +243,7 @@ function InfoFieldEditor({ fieldConfig, initialValue, infoId, onInfoCreated }) {
 export function InfoForm() {
   const [infoId, setInfoId] = useState(null);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const [editorRefreshKey, setEditorRefreshKey] = useState(0);
 
   const {
     data: infoListData,
@@ -155,6 +271,11 @@ export function InfoForm() {
   function handleInfoCreated(id) {
     setInfoId(id);
     refetch();
+  }
+
+  async function handleFieldSaved() {
+    await refetch();
+    setEditorRefreshKey((key) => key + 1);
   }
 
   if (isLoading) {
@@ -186,15 +307,27 @@ export function InfoForm() {
           </p>
         ) : (
           <div className={styles.editorStack}>
-            {selectedGroup.fields.map((field) => (
-              <InfoFieldEditor
-                key={field.id}
-                fieldConfig={field}
-                initialValue={toDisplayValue(info?.[field.id])}
-                infoId={infoId}
-                onInfoCreated={handleInfoCreated}
-              />
-            ))}
+            {selectedGroup.fields.map((field) =>
+              field.editor ? (
+                <InfoEditorFieldEditor
+                  key={`${field.id}-${infoId ?? "new"}-${editorRefreshKey}`}
+                  fieldConfig={field}
+                  initialContent={parseContent(info?.[field.id])}
+                  infoId={infoId}
+                  onInfoCreated={handleInfoCreated}
+                  onSaved={handleFieldSaved}
+                />
+              ) : (
+                <InfoContactFieldEditor
+                  key={field.id}
+                  fieldConfig={field}
+                  initialValue={toContactInitialValue(info?.[field.id])}
+                  infoId={infoId}
+                  onInfoCreated={handleInfoCreated}
+                  onSaved={handleFieldSaved}
+                />
+              ),
+            )}
           </div>
         )}
       </div>

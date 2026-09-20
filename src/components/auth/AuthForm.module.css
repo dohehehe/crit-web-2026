@@ -1,54 +1,96 @@
+@import "../../app/breakpoints.css";
+
 .page {
-  max-width: 480px;
+  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
-  padding: 48px 24px 80px;
+  padding: 60px 24px 80px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 60px;
+}
+
+.subscriptionHeader {
+  gap: 28px;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--gray-65);
+  padding: 10px 0px;
+  border: none;
+  border-bottom: 1px solid var(--black);
   background: var(--white);
   color: var(--black);
   font: inherit;
+  height: 28px;
+  font-size: 23px;
+  line-height: 24px;
+  letter-spacing: 2%;
+  font-weight: 300 !important;
+  font-family: "Pretendard", sans-serif;
 }
 
 .input:focus {
-  outline: 2px solid var(--crit-orange);
+  outline: none;
+  border-bottom: 1px solid var(--crit-orange);
   outline-offset: 0;
   border-color: var(--crit-orange);
 }
 
+
+.checkboxFields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
 .checkboxField {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkboxInput {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--black);
+  appearance: none;
+  cursor: pointer;
+}
+
+.checkboxInput:checked {
+  background: var(--black);
 }
 
 .checkboxField input {
-  margin-top: 4px;
   flex-shrink: 0;
+}
+
+.checkboxLink {
+  text-decoration: underline;
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
 }
 
 .checkboxLabel {
@@ -66,17 +108,17 @@
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .submit {
-  width: 100%;
-  padding: 12px 16px;
   border: none;
-  background: var(--black);
-  color: var(--white);
-  font: inherit;
+  background: white;
+  color: var(--black);
   cursor: pointer;
+  text-align: left;
+  margin-right: auto;
 }
 
 .submit:disabled {
@@ -85,20 +127,24 @@
 }
 
 .submit:not(:disabled):hover {
-  background: var(--crit-orange);
+  color: var(--crit-orange);
 }
 
 .footerLink {
-  text-align: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-.footerLink a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.footerLink button {
+  border: none;
+  background: none;
+  color: var(--gray-65);
+  font: inherit;
+  cursor: pointer;
 }
 
-.footerLink a:hover {
+.footerLinkButton:hover {
   color: var(--crit-orange);
 }
 
@@ -146,4 +192,25 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.paragraph {
+  font-weight: 400;
+}
+
+
+.editorProse-module__2RCLSW__root {
+  gap: 2px;
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .page {
+    padding: 10px 10px 60px;
+  }
 }
