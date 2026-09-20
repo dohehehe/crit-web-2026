@@ -5,11 +5,14 @@ export const metadata = {
 };
 
 export default async function LoginPage({ searchParams }) {
-  const { registered } = await searchParams;
+  const { registered, reset } = await searchParams;
 
   return (
     <main>
-      <LoginForm registered={registered === "1"} />
+      <LoginForm
+        registered={registered === "1"}
+        passwordReset={reset === "1"}
+      />
     </main>
   );
 }

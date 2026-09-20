@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { signInAction } from "@/lib/auth/actions";
 import styles from "@/components/auth/AuthForm.module.css";
 
@@ -16,8 +18,17 @@ function SubmitButton() {
   );
 }
 
-export function LoginForm({ registered }) {
+export function LoginForm({ registered, passwordReset }) {
   const [state, formAction] = useActionState(signInAction, null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+
+  if (showForgotPassword) {
+    return (
+      <div className={styles.page}>
+        <ForgotPasswordForm onBack={() => setShowForgotPassword(false)} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -29,6 +40,12 @@ export function LoginForm({ registered }) {
       {registered ? (
         <p className={`p ${styles.success}`} role="status">
           회원가입이 완료되었습니다. 로그인해 주세요.
+        </p>
+      ) : null}
+
+      {passwordReset ? (
+        <p className={`p ${styles.success}`} role="status">
+          비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요.
         </p>
       ) : null}
 
@@ -45,7 +62,16 @@ export function LoginForm({ registered }) {
         </label>
 
         <label className={styles.field}>
-          <span className="caption">비밀번호</span>
+          <span className={styles.fieldLabelRow}>
+            <span className="caption">비밀번호</span>
+            <button
+              type="button"
+              className={styles.inlineLink}
+              onClick={() => setShowForgotPassword(true)}
+            >
+              비밀번호 찾기
+            </button>
+          </span>
           <input
             className={styles.input}
             type="password"
