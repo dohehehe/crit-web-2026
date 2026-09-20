@@ -7,7 +7,11 @@ import { NavButton } from "@/components/navigation/NavButton";
 import { NavCloseButton } from "@/components/navigation/NavCloseButton";
 import { SearchNav } from "@/components/navigation/search/SearchNav";
 
-export function NavigationContainer({ children }) {
+export function NavigationContainer({
+  children,
+  instagramHref,
+  youtubeHref,
+}) {
   const { isOpen, isSearchOpen } = useNavigationMenu();
   const isNavOpen = isOpen || isSearchOpen;
 
@@ -18,7 +22,10 @@ export function NavigationContainer({ children }) {
     >
       <div className={styles.navContent}>
         {children}
-        <InfoNav />
+        <InfoNav
+          instagramHref={instagramHref}
+          youtubeHref={youtubeHref}
+        />
       </div>
       <div className={styles.navActions}>
         <SearchNav />

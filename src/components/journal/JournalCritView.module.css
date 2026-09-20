@@ -241,7 +241,18 @@
 
 @media (max-width: var(--breakpoint-mobile)) {
   .main {
-    padding-top: var(--journal-mobile-header-offset, 0);
+    padding-top: calc(var(--header-sticky-top, -67px));
+  }
+
+  .article {
+    padding-top: 12px;
+  }
+
+  .issueNumber {
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 2%;
+    font-weight: 600;
   }
 
   .postItem::before {

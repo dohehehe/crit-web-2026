@@ -9,9 +9,11 @@ import {
   INFO_NAV_ITEMS,
   isInfoNavActive,
 } from "@/lib/navigation/infoNavItems";
+import { InstagramIcon } from "@/components/icons/InstagramIcon";
+import { YoutubeIcon } from "@/components/icons/YoutubeIcon";
 import styles from "@/components/navigation/info/InfoNav.module.css";
 
-export function InfoNav() {
+export function InfoNav({ instagramHref, youtubeHref }) {
   const pathname = usePathname();
   const { isOpen, closeMenu, closeSearch } = useNavigationMenu();
   const [hoveredHref, setHoveredHref] = useState(null);
@@ -50,6 +52,32 @@ export function InfoNav() {
           );
         })}
       </ul>
+      {(instagramHref || youtubeHref) && (
+        <div className={styles.infoSocial}>
+          {instagramHref ? (
+            <a
+              className={styles.socialLink}
+              href={instagramHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <InstagramIcon className={styles.socialIcon} />
+            </a>
+          ) : null}
+          {youtubeHref ? (
+            <a
+              className={styles.socialLink}
+              href={youtubeHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+            >
+              <YoutubeIcon className={styles.socialIcon} />
+            </a>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

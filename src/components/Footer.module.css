@@ -1,0 +1,143 @@
+@import "../app/breakpoints.css";
+
+.footer {
+  padding: 80px 24px 20px;
+  color: var(--black);
+  transition: background-color 0.4s ease, color 0.4s ease;
+  position: relative;
+}
+
+.footerJournal {
+  background-color: var(--black);
+  color: var(--crit-orange);
+}
+
+.footerChannel {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.footerTop {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-start;
+  column-gap: 20px;
+  row-gap: 16px;
+}
+
+.footerLeft {
+  font-size: 14px;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.footerTitle {
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.footerBottom {
+  margin-top: 16px;
+}
+
+.footerLogo {
+  display: block;
+  width: 60px;
+  height: 32px;
+  flex-shrink: 0;
+  background-color: currentColor;
+  mask-image: url("/arko-logo.svg");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: left center;
+  -webkit-mask-image: url("/arko-logo.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  -webkit-mask-position: left center;
+}
+
+.footerRight {
+  color: inherit;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  height: 100%;
+}
+
+.footerRightItem {
+  color: inherit;
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .footer {
+    padding: 80px 10px 30px;
+    word-break: keep-all;
+    position: relative;
+  }
+
+  .footerJournal {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .footerTop {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .footerLogo {
+    margin-top: 0;
+  }
+
+  .footerRight {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .footerBottom {
+    width: 100%;
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+
+  .footerTop {
+    grid-template-columns: 1fr;
+  }
+
+  .footerLogo {
+    /* margin-top: 24px; */
+  }
+
+  .footerRight {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    word-break: keep-all;
+    position: relative;
+  }
+
+  .footerRightItem {
+    word-break: keep-all;
+  }
+
+  .footerBottom {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* 
+  .footerRight :nth-child(2) {
+    position: absolute;
+    top: 0;
+    right: 0;
+  } */
+
+  /* .footerRight :last-child {
+    order: 2;
+  } */
+}

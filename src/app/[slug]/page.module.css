@@ -2,6 +2,8 @@
 
 .main {
   padding: 0 24px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .journal {
@@ -25,6 +27,6 @@
 @media (max-width: var(--breakpoint-mobile)) {
   .main {
     padding: 0 10px;
-    padding-top: 82px;
+    /* padding-top: 20px; */
   }
 }

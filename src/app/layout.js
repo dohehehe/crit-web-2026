@@ -1,5 +1,6 @@
 import { Navigation } from '@/components/navigation/Navigation';
 import "./globals.css";
+import Footer from '@/components/Footter';
 
 export const metadata = {
   title: "CRIT",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
       <body>
         <Navigation />
         {children}
+        <Footer />
       </body>
     </html>
   );
