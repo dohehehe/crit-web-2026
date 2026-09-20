@@ -13,11 +13,11 @@ import {
   sectionUsesWorkshopStatusTabs,
 } from "@/lib/admin/section-mode";
 import { filterPostsByWorkshopStatus } from "@/lib/admin/workshop-status";
-import {
-  isKeywordsTabSelected,
-  KEYWORDS_TAB,
-} from "@/lib/admin/keywords-tab";
+import { AUTHORS_TAB, isAuthorsTabSelected } from "@/lib/admin/authors-tab";
+import { isContentsUtilityTabSelected } from "@/lib/admin/contents-utility-tabs";
+import { isKeywordsTabSelected, KEYWORDS_TAB } from "@/lib/admin/keywords-tab";
 import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
+import { AdminAuthorsTable } from "@/components/admin/contents/admin-authors-table";
 import { AdminKeywordsTable } from "@/components/admin/contents/admin-keywords-table";
 import { AdminCategoryBar } from "@/components/admin/contents/category/admin-category-bar";
 import { AdminCategoryManager } from "@/components/admin/contents/category/admin-category-manager";
@@ -44,6 +44,8 @@ export function AdminPostsPanel() {
 
   const sections = sectionsData?.items ?? [];
   const isKeywordsView = isKeywordsTabSelected(selectedSectionId);
+  const isAuthorsView = isAuthorsTabSelected(selectedSectionId);
+  const isUtilityView = isContentsUtilityTabSelected(selectedSectionId);
   const selectedSection =
     sections.find((section) => section.id === selectedSectionId) ?? null;
   const sectionMode = getSectionMode(selectedSection);
@@ -65,6 +67,22 @@ export function AdminPostsPanel() {
   const keywords = keywordsData?.items ?? [];
 
   const {
+    data: authorsData,
+    isLoading: authorsLoading,
+    error: authorsError,
+    refetch: refetchAuthors,
+  } = useAdminQuery("authors", {
+    params: {
+      select: "id,name,slug,email,posts(count)",
+      order: "name.asc",
+      limit: 200,
+    },
+    enabled: isAuthorsView,
+  });
+
+  const authors = authorsData?.items ?? [];
+
+  const {
     data: categoriesData,
     isLoading: categoriesLoading,
     error: categoriesError,
@@ -78,7 +96,7 @@ export function AdminPostsPanel() {
     },
     enabled:
       Boolean(selectedSectionId) &&
-      !isKeywordsView &&
+      !isUtilityView &&
       (sectionUsesCategoryTabs(sectionMode) || sectionUsesCategoryManagement(sectionMode)),
   });
 
@@ -94,7 +112,7 @@ export function AdminPostsPanel() {
       order: "issue_number.desc",
       limit: 100,
     },
-    enabled: Boolean(selectedSectionId) && !isKeywordsView && sectionMode === "journal",
+    enabled: Boolean(selectedSectionId) && !isUtilityView && sectionMode === "journal",
   });
 
   const issues = issuesData?.items ?? [];
@@ -130,7 +148,7 @@ export function AdminPostsPanel() {
     refetch: refetchPosts,
   } = useAdminQuery("posts", {
     params: postsParams,
-    enabled: Boolean(selectedSectionId) && !isKeywordsView,
+    enabled: Boolean(selectedSectionId) && !isUtilityView,
   });
 
   const posts = postsData?.items ?? [];
@@ -171,13 +189,13 @@ export function AdminPostsPanel() {
     postsError;
   const isListLoading =
     Boolean(selectedSectionId) &&
-    !isKeywordsView &&
+    !isUtilityView &&
     (postsLoading ||
       (sectionMode === "journal" && issuesLoading) ||
       (sectionUsesCategoryTabs(sectionMode) && categoriesLoading));
 
   const showPostsTable =
-    !isKeywordsView &&
+    !isUtilityView &&
     (sectionUsesCategoryTabs(sectionMode) ||
       sectionUsesWorkshopStatusTabs(sectionMode) ||
       sectionMode === "posts") &&
@@ -186,7 +204,7 @@ export function AdminPostsPanel() {
     !listError;
 
   const showJournalIssuesList =
-    !isKeywordsView &&
+    !isUtilityView &&
     sectionMode === "journal" &&
     selectedSectionId &&
     !isListLoading &&
@@ -198,7 +216,7 @@ export function AdminPostsPanel() {
         sections={sections}
         selectedId={selectedSectionId}
         onSelect={handleSectionSelect}
-        trailingTabs={[KEYWORDS_TAB]}
+        trailingTabs={[KEYWORDS_TAB, AUTHORS_TAB]}
       />
 
       <div className={styles.content} role="tabpanel">
@@ -220,8 +238,22 @@ export function AdminPostsPanel() {
           <AdminKeywordsTable keywords={keywords} onChanged={refetchKeywords} />
         )}
 
+        {isAuthorsView && authorsLoading && (
+          <p className={`${styles.status} caption gray-65`}>저자 불러오는 중…</p>
+        )}
+
+        {isAuthorsView && authorsError && (
+          <p className={`${styles.status} caption`}>
+            저자를 불러오지 못했습니다: {authorsError.message}
+          </p>
+        )}
+
+        {isAuthorsView && !authorsLoading && !authorsError && (
+          <AdminAuthorsTable authors={authors} onChanged={refetchAuthors} />
+        )}
+
         {selectedSectionId &&
-          !isKeywordsView &&
+          !isUtilityView &&
           sectionUsesCategoryTabs(sectionMode) &&
           !isListLoading &&
           !listError && (
@@ -234,7 +266,7 @@ export function AdminPostsPanel() {
           />
         )}
 
-        {selectedSectionId && !isKeywordsView && sectionUsesCategoryManagement(sectionMode) && (
+        {selectedSectionId && !isUtilityView && sectionUsesCategoryManagement(sectionMode) && (
           <>
             {categoriesLoading && (
               <p className={`${styles.status} caption gray-65`}>카테고리 불러오는 중…</p>
@@ -255,7 +287,7 @@ export function AdminPostsPanel() {
         )}
 
         {selectedSectionId &&
-          !isKeywordsView &&
+          !isUtilityView &&
           sectionUsesWorkshopStatusTabs(sectionMode) &&
           !isListLoading &&
           !listError && (
@@ -265,17 +297,17 @@ export function AdminPostsPanel() {
           />
         )}
 
-        {selectedSectionId && !isKeywordsView && isListLoading && (
+        {selectedSectionId && !isUtilityView && isListLoading && (
           <p className={`${styles.status} caption gray-65`}>목록 불러오는 중…</p>
         )}
 
-        {selectedSectionId && !isKeywordsView && listError && (
+        {selectedSectionId && !isUtilityView && listError && (
           <p className={`${styles.status} caption`}>
             목록을 불러오지 못했습니다: {listError.message}
           </p>
         )}
 
-        {selectedSectionId && !isKeywordsView && !isListLoading && !listError && (
+        {selectedSectionId && !isUtilityView && !isListLoading && !listError && (
           <div className={styles.toolbar}>
             {sectionMode === "journal" ? (
               <Link href={buildIssueCreateHref()} className={`${styles.createButton} caption`}>

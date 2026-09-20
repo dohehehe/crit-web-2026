@@ -4,14 +4,14 @@ import { getSectionMode } from "@/lib/admin/section-mode";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostCard.module.css";
 
-export function PostCard({ post }) {
+export function PostCard({ post, showSectionLabel = false }) {
   const { title, thumbnailImg, category, section, keywords } = post;
   const isJournalSection = section && getSectionMode(section) === "journal";
 
   return (
     <Link href={getPostPath(post)} className={styles.cardLink}>
     <article className={styles.card}>
-      {section?.slug ? (
+      {showSectionLabel && section?.slug ? (
         <span
           className={`${styles.section} ${isJournalSection ? styles.sectionJournal : ""} tag-keyword white`}
         >

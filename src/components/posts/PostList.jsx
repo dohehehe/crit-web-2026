@@ -1,7 +1,7 @@
 import { PostCard } from "@/components/posts/PostCard";
 import styles from "./PostList.module.css";
 
-export function PostList({ posts }) {
+export function PostList({ posts, showSectionLabel = false }) {
   if (!posts?.length) {
     return <p className={`${styles.empty} caption gray-65`}>게시물이 없습니다.</p>;
   }
@@ -10,7 +10,7 @@ export function PostList({ posts }) {
     <ul className={styles.list}>
       {posts.map((post) => (
         <li key={post.id}>
-          <PostCard post={post} />
+          <PostCard post={post} showSectionLabel={showSectionLabel} />
         </li>
       ))}
     </ul>
