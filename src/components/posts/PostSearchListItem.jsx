@@ -14,6 +14,7 @@ export function PostSearchListItem({ entry }) {
     category,
     keywords,
     showThumbnailPlaceholder,
+    excerpt,
   } = entry;
 
   const isJournalSection = section && getSectionMode(section) === "journal";
@@ -63,6 +64,8 @@ export function PostSearchListItem({ entry }) {
               ) : null}
             </div>
           ) : null}
+
+          {excerpt ? <p className={`${styles.excerpt} caption gray-65`}>{excerpt}</p> : null}
 
           {hasKeywords ? (
             <ul className={styles.keywords} aria-label="키워드">

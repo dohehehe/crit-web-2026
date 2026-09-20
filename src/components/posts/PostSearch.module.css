@@ -111,6 +111,13 @@
   text-decoration: underline;
 }
 
+.excerpt {
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
 
 .keywords {
   display: flex;

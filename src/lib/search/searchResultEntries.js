@@ -1,5 +1,7 @@
+import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
 import { getAuthorPath } from "@/lib/routes/authors";
 import { getPostPath } from "@/lib/routes/posts";
+import { truncatePlainText } from "@/lib/text/truncatePlainText";
 
 export function postToSearchEntry(post) {
   return {
@@ -12,6 +14,7 @@ export function postToSearchEntry(post) {
     section: post.section ?? null,
     category: post.category ?? null,
     keywords: post.keywords ?? [],
+    excerpt: "",
     showThumbnailPlaceholder: true,
   };
 }
@@ -27,6 +30,7 @@ export function authorToSearchEntry(author) {
     section: null,
     category: null,
     keywords: [],
+    excerpt: truncatePlainText(getEditorParagraphPlainText(author.content)),
     showThumbnailPlaceholder: false,
   };
 }
