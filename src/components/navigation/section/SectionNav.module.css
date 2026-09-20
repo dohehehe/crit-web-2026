@@ -133,6 +133,13 @@
     height: 52px;
     width: auto;
   }
+
+  .sectionList.menuOpen .labelEn,
+  .sectionList.menuOpen .labelKr {
+    font-size: 52px;
+    line-height: 52px;
+    letter-spacing: 0%;
+  }
 }
 
 @media (max-width: var(--breakpoint-mobile)) {}

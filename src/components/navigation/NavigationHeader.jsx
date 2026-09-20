@@ -12,6 +12,17 @@ import {
 import { CHANNEL_BACKGROUND_CLASS, isChannelPath } from "@/lib/routes/channel";
 import styles from "@/components/navigation/Navigation.module.css";
 
+function getMobileStickyTopFromLogoHeight(header) {
+  const logoLink = header.firstElementChild;
+  if (!logoLink) {
+    return null;
+  }
+
+  const hideHeight = logoLink.offsetTop + logoLink.offsetHeight;
+
+  return hideHeight > 0 ? -hideHeight : null;
+}
+
 function useJournalStickyTop(headerRef, enabled) {
   const [stickyTop, setStickyTop] = useState(null);
 
@@ -26,7 +37,14 @@ function useJournalStickyTop(headerRef, enabled) {
       return;
     }
 
+    const mobileQuery = window.matchMedia(MOBILE_BREAKPOINT_QUERY);
+
     const updateStickyTop = () => {
+      if (mobileQuery.matches) {
+        setStickyTop(getMobileStickyTopFromLogoHeight(header));
+        return;
+      }
+
       const nav = header.querySelector("nav");
       if (!nav) {
         return;
@@ -45,20 +63,21 @@ function useJournalStickyTop(headerRef, enabled) {
       observer.observe(logo);
     }
 
-    const logoImg = logo?.querySelector("img");
-    if (logoImg) {
+    logo?.querySelectorAll("img").forEach((logoImg) => {
       observer.observe(logoImg);
-    }
+    });
 
     const nav = header.querySelector("nav");
     if (nav) {
       observer.observe(nav);
     }
 
+    mobileQuery.addEventListener("change", updateStickyTop);
     window.addEventListener("resize", updateStickyTop);
 
     return () => {
       observer.disconnect();
+      mobileQuery.removeEventListener("change", updateStickyTop);
       window.removeEventListener("resize", updateStickyTop);
     };
   }, [enabled, headerRef]);
@@ -121,6 +140,7 @@ function useJournalMobileHeaderOffset(headerRef, enabled) {
 
 export function NavigationHeader({ children }) {
   const pathname = usePathname();
+  const isHome = pathname === "/";
   const isJournalCrit = isJournalCritPath(pathname);
   const isChannel = isChannelPath(pathname);
   const useIssueBackground = isJournalCritOrangeBackgroundPath(pathname);
@@ -148,16 +168,25 @@ export function NavigationHeader({ children }) {
     );
   }, [useIssueBackground, isChannel]);
 
-  const style =
-    isJournalCrit && stickyTop !== null
-      ? { "--header-sticky-top": `${stickyTop}px` }
-      : undefined;
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+
+    if (!isJournalCrit || stickyTop === null) {
+      root.style.removeProperty("--header-sticky-top");
+      return undefined;
+    }
+
+    root.style.setProperty("--header-sticky-top", `${stickyTop}px`);
+
+    return () => {
+      root.style.removeProperty("--header-sticky-top");
+    };
+  }, [isJournalCrit, stickyTop]);
 
   return (
     <header
       ref={headerRef}
-      className={`${styles.header}${isJournalCrit ? ` ${styles.headerJournal}` : ""}${isChannel ? ` ${styles.headerChannel}` : ""}`}
-      style={style}
+      className={`${styles.header}${isHome ? ` ${styles.headerHome}` : ""}${isJournalCrit ? ` ${styles.headerJournal}` : ""}${isChannel ? ` ${styles.headerChannel}` : ""}`}
     >
       {children}
     </header>

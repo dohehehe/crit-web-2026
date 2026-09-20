@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
 import { useScrolled } from "@/hooks/useScrolled";
-import { getSectionHref } from "@/lib/sections/getSectionHref";
+import { getSectionHref, isSectionHrefActive } from "@/lib/sections/getSectionHref";
 import styles from "@/components/navigation/section/SectionNav.module.css";
 
 const HOME_HREF = "/";
@@ -64,10 +64,7 @@ export function SectionNavList({ sections }) {
         ) : null}
         {sections.map((section) => {
           const href = getSectionHref(section);
-          const isActive =
-            pathname === href ||
-            (href === "/journal-crit" && pathname.startsWith("/journal-crit/")) ||
-            (href === "/channel" && pathname.startsWith("/channel/"));
+          const isActive = isSectionHrefActive(pathname, href);
           const { en, kr } = getSectionLabels(section);
 
           return (
@@ -79,8 +76,8 @@ export function SectionNavList({ sections }) {
                 aria-current={isActive ? "page" : undefined}
               >
                 <span className={styles.labelStack} aria-hidden>
-                  <span className={`menu-en ${styles.labelEn}`}>{en}</span>
-                  <span className={`menu-kr ${styles.labelKr}`}>{kr}</span>
+                  <span className={`${styles.labelEn} menu-en`}>{en}</span>
+                  <span className={`${styles.labelKr} menu-kr`}>{kr}</span>
                 </span>
               </Link>
             </li>

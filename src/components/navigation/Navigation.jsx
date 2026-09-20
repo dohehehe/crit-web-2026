@@ -2,9 +2,19 @@ import { NavigationMenuProvider } from "@/components/navigation/NavigationMenuCo
 import { NavigationContainer } from "@/components/navigation/NavigationContainer";
 import { NavigationHeader } from "@/components/navigation/NavigationHeader";
 import { NavigationLogo } from "@/components/navigation/NavigationLogo";
+import { NavigationSub } from "@/components/navigation/NavigationSub";
 import { SectionNav } from "@/components/navigation/section/SectionNav";
+import { getSections } from "@/lib/sections/getSections";
 
-export function Navigation() {
+export async function Navigation() {
+  let sections = [];
+
+  try {
+    sections = await getSections();
+  } catch {
+    sections = [];
+  }
+
   return (
     <NavigationMenuProvider>
       <NavigationHeader>
@@ -12,6 +22,7 @@ export function Navigation() {
         <NavigationContainer>
           <SectionNav />
         </NavigationContainer>
+        <NavigationSub sections={sections} />
       </NavigationHeader>
     </NavigationMenuProvider>
   );
