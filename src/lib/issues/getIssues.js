@@ -38,13 +38,14 @@ export const getIssueByNumber = cache(async (issueNumber) => {
     .select(ISSUE_DETAIL_SELECT)
     .eq("is_active", true)
     .eq("issue_number", normalized)
-    .maybeSingle();
+    .order("created_at", { ascending: false })
+    .limit(1);
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return normalizeIssue(data);
+  return normalizeIssue(data?.[0] ?? null);
 });
 
 function parseIssueNumber(value) {
