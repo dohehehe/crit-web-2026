@@ -187,7 +187,7 @@
     margin-left: 0;
     background: white;
     /* flex-direction: row; */
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
   }
 
   .headerHome {
@@ -252,5 +252,6 @@
   .navigationSub {
     display: block;
     margin-top: 5px;
+    padding-bottom: 10px;
   }
 }
