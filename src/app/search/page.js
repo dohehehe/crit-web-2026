@@ -1,20 +1,34 @@
 import { PostSearchList } from "@/components/posts/PostSearchList";
-import { searchByQuery, searchByTag } from "@/lib/search/searchContent";
+import {
+  getSearchTagLabel,
+  searchByQuery,
+  searchByTag,
+} from "@/lib/search/searchContent";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ searchParams }) {
-  const { q } = await searchParams;
+  const { q, tag } = await searchParams;
   const trimmed = q?.trim();
 
-  if (!trimmed) {
-    return { title: "Search" };
+  if (trimmed) {
+    return {
+      title: `"${trimmed}" 검색`,
+    };
   }
 
-  return {
-    title: `"${trimmed}" 검색`,
-  };
+  if (tag) {
+    const tagLabel = await getSearchTagLabel(tag);
+
+    if (tagLabel) {
+      return {
+        title: `"${tagLabel}" 검색`,
+      };
+    }
+  }
+
+  return { title: "Search" };
 }
 
 export default async function SearchPage({ searchParams }) {
@@ -24,18 +38,23 @@ export default async function SearchPage({ searchParams }) {
   const hasTag = Boolean(tag);
 
   let entries = [];
+  let tagLabel = null;
 
   if (hasTag) {
-    entries = await searchByTag(tag);
+    [entries, tagLabel] = await Promise.all([searchByTag(tag), getSearchTagLabel(tag)]);
   } else if (hasQuery) {
     entries = await searchByQuery(trimmedQuery);
   }
 
+  const resultLabel = hasQuery ? trimmedQuery : tagLabel;
+
   return (
     <main className={styles.main}>
-      {hasQuery ? (
+      {resultLabel ? (
         <header className={styles.header}>
-          <p className={`title-1 ${styles.query}`}>&ldquo;<span className="crit-orange">{trimmedQuery}</span>&rdquo;</p>
+          <p className={`title-1 ${styles.query}`}>
+            &ldquo;<span className="crit-orange">{resultLabel}</span>&rdquo;
+          </p>
           <h1 className={`title-1 ${styles.heading}`}>검색 결과</h1>
         </header>
       ) : null}

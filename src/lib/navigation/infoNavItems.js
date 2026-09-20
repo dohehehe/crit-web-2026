@@ -26,6 +26,22 @@ export const INFO_NAV_ITEMS = [
   },
 ];
 
+export const MYPAGE_NAV_ITEM = {
+  href: "/mypage",
+  label: "My Page",
+  activeLabel: "내 정보",
+};
+
+export function getInfoNavItems(isLoggedIn) {
+  return INFO_NAV_ITEMS.map((item) => {
+    if (item.href === "/login") {
+      return isLoggedIn ? MYPAGE_NAV_ITEM : item;
+    }
+
+    return item;
+  });
+}
+
 export function isInfoNavActive(pathname, href) {
   if (pathname === href) {
     return true;

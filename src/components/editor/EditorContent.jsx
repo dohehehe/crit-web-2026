@@ -198,7 +198,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
   }
 }
 
-export function EditorContent({ contents }) {
+export function EditorContent({ contents, compact = false }) {
   const blocks = normalizeBlocks(contents);
 
   if (blocks.length === 0) {
@@ -206,9 +206,12 @@ export function EditorContent({ contents }) {
   }
 
   const footnoteContext = createFootnoteContext(blocks);
+  const rootClassName = compact
+    ? `${proseStyles.root} ${proseStyles.rootCompact}`
+    : proseStyles.root;
 
   return (
-    <div className={proseStyles.root}>
+    <div className={rootClassName}>
       {blocks.map((block, index) =>
         renderBlock(block, index, footnoteContext.applyToHtml),
       )}

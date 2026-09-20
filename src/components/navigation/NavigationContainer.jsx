@@ -11,6 +11,7 @@ export function NavigationContainer({
   children,
   instagramHref,
   youtubeHref,
+  isLoggedIn = false,
 }) {
   const { isOpen, isSearchOpen } = useNavigationMenu();
   const isNavOpen = isOpen || isSearchOpen;
@@ -25,6 +26,7 @@ export function NavigationContainer({
         <InfoNav
           instagramHref={instagramHref}
           youtubeHref={youtubeHref}
+          isLoggedIn={isLoggedIn}
         />
       </div>
       <div className={styles.navActions}>

@@ -1,0 +1,216 @@
+@import "../../app/breakpoints.css";
+
+.page {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 60px;
+}
+
+.subscriptionHeader {
+  gap: 28px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 0px;
+  border: none;
+  border-bottom: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+  height: 28px;
+  font-size: 23px;
+  line-height: 24px;
+  letter-spacing: 2%;
+  font-weight: 300 !important;
+  font-family: "Pretendard", sans-serif;
+}
+
+.input:focus {
+  outline: none;
+  border-bottom: 1px solid var(--crit-orange);
+  outline-offset: 0;
+  border-color: var(--crit-orange);
+}
+
+
+.checkboxFields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkboxInput {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--black);
+  appearance: none;
+  cursor: pointer;
+}
+
+.checkboxInput:checked {
+  background: var(--black);
+}
+
+.checkboxField input {
+  flex-shrink: 0;
+}
+
+.checkboxLink {
+  text-decoration: underline;
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  flex: 1;
+}
+
+.error {
+  color: var(--crit-orange);
+}
+
+.success {
+  color: var(--black);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.submit {
+  border: none;
+  background: white;
+  color: var(--black);
+  cursor: pointer;
+  text-align: left;
+  margin-right: auto;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit:not(:disabled):hover {
+  color: var(--crit-orange);
+}
+
+.footerLink {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.footerLink button {
+  border: none;
+  background: none;
+  color: var(--gray-65);
+  font: inherit;
+  cursor: pointer;
+}
+
+.footerLinkButton:hover {
+  color: var(--crit-orange);
+}
+
+.fieldLabelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.inlineLink {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--caption-size, 14px);
+  line-height: var(--caption-line-height, 20px);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.inlineLink:hover {
+  color: var(--crit-orange);
+}
+
+.textButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.textButton:hover {
+  color: var(--crit-orange);
+}
+
+.forgotPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.paragraph {
+  font-weight: 400;
+}
+
+
+.editorProse-module__2RCLSW__root {
+  gap: 2px;
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .page {
+    padding: 10px 10px 60px;
+  }
+}
