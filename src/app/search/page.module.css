@@ -1,13 +1,13 @@
 @import "../breakpoints.css";
 
 .main {
-  padding: 0 24px 48px;
+  padding: 10px 24px 48px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 .header {
-  margin-bottom: 24px;
+  margin-bottom: 15px;
   display: flex;
   gap: 20px;
 }
@@ -27,6 +27,18 @@
 
 @media (max-width: var(--breakpoint-tablet)) {
   .main {
-    padding: 80px 10px 48px;
+    padding: 10px 10px 48px;
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .main {
+    padding: 10px 10px 48px;
+  }
+
+  .header {
+    font-size: 40px;
+    line-height: 48px;
+    letter-spacing: 0.01em;
   }
 }

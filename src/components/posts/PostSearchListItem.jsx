@@ -47,7 +47,7 @@ export function PostSearchListItem({ post }) {
           <div className={styles.metaRow}>
             {date ? <time className={`${styles.date} caption gray-65`}>{date}</time> : null}
             {author?.name ? (
-              <span className={`${styles.author} caption tag-keyword`}>{author.name}</span>
+              <span className={`${styles.author} caption`}>{author.name}</span>
             ) : null}
           </div>
 
