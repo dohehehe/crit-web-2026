@@ -7,6 +7,11 @@ import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import { fetchIssuePreviewRelated } from "@/lib/admin/fetchIssuePreviewRelated";
+import {
+  buildIssuePreviewRecord,
+  writePostPreviewRecord,
+} from "@/lib/admin/postPreview";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import styles from "@/components/admin/contents/issue-form.module.css";
 
@@ -71,6 +76,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
   const [editorError, setEditorError] = useState(null);
   const [coverError, setCoverError] = useState(null);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
 
   function updateField(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -100,6 +106,38 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
     } finally {
       setIsUploadingCover(false);
       event.target.value = "";
+    }
+  }
+
+  async function handlePreview() {
+    setEditorError(null);
+    setIsPreviewing(true);
+
+    try {
+      if (!editorRef.current?.isReady?.()) {
+        throw new Error("에디터가 아직 준비되지 않았습니다.");
+      }
+
+      const savedData = await editorRef.current.save();
+      const contents = serializeEditorContent(savedData);
+      const { posts, previousIssues } = await fetchIssuePreviewRelated({
+        issueId: isEdit ? issueId : null,
+        issueNumber: form.issue_number,
+      });
+      const record = buildIssuePreviewRecord({
+        form,
+        contents,
+        issueId,
+        posts,
+        previousIssues,
+      });
+
+      writePostPreviewRecord(record);
+      window.open("/preview/issue", "_blank", "noopener,noreferrer");
+    } catch (error) {
+      setEditorError(error.message ?? "미리보기를 열지 못했습니다.");
+    } finally {
+      setIsPreviewing(false);
     }
   }
 
@@ -145,6 +183,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
   }
 
   const isSaving = isCreating || isUpdating;
+  const isBusy = isSaving || isPreviewing;
   const submitError = createError ?? updateError;
 
   return (
@@ -211,7 +250,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
             type="button"
             className={`${styles.coverButton} caption`}
             onClick={() => coverInputRef.current?.click()}
-            disabled={isUploadingCover || isSaving}
+            disabled={isUploadingCover || isBusy}
           >
             {isUploadingCover
               ? "업로드 중…"
@@ -259,8 +298,16 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
       )}
 
       <div className={styles.actions}>
-        <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
+        <button type="submit" className={`${styles.submitButton} caption`} disabled={isBusy}>
           {isSaving ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
+        </button>
+        <button
+          type="button"
+          className={`${styles.previewButton} caption`}
+          onClick={handlePreview}
+          disabled={isBusy}
+        >
+          {isPreviewing ? "미리보기 여는 중…" : "미리보기"}
         </button>
         <Link href="/admin/contents" className={`${styles.cancelButton} caption`}>
           취소

@@ -4,6 +4,7 @@ import { createFootnoteContext } from "@/lib/editorjs/footnotes";
 import { getGallerySlides } from "@/lib/editorjs/gallery";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import styles from "@/components/editor/EditorContent.module.css";
+import proseStyles from "@/components/editor/editorProse.module.css";
 
 function DocumentFootnotes({ footnotes }) {
   if (!footnotes?.length) {
@@ -11,10 +12,10 @@ function DocumentFootnotes({ footnotes }) {
   }
 
   return (
-    <aside className={`${styles.footnotesSection} caption black`}>
+    <aside className={`${proseStyles.footnotesSection} caption black`}>
       {footnotes.map((note) => (
-        <p key={note.footnoteId} id={note.footnoteId} className={styles.footnoteItem}>
-          <sup className={styles.footnoteMarker}>{note.superscript}</sup>
+        <p key={note.footnoteId} id={note.footnoteId} className={proseStyles.footnoteItem}>
+          <sup className={proseStyles.footnoteMarker}>{note.superscript}</sup>
           <span dangerouslySetInnerHTML={{ __html: note.content }} />
         </p>
       ))}
@@ -30,7 +31,7 @@ function renderListItems(items, ordered, applyFootnotesToHtml) {
   const ListTag = ordered ? "ol" : "ul";
 
   return (
-    <ListTag className={styles.list}>
+    <ListTag className={proseStyles.list}>
       {items.map((item, index) => {
         const content = typeof item === "string" ? item : item.content;
         const processedContent = content ? applyFootnotesToHtml(content) : "";
@@ -61,7 +62,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
       return (
         <Tag
           key={index}
-          className={styles.header}
+          className={proseStyles.header}
           dangerouslySetInnerHTML={{
             __html: applyFootnotesToHtml(data?.text ?? ""),
           }}
@@ -73,7 +74,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
       return (
         <p
           key={index}
-          className={`p ${styles.paragraph}`}
+          className={`p ${proseStyles.paragraph}`}
           dangerouslySetInnerHTML={{
             __html: applyFootnotesToHtml(data?.text ?? ""),
           }}
@@ -82,7 +83,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
 
     case "list":
       return (
-        <div key={index} className={styles.listBlock}>
+        <div key={index} className={proseStyles.listBlock}>
           {renderListItems(
             data?.items,
             data?.style === "ordered",
@@ -93,7 +94,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
 
     case "quote":
       return (
-        <blockquote key={index} className={styles.quote}>
+        <blockquote key={index} className={proseStyles.quote}>
           <p
             className="p"
             dangerouslySetInnerHTML={{
@@ -101,7 +102,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
             }}
           />
           {data?.caption ? (
-            <cite className={`p ${styles.quoteCaption}`}>— {data.caption}</cite>
+            <cite className={`p ${proseStyles.quoteCaption}`}>— {data.caption}</cite>
           ) : null}
         </blockquote>
       );
@@ -114,18 +115,18 @@ function renderBlock(block, index, applyFootnotesToHtml) {
       }
 
       return (
-        <figure key={index} className={styles.imageBlock}>
+        <figure key={index} className={proseStyles.imageBlock}>
           <Image
             src={imageUrl}
             alt={data?.caption ?? ""}
             width={0}
             height={0}
             sizes="100vw"
-            className={styles.image}
+            className={proseStyles.image}
           />
           {data?.caption ? (
             <figcaption
-              className={`caption ${styles.imageCaption}`}
+              className={`caption ${proseStyles.imageCaption}`}
               dangerouslySetInnerHTML={{
                 __html: applyFootnotesToHtml(data.caption),
               }}
@@ -168,8 +169,8 @@ function renderBlock(block, index, applyFootnotesToHtml) {
       }
 
       return (
-        <figure key={index} className={styles.embedBlock}>
-          <div className={styles.embed}>
+        <figure key={index} className={proseStyles.embedBlock}>
+          <div className={proseStyles.embed}>
             <iframe
               src={embedUrl}
               title={data?.caption ?? "Embedded content"}
@@ -179,7 +180,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
           </div>
           {data?.caption ? (
             <figcaption
-              className={`caption ${styles.embedCaption}`}
+              className={`caption ${proseStyles.embedCaption}`}
               dangerouslySetInnerHTML={{
                 __html: applyFootnotesToHtml(data.caption),
               }}
@@ -190,7 +191,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
     }
 
     case "delimiter":
-      return <hr key={index} className={styles.delimiter} />;
+      return <hr key={index} className={proseStyles.delimiter} />;
 
     default:
       return null;
@@ -207,7 +208,7 @@ export function EditorContent({ contents }) {
   const footnoteContext = createFootnoteContext(blocks);
 
   return (
-    <div className={styles.content}>
+    <div className={proseStyles.root}>
       {blocks.map((block, index) =>
         renderBlock(block, index, footnoteContext.applyToHtml),
       )}

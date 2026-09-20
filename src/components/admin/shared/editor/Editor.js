@@ -15,6 +15,7 @@ import {
 } from "@/lib/editorjs/footnotesTune";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
+import proseStyles from "@/components/editor/editorProse.module.css";
 
 const INLINE_TOOLS = ["link", "bold", "italic", "underline", "marker"];
 
@@ -225,7 +226,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
   }, [holderId]);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${proseStyles.root}`}>
       <div
         id={holderId}
         className={styles.holder}

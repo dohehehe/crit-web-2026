@@ -52,6 +52,7 @@
 }
 
 .submitButton,
+.previewButton,
 .cancelButton {
   padding: 10px 20px;
   border: 1px solid var(--black);
@@ -70,6 +71,21 @@
 }
 
 .submitButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.previewButton {
+  background: var(--white);
+  color: var(--black);
+}
+
+.previewButton:hover:not(:disabled) {
+  background: var(--black);
+  color: var(--white);
+}
+
+.previewButton:disabled {
   cursor: wait;
   opacity: 0.6;
 }
