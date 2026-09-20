@@ -105,4 +105,20 @@
   flex-wrap: wrap;
   gap: 9px 6px;
   list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.category a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--crit-orange);
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1.8px;
+}
+
+.category a:hover {
+  background: var(--crit-orange);
+  color: var(--white);
+  text-decoration: none;
 }

@@ -9,56 +9,57 @@ export function PostCard({ post, showSectionLabel = false }) {
   const isJournalSection = section && getSectionMode(section) === "journal";
 
   return (
-    <Link href={getPostPath(post)} className={styles.cardLink}>
     <article className={styles.card}>
-      {showSectionLabel && section?.slug ? (
-        <span
-          className={`${styles.section} ${isJournalSection ? styles.sectionJournal : ""} tag-keyword white`}
-        >
-          <span className={styles.sectionSlug}>{section.slug}</span>
-          {section.name ? <span className={styles.sectionName}>{section.name}</span> : null}
-        </span>
-      ) : null}
+      <Link href={getPostPath(post)} className={styles.cardLink}>
+        {showSectionLabel && section?.slug ? (
+          <span
+            className={`${styles.section} ${isJournalSection ? styles.sectionJournal : ""} tag-keyword white`}
+          >
+            <span className={styles.sectionSlug}>{section.slug}</span>
+            {section.name ? <span className={styles.sectionName}>{section.name}</span> : null}
+          </span>
+        ) : null}
 
-      {thumbnailImg ? (
-        <div
-          className={`${styles.thumbnail} ${isJournalSection ? styles.thumbnailJournal : ""}`}
-        >
-          <Image
-            src={thumbnailImg}
-            alt=""
-            width={0}
-            height={0}
-            sizes="(max-width: 479px) 100vw, (max-width: 719px) 50vw, 600px"
-            className={styles.thumbnailImage}
-          />
-        </div>
-      ) : (
-        <div className={`${styles.thumbnail} ${styles.thumbnailPlaceholder}`} />
-      )}
+        {thumbnailImg ? (
+          <div
+            className={`${styles.thumbnail} ${isJournalSection ? styles.thumbnailJournal : ""}`}
+          >
+            <Image
+              src={thumbnailImg}
+              alt=""
+              width={0}
+              height={0}
+              sizes="(max-width: 479px) 100vw, (max-width: 719px) 50vw, 600px"
+              className={styles.thumbnailImage}
+            />
+          </div>
+        ) : (
+          <div className={`${styles.thumbnail} ${styles.thumbnailPlaceholder}`} />
+        )}
 
-      {title ? <h2 className={`${styles.title} thumb-title`}>{title}</h2> : null}
+        {title ? <h2 className={`${styles.title} thumb-title`}>{title}</h2> : null}
+      </Link>
 
       <div className={styles.meta}>
         <ul className={styles.keywords} aria-label="키워드">
           {category?.name ? (
-            <li className={`${styles.category} tag-category`}>{category.name}</li>
+            <li className={`${styles.category} tag-category`}>
+              {category.id ? (
+                <Link href={`/search?tag=category-${category.id}`}>{category.name}</Link>
+              ) : (
+                category.name
+              )}
+            </li>
           ) : null}
-          {keywords.length > 0 ? (
-
-            keywords.map((keyword) => (
-              <li key={keyword.id} className="tag-keyword">
-                {keyword.name}
-              </li>
-            ))
-
-          ) : null}
+          {keywords.length > 0
+            ? keywords.map((keyword) => (
+                <li key={keyword.id} className="tag-keyword">
+                  {keyword.name}
+                </li>
+              ))
+            : null}
         </ul>
       </div>
-
-
-
     </article>
-    </Link>
   );
 }
