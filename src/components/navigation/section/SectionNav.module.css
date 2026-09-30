@@ -25,11 +25,10 @@
 .homeLink {
   display: inline-flex;
   align-items: center;
-  line-height: var(--menu-en-line-height);
+  /* line-height: var(--menu-en-line-height); */
 }
 
-.labelStack,
-.homeIconStack {
+.labelStack {
   display: inline-grid;
   grid-template-columns: max-content;
   grid-template-rows: max-content;
@@ -37,7 +36,7 @@
 
 .labelEn,
 .labelKr,
-.homeIconStack img {
+.homeIcon {
   grid-area: 1 / 1;
 }
 
@@ -46,20 +45,26 @@
   white-space: nowrap;
 }
 
+.labelKr {
+  padding-top: 1px;
+}
+
+.homeLink {
+  padding-top: 4px;
+}
+
 .labelEn,
 .labelKr,
-.homeIconDefault,
-.homeIconHover {
+.homeIcon {
   transition: opacity 0.15s ease;
 }
 
 .labelEn,
-.homeIconDefault {
+.homeIcon {
   opacity: 1;
 }
 
-.labelKr,
-.homeIconHover {
+.labelKr {
   opacity: 0;
 }
 
@@ -75,15 +80,13 @@
   opacity: 1;
 }
 
-.homeLink[aria-current="page"] .homeIconDefault,
-.homeLink:hover .homeIconDefault,
-.homeLink:focus-visible .homeIconDefault {
+.homeLink:hover .homeIcon,
+.homeLink:focus-visible .homeIcon {
   opacity: 0;
 }
 
-.homeLink[aria-current="page"] .homeIconHover,
-.homeLink:hover .homeIconHover,
-.homeLink:focus-visible .homeIconHover {
+.homeLink:hover .labelKr,
+.homeLink:focus-visible .labelKr {
   opacity: 1;
 }
 
@@ -91,16 +94,20 @@
 
   .labelEn,
   .labelKr,
-  .homeIconDefault,
-  .homeIconHover {
+  .homeIcon {
     transition: none;
   }
 }
 
 .homeIcon {
   display: block;
-  width: auto;
-  height: var(--menu-en-line-height);
+  width: 25px;
+  height: 25px;
+  padding-left: 3px;
+}
+
+.homeLink {
+  margin-top: -2.5px;
 }
 
 :global(html.channelBackground) .homeLink .homeIcon {
@@ -108,7 +115,9 @@
 }
 
 @media (max-width: var(--breakpoint-tablet)) {
-  .sectionList.menuOpen {}
+  .sectionList.menuOpen {
+    text-align: left;
+  }
 
 
   .sectionList.menuOpen .list {

@@ -120,7 +120,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
 
       const savedData = await editorRef.current.save();
       const contents = serializeEditorContent(savedData);
-      const { posts, previousIssues } = await fetchIssuePreviewRelated({
+      const { posts, otherIssues } = await fetchIssuePreviewRelated({
         issueId: isEdit ? issueId : null,
         issueNumber: form.issue_number,
       });
@@ -129,7 +129,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         contents,
         issueId,
         posts,
-        previousIssues,
+        otherIssues,
       });
 
       writePostPreviewRecord(record);

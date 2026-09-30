@@ -55,20 +55,35 @@ function parseIssueNumber(value) {
   return Number.isNaN(num) ? null : num;
 }
 
-export const getPreviousIssues = cache(async (currentIssueNumber) => {
-  const current = parseIssueNumber(currentIssueNumber);
+function compareIssueNumberDesc(a, b) {
+  const aNum = parseIssueNumber(a.issueNumber);
+  const bNum = parseIssueNumber(b.issueNumber);
 
-  if (current === null) {
-    return [];
+  if (aNum === null && bNum === null) {
+    return 0;
   }
 
+  if (aNum === null) {
+    return 1;
+  }
+
+  if (bNum === null) {
+    return -1;
+  }
+
+  return bNum - aNum;
+}
+
+export const getOtherIssues = cache(async (currentIssueNumber, currentIssueId) => {
+  const current = parseIssueNumber(currentIssueNumber);
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from("issues")
     .select(ISSUE_LIST_SELECT)
     .eq("is_active", true)
-    .order("issue_number", { ascending: false, nullsFirst: false });
+    .order("issue_number", { ascending: false, nullsFirst: false })
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw new Error(error.message);
@@ -77,7 +92,12 @@ export const getPreviousIssues = cache(async (currentIssueNumber) => {
   return (data ?? [])
     .map(normalizeIssueSummary)
     .filter((issue) => {
+      if (currentIssueId && issue.id === currentIssueId) {
+        return false;
+      }
+
       const num = parseIssueNumber(issue.issueNumber);
-      return num !== null && num < current;
-    });
+      return current === null || num !== current;
+    })
+    .sort(compareIssueNumberDesc);
 });

@@ -10,10 +10,7 @@ import styles from "@/components/navigation/section/SectionNav.module.css";
 
 const HOME_HREF = "/";
 const HEADER_SCROLL_THRESHOLD = 140;
-const HOME_ICON_WIDTH = 30;
-const HOME_ICON_HEIGHT = 22;
-const HOME_ICON_DEFAULT = "/icon-home-Default.svg";
-const HOME_ICON_HOVER = "/icon-home-Hover.svg";
+const HOME_ICON_SIZE = 10;
 
 function getSectionLabels(section) {
   return {
@@ -43,21 +40,15 @@ export function SectionNavList({ sections }) {
               aria-label={isHomeActive ? "홈" : "Home"}
               aria-current={isHomeActive ? "page" : undefined}
             >
-              <span className={styles.homeIconStack} aria-hidden>
+              <span className={styles.labelStack} aria-hidden>
                 <Image
-                  src={HOME_ICON_DEFAULT}
+                  src="/home.svg"
                   alt=""
-                  width={HOME_ICON_WIDTH}
-                  height={HOME_ICON_HEIGHT}
-                  className={`${styles.homeIcon} ${styles.homeIconDefault}`}
+                  width={HOME_ICON_SIZE}
+                  height={HOME_ICON_SIZE}
+                  className={styles.homeIcon}
                 />
-                <Image
-                  src={HOME_ICON_HOVER}
-                  alt=""
-                  width={HOME_ICON_WIDTH}
-                  height={HOME_ICON_HEIGHT}
-                  className={`${styles.homeIcon} ${styles.homeIconHover}`}
-                />
+                <span className={`${styles.labelKr} menu-kr`}>홈</span>
               </span>
             </Link>
           </li>

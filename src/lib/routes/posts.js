@@ -1,6 +1,7 @@
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getSectionHref, sectionPathSlug } from "@/lib/sections/getSectionHref";
 import { getJournalCritIssuePath, getJournalCritPostPath } from "@/lib/routes/journalCrit";
+import { toPostPathSegment } from "@/lib/routes/slugPath";
 
 export function getPostSegment(post) {
   return post?.slug || post?.id || "";
@@ -30,7 +31,7 @@ export function getPostPath(post, options = {}) {
     return "/";
   }
 
-  return `/${pathSlug}/${segment}`;
+  return `/${pathSlug}/${encodeURIComponent(toPostPathSegment(segment))}`;
 }
 
 export function getPostBackLink(post) {
