@@ -63,6 +63,8 @@ export default function FooterClient({ email }) {
           aria-label="한국문화예술위원회"
         />
       </div>
+
+
     </footer>
   );
 }
