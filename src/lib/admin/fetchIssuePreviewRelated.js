@@ -13,6 +13,9 @@ function mapPostForPreview(post) {
     id: post.id,
     title: post.title ?? "",
     slug: post.slug ?? "",
+    author: post.authors?.name
+      ? { id: post.authors.id, name: post.authors.name }
+      : null,
   };
 }
 
@@ -85,7 +88,7 @@ export async function fetchIssuePreviewRelated({ issueId, issueNumber }) {
         params: {
           ...adminParams,
           "eq.issue_id": issueId,
-          select: "id,title,slug,sort_order",
+          select: "id,title,slug,sort_order,authors!author_id(id,name)",
           order: "sort_order.asc",
           limit: 100,
         },

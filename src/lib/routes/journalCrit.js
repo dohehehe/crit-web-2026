@@ -1,3 +1,5 @@
+import { toPostPathSegment } from "@/lib/routes/slugPath";
+
 export const JOURNAL_CRIT_PATH_PREFIX = "/journal-crit";
 
 export function isJournalCritPath(pathname) {
@@ -30,5 +32,5 @@ export function getJournalCritIssuePath(issueNumber) {
 }
 
 export function getJournalCritPostPath(issueNumber, postSlug) {
-  return `${getJournalCritIssuePath(issueNumber)}/${postSlug}`;
+  return `${getJournalCritIssuePath(issueNumber)}/${encodeURIComponent(toPostPathSegment(postSlug))}`;
 }

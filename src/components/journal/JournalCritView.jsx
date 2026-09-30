@@ -60,6 +60,9 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
                     className={`thumb-title ${styles.postLink}`}
                   >
                     {post.title}
+                    {post.author?.name ? (
+                      <span className={`${styles.author} caption gray-65`}>{post.author.name}</span>
+                    ) : null}
                   </Link>
                 </li>
               ))}
