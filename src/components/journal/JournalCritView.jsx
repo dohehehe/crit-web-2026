@@ -57,11 +57,11 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
                 <li key={post.id} className={styles.postItem}>
                   <Link
                     href={getPostPath(post, { issueNumber: issue.issueNumber })}
-                    className={`thumb-title ${styles.postLink}`}
+                    className={`tag-keyword ${styles.postLink}`}
                   >
                     {post.title}
                     {post.author?.name ? (
-                      <span className={`${styles.author} caption gray-65`}>{post.author.name}</span>
+                      <span className={`${styles.author} caption`}>{post.author.name}</span>
                     ) : null}
                   </Link>
                 </li>

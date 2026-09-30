@@ -12,7 +12,11 @@
 
 .root>*:first-child {
   margin-top: 0;
-  padding: 20px 40px 20px 70px;
+  /* padding: 20px 40px 20px 70px; */
+}
+
+.root :global(#editorjs) {
+  padding: 20px 40px 20px 60px;
 }
 
 .root a:hover {
