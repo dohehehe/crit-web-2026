@@ -10,12 +10,17 @@
   gap: 2px;
 }
 
-.root > *:first-child {
+.root>*:first-child {
   margin-top: 0;
+  padding: 20px 40px 20px 70px;
 }
 
 .root a:hover {
   color: var(--crit-orange);
+}
+
+.root :global(.ce-toolbar) {
+  right: unset;
 }
 
 .root h2,
@@ -267,6 +272,7 @@
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
+
   .quote,
   .root :global(.cdx-quote) {
     margin: 0;

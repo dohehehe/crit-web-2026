@@ -5,7 +5,7 @@ import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./JournalCritView.module.css";
 
-export function JournalCritView({ issue, posts, previousIssues = [] }) {
+export function JournalCritView({ issue, posts, otherIssues = [] }) {
   if (!issue) {
     return <p className={`${styles.empty} caption gray-65`}>표시할 이슈가 없습니다.</p>;
   }
@@ -68,19 +68,18 @@ export function JournalCritView({ issue, posts, previousIssues = [] }) {
         ) : null}
       </article>
 
-      {previousIssues.length ? (
-        <aside className={styles.aside} aria-label="지난 이슈">
-          <h3 className={`p-bold ${styles.asideHeading}`}>Past Issue</h3>
+      {otherIssues.length ? (
+        <aside className={styles.aside} aria-label="다른 이슈">
+          <h3 className={`p-bold ${styles.asideHeading}`}>Other Issues</h3>
           <ol className={styles.asideList}>
-            {previousIssues.map((pastIssue) => (
-              <li key={pastIssue.id} className={styles.asideItem}>
-                <Link href={getJournalCritIssuePath(pastIssue.issueNumber)} className={styles.asideLink}>
-                  {pastIssue.issueNumber ? (
-                    <span className={`${styles.asideIssueNumber} caption`}>Issue {pastIssue.issueNumber}</span>
+            {otherIssues.map((otherIssue) => (
+              <li key={otherIssue.id} className={styles.asideItem}>
+                <Link href={getJournalCritIssuePath(otherIssue.issueNumber)} className={styles.asideLink}>
+                  {otherIssue.issueNumber ? (
+                    <span className={`${styles.asideIssueNumber} caption`}>Issue {otherIssue.issueNumber}</span>
                   ) : null}
-                  {pastIssue.title ? (
-                    <span className={`${styles.asideIssueTitle}
-                    menu-en`}>{pastIssue.title}</span>
+                  {otherIssue.title ? (
+                    <span className={`${styles.asideIssueTitle} menu-en`}>{otherIssue.title}</span>
                   ) : null}
                 </Link>
               </li>

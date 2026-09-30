@@ -16,12 +16,31 @@ function mapPostForPreview(post) {
   };
 }
 
-function mapPreviousIssueForPreview(issue) {
+function mapOtherIssueForPreview(issue) {
   return {
     id: issue.id,
     title: issue.title ?? "",
     issueNumber: issue.issue_number ?? "",
   };
+}
+
+function compareIssueNumberDesc(a, b) {
+  const aNum = parseIssueNumber(a.issueNumber);
+  const bNum = parseIssueNumber(b.issueNumber);
+
+  if (aNum === null && bNum === null) {
+    return 0;
+  }
+
+  if (aNum === null) {
+    return 1;
+  }
+
+  if (bNum === null) {
+    return -1;
+  }
+
+  return bNum - aNum;
 }
 
 export async function fetchIssuePostsForPreview(issueId) {
@@ -85,15 +104,20 @@ export async function fetchIssuePreviewRelated({ issueId, issueNumber }) {
   const [posts, issuesData] = await Promise.all([postsPromise, issuesPromise]);
   const current = parseIssueNumber(issueNumber);
 
-  const previousIssues =
-    current === null
-      ? []
-      : (issuesData?.items ?? [])
-          .filter((issue) => {
-            const num = parseIssueNumber(issue.issue_number);
-            return num !== null && num < current;
-          })
-          .map(mapPreviousIssueForPreview);
+  const otherIssues = (issuesData?.items ?? [])
+    .filter((issue) => {
+      if (issueId && issue.id === issueId) {
+        return false;
+      }
 
-  return { posts, previousIssues };
+      if (current === null) {
+        return true;
+      }
+
+      return parseIssueNumber(issue.issue_number) !== current;
+    })
+    .map(mapOtherIssueForPreview)
+    .sort(compareIssueNumberDesc);
+
+  return { posts, otherIssues };
 }
