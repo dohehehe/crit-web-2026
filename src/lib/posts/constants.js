@@ -8,6 +8,7 @@ export const POST_LIST_SELECT = `
   categories ( id, name, slug ),
   sections ( id, name, slug ),
   issues ( issue_number ),
+  authors!author_id ( id, name ),
   post_keywords ( keywords ( id, name, slug ) )
 `;
 

@@ -119,7 +119,7 @@ export function buildIssuePreviewRecord({
   contents,
   issueId,
   posts = [],
-  previousIssues = [],
+  otherIssues = [],
 }) {
   return {
     version: 1,
@@ -131,7 +131,7 @@ export function buildIssuePreviewRecord({
     fileUrl: form.file_url,
     contents,
     posts,
-    previousIssues,
+    otherIssues,
   };
 }
 
@@ -150,7 +150,7 @@ export function mapIssuePreviewRecordToJournalView(record) {
       contents: record.contents ?? null,
     },
     posts: record.posts ?? [],
-    previousIssues: record.previousIssues ?? [],
+    otherIssues: record.otherIssues ?? record.previousIssues ?? [],
   };
 }
 

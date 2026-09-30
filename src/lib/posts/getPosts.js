@@ -8,6 +8,7 @@ import {
   POST_LIST_SELECT,
 } from "@/lib/posts/constants";
 import { normalizePostDetail, normalizePosts } from "@/lib/posts/normalizePost";
+import { slugMatchPattern, toPostPathSegment } from "@/lib/routes/slugPath";
 
 function applyOrder(query, orderBy) {
   if (orderBy === "sort_order") {
@@ -81,8 +82,20 @@ function isUuid(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
 
+function decodeRouteParam(value) {
+  const raw = String(value ?? "");
+
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
 export async function getPostDetail({ sectionId, postSlug, issueId } = {}) {
-  if (!sectionId || !postSlug) {
+  const segment = decodeRouteParam(postSlug);
+
+  if (!sectionId || !segment) {
     return null;
   }
 
@@ -98,13 +111,27 @@ export async function getPostDetail({ sectionId, postSlug, issueId } = {}) {
     query = query.eq("issue_id", issueId);
   }
 
-  query = isUuid(postSlug) ? query.eq("id", postSlug) : query.eq("slug", postSlug);
+  if (isUuid(segment)) {
+    const { data, error } = await query.eq("id", segment).maybeSingle();
 
-  const { data, error } = await query.maybeSingle();
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return normalizePostDetail(data);
+  }
+
+  const normalized = toPostPathSegment(segment);
+  const { data, error } = await query.ilike("slug", slugMatchPattern(segment));
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return normalizePostDetail(data);
+  const match =
+    (data ?? []).find((post) => post.slug === segment) ??
+    (data ?? []).find((post) => toPostPathSegment(post.slug) === normalized) ??
+    null;
+
+  return normalizePostDetail(match);
 }

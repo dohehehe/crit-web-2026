@@ -84,7 +84,7 @@ export function AdminContentPreview({ variant }) {
   }
 
   if (variant === "issue" && issueViewModel) {
-    const { issue, posts, previousIssues } = issueViewModel;
+    const { issue, posts, otherIssues } = issueViewModel;
 
     return (
       <>
@@ -96,7 +96,7 @@ export function AdminContentPreview({ variant }) {
           <JournalCritView
             issue={issue}
             posts={posts}
-            previousIssues={previousIssues}
+            otherIssues={otherIssues}
           />
         </main>
       </>

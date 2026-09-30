@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { JournalCritView } from "@/components/journal/JournalCritView";
-import { getIssueByNumber, getPreviousIssues } from "@/lib/issues/getIssues";
+import { getIssueByNumber, getOtherIssues } from "@/lib/issues/getIssues";
 import { getPostsBySection } from "@/lib/posts/getPosts";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
 import styles from "@/components/journal/JournalCritView.module.css";
@@ -38,9 +38,9 @@ export default async function JournalCritIssuePage({ params }) {
     notFound();
   }
 
-  const [section, previousIssues] = await Promise.all([
+  const [section, otherIssues] = await Promise.all([
     getSectionByPathSlug("journal-crit"),
-    getPreviousIssues(issue.issueNumber),
+    getOtherIssues(issue.issueNumber, issue.id),
   ]);
   const posts = section
     ? await getPostsBySection(section.id, {
@@ -54,7 +54,7 @@ export default async function JournalCritIssuePage({ params }) {
       className={`${styles.main} ${styles.mainOrange}`}
       data-journal-issue
     >
-      <JournalCritView issue={issue} posts={posts} previousIssues={previousIssues} />
+      <JournalCritView issue={issue} posts={posts} otherIssues={otherIssues} />
     </main>
   );
 }
