@@ -1,15 +1,15 @@
-export const IMAGE_UPLOAD_MAX_SIZE_MB = 0.8;
-export const IMAGE_UPLOAD_MAX_DIMENSION = 1000;
-export const IMAGE_UPLOAD_WEBP_QUALITY = 0.85;
+export const IMAGE_UPLOAD_MAX_DIMENSION = 2400;
+
+export const IMAGE_UPLOAD_MAX_BYTES = 500 * 1024;
+
+export const IMAGE_UPLOAD_MIN_QUALITY = 70;
+export const IMAGE_UPLOAD_MAX_QUALITY = 100;
 export const IMAGE_UPLOAD_BUCKET =
   process.env.SUPABASE_STORAGE_BUCKET ?? "gallery";
 
-export const POPUP_IMAGE_MAX_WIDTH = 450;
-export const POPUP_IMAGE_WEBP_QUALITY = 0.65;
-export const POPUP_IMAGE_MAX_SIZE_MB = 0.35;
-
-export const POPUP_IMAGE_UPLOAD_OPTIONS = {
-  maxWidth: POPUP_IMAGE_MAX_WIDTH,
-  webpQuality: POPUP_IMAGE_WEBP_QUALITY,
-  maxSizeMb: POPUP_IMAGE_MAX_SIZE_MB,
+export const IMAGE_UPLOAD_TYPES = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
 };

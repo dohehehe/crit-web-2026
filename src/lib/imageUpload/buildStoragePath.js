@@ -1,4 +1,4 @@
-export function buildImageStoragePath() {
+export function buildImageStoragePath(extension) {
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-  return `images/${id}.webp`;
+  return `images/${id}.${extension}`;
 }
