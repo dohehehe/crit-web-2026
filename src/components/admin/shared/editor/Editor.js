@@ -14,6 +14,7 @@ import {
   scheduleGlobalFootnoteRenumber,
 } from "@/lib/editorjs/footnotesTune";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
+import { attachRichTextPaste } from "@/lib/editorjs/normalizePastedHtml";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 import proseStyles from "@/components/editor/editorProse.module.css";
 
@@ -45,6 +46,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
 
     let editor = null;
     let cancelled = false;
+    let removePasteNormalizer = () => {};
 
     const initEditor = async () => {
       try {
@@ -199,6 +201,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
         }
 
         editorInstanceRef.current = editor;
+        removePasteNormalizer = attachRichTextPaste(holder);
       } catch (error) {
         console.error("Editor initialization failed:", error);
       }
@@ -209,6 +212,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
     return () => {
       cancelled = true;
       clearTimeout(timer);
+      removePasteNormalizer();
 
       if (
         editorInstanceRef.current &&

@@ -226,6 +226,11 @@
   font-weight: var(--p-bold-weight);
 }
 
+.root :global(i),
+.root :global(em) {
+  font-style: italic;
+}
+
 .root :global(a) {
   color: inherit;
   font-weight: var(--p-bold-weight);
