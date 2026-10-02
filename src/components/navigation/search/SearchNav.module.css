@@ -122,3 +122,24 @@
     display: flex;
   }
 }
+
+.searchFormJournal.open .searchInput {
+  background: var(--crit-orange);
+  color: var(--black);
+  border-bottom-color: var(--black);
+}
+
+.searchFormJournal .searchInput::placeholder {
+  color: var(--black);
+}
+
+.searchFormChannel.open .searchInput {
+  background: var(--black);
+  color: var(--white);
+  border-bottom-color: var(--white);
+}
+
+.searchFormChannel .searchInput,
+.searchFormChannel .searchInput::placeholder {
+  color: var(--white);
+}
