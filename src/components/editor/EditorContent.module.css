@@ -94,6 +94,7 @@
 
 .galleryItemCaption {
   display: block;
+  color: var(--white);
 }
 
 .galleryItem:first-child .galleryItemCaption {
@@ -103,6 +104,7 @@
 .galleryCaption {
   display: block;
   margin-top: 4px;
+  color: var(--white);
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
