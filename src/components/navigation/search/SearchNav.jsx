@@ -1,14 +1,23 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
+import { isChannelPath } from "@/lib/routes/channel";
+import { isJournalCritPath } from "@/lib/routes/journalCrit";
 import styles from "@/components/navigation/search/SearchNav.module.css";
 import Image from "next/image";
 
 export function SearchNav() {
+  const pathname = usePathname();
   const { isOpen, isSearchOpen, openSearch, closeSearch } = useNavigationMenu();
   const inputRef = useRef(null);
   const isVisibleOnMobile = isOpen || isSearchOpen;
+  const toneClassName = isJournalCritPath(pathname)
+    ? styles.searchFormJournal
+    : isChannelPath(pathname)
+      ? styles.searchFormChannel
+      : "";
 
   useEffect(() => {
     if (isSearchOpen) {
@@ -20,7 +29,7 @@ export function SearchNav() {
     <form
       action="/search"
       method="get"
-      className={`${styles.searchForm}${isSearchOpen ? ` ${styles.open}` : ""}${isVisibleOnMobile ? ` ${styles.visibleOnMobile}` : ""}`}
+      className={`${styles.searchForm}${toneClassName ? ` ${toneClassName}` : ""}${isSearchOpen ? ` ${styles.open}` : ""}${isVisibleOnMobile ? ` ${styles.visibleOnMobile}` : ""}`}
       onSubmit={closeSearch}
     >
       <input
