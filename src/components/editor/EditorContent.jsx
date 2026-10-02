@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { EditorImage } from "@/components/editor/EditorImage";
 import { GallerySlider } from "@/components/editor/GallerySlider";
 import { createFootnoteContext } from "@/lib/editorjs/footnotes";
 import { getGallerySlides } from "@/lib/editorjs/gallery";
@@ -114,25 +114,20 @@ function renderBlock(block, index, applyFootnotesToHtml) {
         return null;
       }
 
+      const stretched = data?.stretched === true || data?.stretched === "true";
+
       return (
-        <figure key={index} className={proseStyles.imageBlock}>
-          <Image
-            src={imageUrl}
-            alt={data?.caption ?? ""}
-            width={0}
-            height={0}
-            sizes="100vw"
-            className={proseStyles.image}
-          />
-          {data?.caption ? (
-            <figcaption
-              className={`caption ${proseStyles.imageCaption}`}
-              dangerouslySetInnerHTML={{
-                __html: applyFootnotesToHtml(data.caption),
-              }}
-            />
-          ) : null}
-        </figure>
+        <EditorImage
+          key={index}
+          src={imageUrl}
+          alt=""
+          captionHtml={
+            data?.caption ? applyFootnotesToHtml(data.caption) : ""
+          }
+          stretched={stretched}
+          width={data?.file?.width}
+          height={data?.file?.height}
+        />
       );
     }
 

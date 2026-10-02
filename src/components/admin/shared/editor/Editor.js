@@ -14,6 +14,7 @@ import {
   scheduleGlobalFootnoteRenumber,
 } from "@/lib/editorjs/footnotesTune";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
+import { attachImageOrientation } from "@/lib/editorjs/imageOrientation";
 import { attachRichTextPaste } from "@/lib/editorjs/normalizePastedHtml";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 import proseStyles from "@/components/editor/editorProse.module.css";
@@ -47,6 +48,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
     let editor = null;
     let cancelled = false;
     let removePasteNormalizer = () => {};
+    let removeImageOrientation = () => {};
 
     const initEditor = async () => {
       try {
@@ -102,6 +104,9 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
                 Gallery: "이미지 슬라이더",
               },
               tools: {
+                image: {
+                  "Stretch image": "가로로 채우기",
+                },
                 gallery: {
                   "Select an Image": "슬라이더 이미지 추가",
                   "Gallery caption": "슬라이더 설명",
@@ -165,6 +170,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
                   border: false,
                   caption: true,
                   background: false,
+                  stretch: true,
                 },
                 uploader: imageUploader,
               },
@@ -202,6 +208,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
 
         editorInstanceRef.current = editor;
         removePasteNormalizer = attachRichTextPaste(holder);
+        removeImageOrientation = attachImageOrientation(holder);
       } catch (error) {
         console.error("Editor initialization failed:", error);
       }
@@ -213,6 +220,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
       cancelled = true;
       clearTimeout(timer);
       removePasteNormalizer();
+      removeImageOrientation();
 
       if (
         editorInstanceRef.current &&

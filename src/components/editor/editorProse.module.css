@@ -107,13 +107,32 @@
 
 .imageBlock {
   margin: 0;
+  width: 100%;
+}
+
+.imagePortrait {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.imageStretched {
+  width: 100%;
 }
 
 .image,
-.root :global(.image-tool__image-picture img) {
+.root :global(img.image-tool__image-picture) {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.root :global(.image-tool--portrait:not(.image-tool--stretched)) {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.root :global(.image-tool--stretched) {
+  width: 100%;
 }
 
 .imageCaption,
@@ -296,5 +315,15 @@
   .root h3,
   .root :global(h3.ce-header) {
     margin-top: 28px;
+  }
+
+  .imagePortrait {
+    width: 100%;
+    margin: 0;
+  }
+
+  .imageStretched {
+    width: 100%;
+    margin: 0;
   }
 }
