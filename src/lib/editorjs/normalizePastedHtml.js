@@ -50,10 +50,25 @@ function decorationText(element) {
     .toLowerCase();
 }
 
+function explicitColor(element) {
+  const styleColor = (element.style?.color || "").trim();
+
+  if (styleColor) {
+    return styleColor;
+  }
+
+  if (element.tagName === "FONT") {
+    return (element.getAttribute("color") || "").trim() || null;
+  }
+
+  return null;
+}
+
 function resolveInlineStyle(textNode, root) {
   let bold = null;
   let italic = null;
   let underline = null;
+  let color = null;
   let element = textNode.parentElement;
 
   while (element) {
@@ -92,6 +107,10 @@ function resolveInlineStyle(textNode, root) {
       }
     }
 
+    if (color === null) {
+      color = explicitColor(element);
+    }
+
     if (element === root) {
       break;
     }
@@ -103,6 +122,7 @@ function resolveInlineStyle(textNode, root) {
     bold: bold === true,
     italic: italic === true,
     underline: underline === true,
+    color,
   };
 }
 
@@ -131,6 +151,13 @@ function wrapText(textNode, root) {
     const bold = textNode.ownerDocument.createElement("b");
     bold.appendChild(node);
     node = bold;
+  }
+
+  if (style.color) {
+    const colored = textNode.ownerDocument.createElement("font");
+    colored.style.color = style.color;
+    colored.appendChild(node);
+    node = colored;
   }
 
   return node;
@@ -190,7 +217,7 @@ function rebuildNode(node, root) {
   return fragment;
 }
 
-const MERGEABLE_TAGS = new Set(["A", "B", "I", "U"]);
+const MERGEABLE_TAGS = new Set(["A", "B", "I", "U", "FONT"]);
 
 function sameInlineElement(left, right) {
   if (left.nodeType !== Node.ELEMENT_NODE || right.nodeType !== Node.ELEMENT_NODE) {
@@ -199,6 +226,10 @@ function sameInlineElement(left, right) {
 
   if (!MERGEABLE_TAGS.has(left.tagName)) {
     return false;
+  }
+
+  if (left.tagName === "FONT") {
+    return left.style.color === right.style.color;
   }
 
   return (

@@ -19,7 +19,212 @@ import { attachRichTextPaste } from "@/lib/editorjs/normalizePastedHtml";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 import proseStyles from "@/components/editor/editorProse.module.css";
 
-const INLINE_TOOLS = ["link", "bold", "italic", "underline", "marker"];
+const INLINE_TOOLS = ["link", "bold", "italic", "underline", "marker", "color"];
+
+const TEXT_COLORS = ["#000000", "#FF6400", "#A6A6A6", "#FFFFFF"];
+
+function toColorInputValue(color) {
+  if (/^#[0-9a-f]{6}$/i.test(color)) {
+    return color;
+  }
+
+  const match = String(color).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+
+  if (!match) {
+    return "#FF6400";
+  }
+
+  return `#${match
+    .slice(1, 4)
+    .map((channel) => Number(channel).toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
+function usableRange(range) {
+  if (!range || range.collapsed) {
+    return null;
+  }
+
+  if (!range.startContainer.isConnected || !range.endContainer.isConnected) {
+    return null;
+  }
+
+  return range;
+}
+
+function createColorTool(Tool) {
+  return class extends Tool {
+    render() {
+      const button = super.render();
+      this.savedRange = null;
+
+      button.addEventListener("mousedown", (event) => {
+        const selection = window.getSelection();
+
+        if (selection?.rangeCount && !selection.isCollapsed) {
+          this.savedRange = selection.getRangeAt(0).cloneRange();
+        }
+
+        if (event.target instanceof HTMLInputElement) {
+          return;
+        }
+
+        event.preventDefault();
+      });
+
+      button.querySelector("#color-left-btn")?.addEventListener("click", () => {
+        this.closePanel();
+      });
+
+      return button;
+    }
+
+    closePanel() {
+      this.panel?.classList.remove("isOpen");
+    }
+
+    applyColor(color) {
+      this.clickedOnLeft = false;
+      this.color = color;
+
+      if (this.dot) {
+        this.dot.style.backgroundColor = color;
+      }
+
+      const nextInputValue = toColorInputValue(color);
+
+      if (this.colorInput && /^#[0-9a-f]{6}$/i.test(nextInputValue)) {
+        this.colorInput.value = nextInputValue;
+      }
+
+      this.closePanel();
+
+      const selection = window.getSelection();
+      const range =
+        usableRange(selection?.rangeCount ? selection.getRangeAt(0) : null) ??
+        usableRange(this.savedRange);
+
+      if (range) {
+        this.surround(range);
+      }
+    }
+
+    createRightButton() {
+      if (this.picker) {
+        return this.picker;
+      }
+
+      const picker = document.createElement("div");
+      const dot = document.createElement("span");
+      const panel = document.createElement("div");
+      const colors = this.config.colorCollections || [];
+
+      picker.className = "critColorPicker";
+      dot.className = "critColorPickerDot";
+      dot.title = "색상 팔레트";
+      dot.style.backgroundColor = this.color;
+      panel.className = "critColorPickerPanel";
+      this.dot = dot;
+      this.panel = panel;
+
+      const keepInPicker = (event) => {
+        event.stopPropagation();
+      };
+
+      picker.addEventListener("click", keepInPicker);
+      panel.addEventListener("click", keepInPicker);
+
+      dot.addEventListener("click", (event) => {
+        event.stopPropagation();
+        panel.classList.toggle("isOpen");
+      });
+
+      for (const color of colors) {
+        const swatch = document.createElement("span");
+        swatch.className = "critColorSwatch";
+        swatch.title = color;
+        swatch.style.backgroundColor = color;
+        swatch.addEventListener("click", (event) => {
+          event.stopPropagation();
+          this.applyColor(color);
+        });
+        panel.append(swatch);
+      }
+
+      if (this.config.customPicker) {
+        const input = document.createElement("input");
+        input.type = "color";
+        input.className = "critColorInput";
+        input.value = toColorInputValue(this.color);
+        input.title = "직접 선택";
+        this.colorInput = input;
+        input.addEventListener("click", keepInPicker);
+        input.addEventListener("input", () => {
+          this.color = input.value;
+          dot.style.backgroundColor = input.value;
+        });
+        input.addEventListener("change", (event) => {
+          event.stopPropagation();
+          this.applyColor(input.value);
+        });
+        panel.append(input);
+      }
+
+      this.onDocumentPointerDown = (event) => {
+        if (!panel.classList.contains("isOpen")) {
+          return;
+        }
+
+        const path = event.composedPath?.() ?? [];
+
+        if (path.includes(picker)) {
+          return;
+        }
+
+        this.closePanel();
+      };
+
+      document.addEventListener("mousedown", this.onDocumentPointerDown);
+      picker.append(dot, panel);
+      this.picker = picker;
+      return picker;
+    }
+
+    clear() {
+      if (this.onDocumentPointerDown) {
+        document.removeEventListener("mousedown", this.onDocumentPointerDown);
+        this.onDocumentPointerDown = null;
+      }
+
+      this.panel = null;
+      this.dot = null;
+      this.colorInput = null;
+      super.clear();
+    }
+
+    surround(range) {
+      if (!range) {
+        return;
+      }
+
+      if (!this.api.selection.findParentTag(this.parentTag)) {
+        const root =
+          range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+            ? range.commonAncestorContainer
+            : range.commonAncestorContainer.parentElement;
+        const inner = root?.querySelector(this.parentTag.toLowerCase());
+
+        if (inner && range.intersectsNode(inner)) {
+          this.api.selection.expandToTag(inner);
+          super.surround(window.getSelection().getRangeAt(0));
+          return;
+        }
+      }
+
+      super.surround(range);
+    }
+  };
+}
 
 const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) {
   const editorInstanceRef = useRef(null);
@@ -69,6 +274,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           { default: Quote },
           { default: Sortable },
           { default: Underline },
+          colorModule,
           FootnotesTune,
           GalleryTool,
         ] = await Promise.all([
@@ -81,6 +287,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           import("@editorjs/quote"),
           import("sortablejs"),
           import("@editorjs/underline"),
+          import("editorjs-text-color-plugin"),
           loadFootnotesTune(),
           loadGalleryTool(),
         ]);
@@ -92,6 +299,8 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
         const imageUploader = createEditorImageUploader((file) =>
           uploadImageRef.current(file),
         );
+        const ColorPlugin = colorModule.default ?? colorModule;
+        const ColorTool = createColorTool(ColorPlugin);
 
         editor = new EditorJS({
           holder: holderId,
@@ -102,6 +311,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               toolNames: {
                 Image: "단독 이미지",
                 Gallery: "이미지 슬라이더",
+                Color: "글자색",
               },
               tools: {
                 image: {
@@ -151,6 +361,15 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             underline: Underline,
             marker: Marker,
+            color: {
+              class: ColorTool,
+              config: {
+                colorCollections: TEXT_COLORS,
+                defaultColor: "#FF6400",
+                type: "text",
+                customPicker: true,
+              },
+            },
             embed: {
               class: Embed,
               inlineToolbar: INLINE_TOOLS,

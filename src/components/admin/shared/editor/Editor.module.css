@@ -23,3 +23,79 @@
   min-height: 300px;
   padding: 20px;
 }
+
+.wrapper :global(.colorPlugin.ce-inline-tool) {
+  width: auto;
+  min-width: 34px;
+  padding: 0 2px;
+  overflow: visible;
+}
+
+.wrapper :global(.colorPlugin.ce-inline-tool svg) {
+  width: 16px;
+  height: 16px;
+}
+
+.wrapper :global(#color-left-btn) {
+  height: 100%;
+}
+
+.wrapper :global(.ce-popover-item-html),
+.wrapper :global(.ce-inline-toolbar),
+.wrapper :global(.ce-popover__container),
+.wrapper :global(.ce-popover__items) {
+  overflow: visible;
+}
+
+.wrapper :global(.critColorPicker) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.wrapper :global(.critColorPickerDot) {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.wrapper :global(.critColorPickerPanel) {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  grid-template-columns: repeat(4, 18px);
+  gap: 8px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.wrapper :global(.critColorPickerPanel.isOpen) {
+  display: grid;
+}
+
+.wrapper :global(.critColorSwatch) {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.wrapper :global(.critColorInput) {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
