@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
-import { POPUP_IMAGE_UPLOAD_OPTIONS } from "@/lib/imageUpload/constants";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import styles from "@/components/admin/shared/post-form.module.css";
@@ -83,7 +82,7 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
     setIsUploadingThumbnail(true);
 
     try {
-      const result = await uploadImageToServer(file, POPUP_IMAGE_UPLOAD_OPTIONS);
+      const result = await uploadImageToServer(file);
 
       if (result.success && result.file?.url) {
         updateField("thumbnail_img", result.file.url);

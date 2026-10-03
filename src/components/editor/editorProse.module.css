@@ -107,13 +107,32 @@
 
 .imageBlock {
   margin: 0;
+  width: 100%;
+}
+
+.imagePortrait {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.imageStretched {
+  width: 100%;
 }
 
 .image,
-.root :global(.image-tool__image-picture img) {
+.root :global(img.image-tool__image-picture) {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.root :global(.image-tool--portrait:not(.image-tool--stretched)) {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.root :global(.image-tool--stretched) {
+  width: 100%;
 }
 
 .imageCaption,
@@ -193,7 +212,7 @@
   font-size: 12px;
   letter-spacing: 0%;
   line-height: 12px;
-  font-weight: 600;
+  font-weight: 400;
   vertical-align: super;
 }
 
@@ -201,7 +220,7 @@
 .root :global(sup[data-tune="footnotes"] a) {
   color: inherit;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .root :global(.footnote-ref a:hover),
@@ -224,6 +243,11 @@
 
 .root :global(b) {
   font-weight: var(--p-bold-weight);
+}
+
+.root :global(i),
+.root :global(em) {
+  font-style: italic;
 }
 
 .root :global(a) {
@@ -258,7 +282,7 @@
   min-height: 0;
   border-radius: 0;
   background: none;
-  color: inherit;
+  color: white;
   font-weight: var(--caption-weight);
   font-style: var(--caption-style);
   font-size: var(--caption-size);
@@ -291,5 +315,15 @@
   .root h3,
   .root :global(h3.ce-header) {
     margin-top: 28px;
+  }
+
+  .imagePortrait {
+    width: 100%;
+    margin: 0;
+  }
+
+  .imageStretched {
+    width: 100%;
+    margin: 0;
   }
 }

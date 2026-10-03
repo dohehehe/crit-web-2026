@@ -4,9 +4,9 @@ import { useCallback } from "react";
 import { prepareImageForUpload } from "@/lib/imageUpload/processImage";
 
 export function useImageUpload() {
-  const uploadImageToServer = useCallback(async (file, options) => {
+  const uploadImageToServer = useCallback(async (file) => {
     try {
-      const prepared = await prepareImageForUpload(file, options);
+      const prepared = await prepareImageForUpload(file);
       const formData = new FormData();
 
       formData.append("file", prepared.file, prepared.fileName);

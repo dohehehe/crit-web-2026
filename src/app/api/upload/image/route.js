@@ -1,9 +1,8 @@
 import { jsonError, jsonOk } from "@/lib/api/response";
-import { IMAGE_UPLOAD_BUCKET } from "@/lib/imageUpload/constants";
+import { IMAGE_UPLOAD_BUCKET, IMAGE_UPLOAD_TYPES } from "@/lib/imageUpload/constants";
 import { buildImageStoragePath } from "@/lib/imageUpload/buildStoragePath";
+import { prepareStoredImage } from "@/lib/imageUpload/toWebp";
 import { createAdminClient } from "@/lib/supabase/admin";
-
-const MAX_BYTES = 1024 * 1024;
 
 export async function POST(request) {
   try {
@@ -14,21 +13,23 @@ export async function POST(request) {
       return jsonError("파일이 필요합니다.", 400);
     }
 
-    if (file.type !== "image/webp") {
-      return jsonError("WebP 이미지만 업로드할 수 있습니다.", 400);
+    const extension = IMAGE_UPLOAD_TYPES[file.type];
+
+    if (!extension) {
+      return jsonError("JPEG, PNG, WebP, GIF 이미지만 업로드할 수 있습니다.", 400);
     }
 
-    if (file.size > MAX_BYTES) {
-      return jsonError("파일 크기가 너무 큽니다.", 400);
-    }
-
-    const storagePath = buildImageStoragePath();
+    const source = Buffer.from(await file.arrayBuffer());
+    const stored = await prepareStoredImage(source, {
+      sourceType: file.type,
+      sourceBytes: file.size,
+    });
+    const storagePath = buildImageStoragePath("webp");
     const supabase = createAdminClient();
-    const buffer = Buffer.from(await file.arrayBuffer());
 
     const { error } = await supabase.storage
       .from(IMAGE_UPLOAD_BUCKET)
-      .upload(storagePath, buffer, {
+      .upload(storagePath, stored.buffer, {
         contentType: "image/webp",
         upsert: false,
       });
@@ -41,8 +42,8 @@ export async function POST(request) {
       .from(IMAGE_UPLOAD_BUCKET)
       .getPublicUrl(storagePath);
 
-    const width = Number(formData.get("width")) || null;
-    const height = Number(formData.get("height")) || null;
+    const width = stored.width || Number(formData.get("width")) || null;
+    const height = stored.height || Number(formData.get("height")) || null;
 
     return jsonOk({
       url: data.publicUrl,
@@ -50,6 +51,6 @@ export async function POST(request) {
       height: Number.isFinite(height) ? height : null,
     });
   } catch (error) {
-    return jsonError(error.message, 500);
+    return jsonError(error.message, error.status ?? 500);
   }
 }
