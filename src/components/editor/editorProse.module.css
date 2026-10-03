@@ -78,6 +78,22 @@
   margin: 0;
 }
 
+.listBlock[data-text-align="center"]>.list,
+.listBlock[data-text-align="right"]>.list {
+  width: fit-content;
+  max-width: 100%;
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+.listBlock[data-text-align="center"]>.list {
+  margin-inline: auto;
+}
+
+.listBlock[data-text-align="right"]>.list {
+  margin-left: auto;
+}
+
 .list,
 .root :global(.cdx-list) {
   margin: 0;

@@ -99,3 +99,15 @@
   background: none;
   cursor: pointer;
 }
+
+.wrapper :global(.critAlignBlock) {
+  width: 100%;
+}
+
+.wrapper :global([data-text-align="center"] .cdx-list) {
+  justify-items: center;
+}
+
+.wrapper :global([data-text-align="right"] .cdx-list) {
+  justify-items: end;
+}

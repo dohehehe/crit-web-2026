@@ -16,10 +16,15 @@ import {
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
 import { attachImageOrientation } from "@/lib/editorjs/imageOrientation";
 import { attachRichTextPaste } from "@/lib/editorjs/normalizePastedHtml";
+import {
+  TextAlignTool,
+  withBlockAlignment,
+} from "@/lib/editorjs/textAlign";
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 import proseStyles from "@/components/editor/editorProse.module.css";
 
 const INLINE_TOOLS = ["link", "bold", "italic", "underline", "marker", "color"];
+const TEXT_INLINE_TOOLS = [...INLINE_TOOLS, "alignment"];
 
 const TEXT_COLORS = ["#000000", "#FF6400", "#A6A6A6", "#FFFFFF"];
 
@@ -271,6 +276,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           { default: ImageTool },
           { default: List },
           { default: Marker },
+          { default: Paragraph },
           { default: Quote },
           { default: Sortable },
           { default: Underline },
@@ -284,6 +290,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           import("@editorjs/image"),
           import("@editorjs/list"),
           import("@editorjs/marker"),
+          import("@editorjs/paragraph"),
           import("@editorjs/quote"),
           import("sortablejs"),
           import("@editorjs/underline"),
@@ -312,6 +319,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
                 Image: "단독 이미지",
                 Gallery: "이미지 슬라이더",
                 Color: "글자색",
+                Alignment: "정렬",
               },
               tools: {
                 image: {
@@ -326,9 +334,13 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
           },
           tools: {
+            paragraph: {
+              class: withBlockAlignment(Paragraph),
+              inlineToolbar: true,
+            },
             header: {
-              class: Header,
-              inlineToolbar: INLINE_TOOLS,
+              class: withBlockAlignment(Header),
+              inlineToolbar: TEXT_INLINE_TOOLS,
               config: {
                 placeholder: "제목을 입력하세요",
                 levels: [2, 3, 4],
@@ -336,7 +348,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               },
             },
             quote: {
-              class: Quote,
+              class: withBlockAlignment(Quote, { syncData: true }),
               inlineToolbar: true,
               shortcut: 'CMD+SHIFT+O',
               config: {
@@ -345,8 +357,8 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               },
             },
             list: {
-              class: List,
-              inlineToolbar: INLINE_TOOLS,
+              class: withBlockAlignment(List, { wrap: true }),
+              inlineToolbar: TEXT_INLINE_TOOLS,
               config: {
                 defaultStyle: "ordered",
                 maxLevel: 4,
@@ -369,6 +381,9 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
                 type: "text",
                 customPicker: true,
               },
+            },
+            alignment: {
+              class: TextAlignTool,
             },
             embed: {
               class: Embed,
@@ -404,7 +419,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               },
             },
           },
-          inlineToolbar: INLINE_TOOLS,
+          inlineToolbar: TEXT_INLINE_TOOLS,
           data: normalizeEditorData(initialDataRef.current),
           onChange: (_api, event) => {
             const events = Array.isArray(event) ? event : [event];
