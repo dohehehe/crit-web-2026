@@ -58,10 +58,12 @@
 
 .header {
   margin: 0;
+  word-break: keep-all;
 }
 
 .paragraph {
   margin: 0;
+  word-break: keep-all;
 }
 
 .root :global(.ce-paragraph),
@@ -74,14 +76,40 @@
   letter-spacing: var(--p-letter-spacing);
 }
 
+.root :global(.ce-paragraph),
+.root :global(.ce-header),
+.root :global(.cdx-quote),
+.root :global(.cdx-quote__text),
+.root :global(.cdx-quote__caption),
+.root :global(.cdx-list__item-content) {
+  word-break: keep-all;
+}
+
 .listBlock {
   margin: 0;
+}
+
+.listBlock[data-text-align="center"]>.list,
+.listBlock[data-text-align="right"]>.list {
+  width: fit-content;
+  max-width: 100%;
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+.listBlock[data-text-align="center"]>.list {
+  margin-inline: auto;
+}
+
+.listBlock[data-text-align="right"]>.list {
+  margin-left: auto;
 }
 
 .list,
 .root :global(.cdx-list) {
   margin: 0;
   padding-left: 1.25em;
+  word-break: keep-all;
   font-weight: var(--p-weight);
   font-style: var(--p-style);
   font-size: var(--p-size);
@@ -93,6 +121,20 @@
 .root :global(.cdx-quote) {
   margin: 0;
   padding: 0 60px;
+  word-break: keep-all;
+}
+
+.paragraph[data-text-align="justify"],
+.header[data-text-align="justify"],
+.quote[data-text-align="justify"],
+.listBlock[data-text-align="justify"],
+.listBlock[data-text-align="justify"]>.list,
+.root :global([data-text-align="justify"]),
+.root :global([data-text-align="justify"] .cdx-quote__text),
+.root :global([data-text-align="justify"] .cdx-quote__caption),
+.root :global([data-text-align="justify"] .cdx-list),
+.root :global([data-text-align="justify"] .cdx-list__item-content) {
+  word-break: break-all;
 }
 
 .quoteCaption,
