@@ -3,6 +3,7 @@ import { GallerySlider } from "@/components/editor/GallerySlider";
 import { createFootnoteContext } from "@/lib/editorjs/footnotes";
 import { getGallerySlides } from "@/lib/editorjs/gallery";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import { blockAlignProps } from "@/lib/editorjs/textAlign";
 import styles from "@/components/editor/EditorContent.module.css";
 import proseStyles from "@/components/editor/editorProse.module.css";
 
@@ -63,6 +64,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
         <Tag
           key={index}
           className={proseStyles.header}
+          {...blockAlignProps(data?.alignment)}
           dangerouslySetInnerHTML={{
             __html: applyFootnotesToHtml(data?.text ?? ""),
           }}
@@ -75,6 +77,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
         <p
           key={index}
           className={`p ${proseStyles.paragraph}`}
+          {...blockAlignProps(data?.alignment)}
           dangerouslySetInnerHTML={{
             __html: applyFootnotesToHtml(data?.text ?? ""),
           }}
@@ -83,7 +86,11 @@ function renderBlock(block, index, applyFootnotesToHtml) {
 
     case "list":
       return (
-        <div key={index} className={proseStyles.listBlock}>
+        <div
+          key={index}
+          className={proseStyles.listBlock}
+          {...blockAlignProps(data?.alignment)}
+        >
           {renderListItems(
             data?.items,
             data?.style === "ordered",
@@ -94,7 +101,11 @@ function renderBlock(block, index, applyFootnotesToHtml) {
 
     case "quote":
       return (
-        <blockquote key={index} className={proseStyles.quote}>
+        <blockquote
+          key={index}
+          className={proseStyles.quote}
+          {...blockAlignProps(data?.alignment)}
+        >
           <p
             className="p"
             dangerouslySetInnerHTML={{
