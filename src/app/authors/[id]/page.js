@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import { AuthorProfileView } from "@/components/authors/AuthorProfileView";
 import { getAuthorById, getPostsByAuthorId } from "@/lib/authors/getAuthors";
+import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
+import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
+import { resolveAuthorShareImage } from "@/lib/seo/resolveShareImage";
+import { truncatePlainText } from "@/lib/text/truncatePlainText";
 import styles from "./page.module.css";
 
 export const revalidate = 60;
@@ -13,9 +17,16 @@ export async function generateMetadata({ params }) {
     return {};
   }
 
-  return {
+  const description = truncatePlainText(
+    getEditorParagraphPlainText(author.content)
+  );
+
+  return buildPageMetadata({
     title: author.name,
-  };
+    description,
+    path: `/authors/${author.id}`,
+    image: resolveAuthorShareImage(author),
+  });
 }
 
 export default async function AuthorPage({ params }) {

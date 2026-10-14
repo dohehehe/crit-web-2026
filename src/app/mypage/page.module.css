@@ -7,16 +7,49 @@
   gap: 16px;
 }
 
-.logout {
+.accountActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   margin-top: 16px;
-  width: 100%;
-  max-width: 200px;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logout {
+  width: auto;
+  min-width: 120px;
   padding: 12px 16px;
   border: 1px solid var(--black);
   background: var(--white);
   color: var(--black);
   font: inherit;
   cursor: pointer;
+}
+
+.unsubscribe {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.unsubscribe:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.unsubscribe:not(:disabled):hover {
+  color: var(--crit-orange);
+}
+
+.actionError {
+  color: var(--crit-orange);
 }
 
 .logout:disabled {

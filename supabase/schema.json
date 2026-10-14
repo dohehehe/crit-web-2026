@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T08:19:16.874Z",
+  "generatedAt": "2026-10-14T09:52:39.552Z",
   "projectUrl": null,
   "tables": [
     {
@@ -374,6 +374,13 @@
           "notes": []
         },
         {
+          "name": "is_primary",
+          "type": "boolean",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
           "name": "title",
           "type": "text",
           "required": false,
@@ -508,6 +515,13 @@
         {
           "name": "date",
           "type": "date",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "description",
+          "type": "text",
           "required": false,
           "default": null,
           "notes": []

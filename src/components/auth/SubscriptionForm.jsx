@@ -1,9 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { MIN_PASSWORD_LENGTH } from "@/lib/auth/constants";
+import { AlertDialog } from "@/components/auth/AlertDialog";
+import {
+  MIN_PASSWORD_LENGTH,
+  SIGNUP_VERIFICATION_ALERT,
+} from "@/lib/auth/constants";
 import { signUpAction } from "@/lib/auth/actions";
 import styles from "@/components/auth/AuthForm.module.css";
 
@@ -11,14 +17,31 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={`tag-keyword ${styles.submit}`} disabled={pending}>
+    <button
+      type="submit"
+      className={`tag-keyword ${styles.submit}`}
+      disabled={pending}
+    >
       {pending ? "가입 중…" : "가입하기"}
     </button>
   );
 }
 
 export function SubscriptionForm({ intro = null }) {
+  const router = useRouter();
   const [state, formAction] = useActionState(signUpAction, null);
+  const [showVerificationAlert, setShowVerificationAlert] = useState(false);
+
+  useEffect(() => {
+    if (state?.success) {
+      setShowVerificationAlert(true);
+    }
+  }, [state]);
+
+  function handleVerificationConfirm() {
+    setShowVerificationAlert(false);
+    router.push("/login?registered=1");
+  }
 
   return (
     <div className={styles.page}>
@@ -76,7 +99,12 @@ export function SubscriptionForm({ intro = null }) {
 
         <div className={styles.checkboxFields}>
           <label className={styles.checkboxField}>
-            <input className={styles.checkboxInput} type="checkbox" name="privacyConsent" required />
+            <input
+              className={styles.checkboxInput}
+              type="checkbox"
+              name="privacyConsent"
+              required
+            />
             <span className={`p ${styles.checkboxLabel}`}>
               <Link
                 href="/privacy"
@@ -91,7 +119,11 @@ export function SubscriptionForm({ intro = null }) {
           </label>
 
           <label className={styles.checkboxField}>
-            <input className={styles.checkboxInput} type="checkbox" name="newsletterConsent" />
+            <input
+              className={styles.checkboxInput}
+              type="checkbox"
+              name="newsletterConsent"
+            />
             <span className={`p ${styles.checkboxLabel}`}>
               뉴스레터 및 이벤트 소식 수신에 동의합니다
             </span>
@@ -111,6 +143,13 @@ export function SubscriptionForm({ intro = null }) {
           </p>
         </div>
       </form>
+
+      <AlertDialog
+        open={showVerificationAlert}
+        title={SIGNUP_VERIFICATION_ALERT.title}
+        message={SIGNUP_VERIFICATION_ALERT.message}
+        onConfirm={handleVerificationConfirm}
+      />
     </div>
   );
 }

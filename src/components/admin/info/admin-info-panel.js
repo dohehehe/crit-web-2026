@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
+import { getRoleLabel } from "@/lib/auth/roleLabels";
 import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
+import { AdminCategoryTabs } from "@/components/admin/shared/admin-category-tabs";
 import { InfoForm } from "@/components/admin/info/info-form";
 import { AdminUsersTable } from "@/components/admin/info/admin-users-table";
 import styles from "@/components/admin/shared/admin-posts-panel.module.css";
@@ -14,21 +16,54 @@ const INFO_TABS = [
 
 export function AdminInfoPanel() {
   const [selectedTab, setSelectedTab] = useState("info");
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
+
+  const {
+    data: rolesData,
+    isLoading: rolesLoading,
+    error: rolesError,
+  } = useAdminQuery("roles", {
+    params: {
+      select: "id,name,created_at",
+      order: "created_at.asc",
+      limit: 100,
+    },
+    enabled: selectedTab === "users",
+  });
+
+  const userParams = useMemo(() => {
+    const params = {
+      select: "id,name,email,created_at,role_id,roles(name)",
+      order: "created_at.desc",
+      limit: 100,
+    };
+
+    if (selectedRoleId) {
+      params["eq.role_id"] = selectedRoleId;
+    }
+
+    return params;
+  }, [selectedRoleId]);
 
   const {
     data: usersData,
     isLoading: usersLoading,
     error: usersError,
   } = useAdminQuery("users", {
-    params: {
-      select: "id,name,email,created_at",
-      order: "created_at.desc",
-      limit: 100,
-    },
+    params: userParams,
     enabled: selectedTab === "users",
   });
 
+  const roles = rolesData?.items ?? [];
   const users = usersData?.items ?? [];
+  const roleTabs = roles.map((role) => ({
+    id: role.id,
+    name: getRoleLabel(role.name),
+    slug: role.name,
+  }));
+
+  const isLoading = rolesLoading || usersLoading;
+  const error = rolesError ?? usersError;
 
   return (
     <div className={styles.panel}>
@@ -43,17 +78,26 @@ export function AdminInfoPanel() {
 
         {selectedTab === "users" && (
           <>
-            {usersLoading && (
-              <p className={`${styles.status} caption gray-65`}>목록 불러오는 중…</p>
-            )}
+            <AdminCategoryTabs
+              categories={roleTabs}
+              selectedId={selectedRoleId}
+              onSelect={setSelectedRoleId}
+              ariaLabel="역할"
+            />
 
-            {usersError && (
-              <p className={`${styles.status} caption`}>
-                목록을 불러오지 못했습니다: {usersError.message}
+            {isLoading && (
+              <p className={`${styles.status} caption gray-65`}>
+                목록 불러오는 중…
               </p>
             )}
 
-            {!usersLoading && !usersError && <AdminUsersTable users={users} />}
+            {error && (
+              <p className={`${styles.status} caption`}>
+                목록을 불러오지 못했습니다: {error.message}
+              </p>
+            )}
+
+            {!isLoading && !error && <AdminUsersTable users={users} />}
           </>
         )}
       </div>

@@ -1,0 +1,54 @@
+@import "../../breakpoints.css";
+
+.main {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.backLink {
+  color: var(--gray-65);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.backLink:hover {
+  color: var(--crit-orange);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--black);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge {
+  color: var(--crit-orange);
+}
+
+.title {
+  margin: 0;
+}
+
+.date {
+  margin: 0;
+  color: var(--gray-65);
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding: 48px 10px 64px;
+  }
+}

@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth/constants";
 import { getSiteOrigin } from "@/lib/auth/getSiteOrigin";
 import { getSubscriberRoleId } from "@/lib/auth/getSubscriberRoleId";
+import { isAdminUser } from "@/lib/auth/isAdminUser";
+import { getSafeRedirectPath } from "@/lib/auth/safeRedirect";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -19,6 +21,7 @@ function readString(formData, key) {
 export async function signInAction(_prevState, formData) {
   const email = normalizeEmail(formData.get("email"));
   const password = formData.get("password");
+  const nextPath = getSafeRedirectPath(readString(formData, "next"));
 
   if (!email) {
     return { error: "이메일을 입력해 주세요." };
@@ -29,13 +32,24 @@ export async function signInAction(_prevState, formData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
     return { error: "이메일 또는 비밀번호가 올바르지 않습니다." };
   }
 
-  redirect("/");
+  if (nextPath?.startsWith("/admin")) {
+    if (!(await isAdminUser(data.user?.id))) {
+      return { error: "관리자만 접근할 수 있습니다." };
+    }
+
+    redirect(nextPath);
+  }
+
+  redirect(nextPath ?? "/");
 }
 
 export async function signUpAction(_prevState, formData) {
@@ -124,13 +138,43 @@ export async function signUpAction(_prevState, formData) {
     redirect("/");
   }
 
-  redirect("/login?registered=1");
+  return { success: true };
 }
 
 export async function signOutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");
+}
+
+export async function deleteAccountAction() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "로그인이 필요합니다." };
+  }
+
+  const admin = createAdminClient();
+  const { error: deleteProfileError } = await admin
+    .from("users")
+    .delete()
+    .eq("id", user.id);
+
+  if (deleteProfileError) {
+    return { error: "회원 정보를 삭제하지 못했습니다. 다시 시도해 주세요." };
+  }
+
+  const { error: deleteAuthError } = await admin.auth.admin.deleteUser(user.id);
+
+  if (deleteAuthError) {
+    return { error: "계정을 삭제하지 못했습니다. 다시 시도해 주세요." };
+  }
+
+  await supabase.auth.signOut();
+  redirect("/");
 }
 
 export async function requestPasswordResetAction(_prevState, formData) {
@@ -179,7 +223,8 @@ export async function updatePasswordAction(_prevState, formData) {
 
   if (!user) {
     return {
-      error: "링크가 만료되었거나 유효하지 않습니다. 비밀번호 찾기를 다시 시도해 주세요.",
+      error:
+        "링크가 만료되었거나 유효하지 않습니다. 비밀번호 찾기를 다시 시도해 주세요.",
     };
   }
 

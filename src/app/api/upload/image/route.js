@@ -1,10 +1,19 @@
 import { jsonError, jsonOk } from "@/lib/api/response";
-import { IMAGE_UPLOAD_BUCKET, IMAGE_UPLOAD_TYPES } from "@/lib/imageUpload/constants";
+import { requireAdminApi } from "@/lib/auth/requireAdminApi";
+import {
+  IMAGE_UPLOAD_BUCKET,
+  IMAGE_UPLOAD_TYPES,
+} from "@/lib/imageUpload/constants";
 import { buildImageStoragePath } from "@/lib/imageUpload/buildStoragePath";
 import { prepareStoredImage } from "@/lib/imageUpload/toWebp";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request) {
+  const authError = await requireAdminApi();
+  if (authError) {
+    return authError;
+  }
+
   try {
     const formData = await request.formData();
     const file = formData.get("file");
@@ -16,7 +25,10 @@ export async function POST(request) {
     const extension = IMAGE_UPLOAD_TYPES[file.type];
 
     if (!extension) {
-      return jsonError("JPEG, PNG, WebP, GIF 이미지만 업로드할 수 있습니다.", 400);
+      return jsonError(
+        "JPEG, PNG, WebP, GIF 이미지만 업로드할 수 있습니다.",
+        400
+      );
     }
 
     const source = Buffer.from(await file.arrayBuffer());

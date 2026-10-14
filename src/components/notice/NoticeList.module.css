@@ -1,0 +1,107 @@
+@import "../../app/breakpoints.css";
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--black);
+}
+
+.item {
+  border-bottom: 1px solid var(--gray-65);
+}
+
+.link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 4px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.link:hover .title {
+  color: var(--crit-orange);
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.badge {
+  flex-shrink: 0;
+  color: var(--crit-orange);
+}
+
+.title {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.date {
+  flex-shrink: 0;
+  color: var(--gray-65);
+}
+
+.empty {
+  margin: 0;
+  padding: 48px 0;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.pageLink,
+.pageCurrent,
+.pageDisabled {
+  min-width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  text-decoration: none;
+  color: inherit;
+  border: none;
+  background: none;
+}
+
+.pageLink:hover {
+  color: var(--crit-orange);
+}
+
+.pageCurrent {
+  color: var(--crit-orange);
+}
+
+.pageDisabled {
+  color: var(--gray-65);
+  pointer-events: none;
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .link {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px 2px;
+  }
+
+  .title {
+    white-space: normal;
+  }
+}
