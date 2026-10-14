@@ -24,7 +24,7 @@ export function AdminNoticePanel() {
     error: noticesError,
   } = useAdminQuery("notice", {
     params: {
-      select: "id,title,date,is_active,created_at",
+      select: "id,title,date,is_active,is_primary,created_at",
       order: "date.desc",
       limit: 100,
     },
@@ -99,7 +99,9 @@ export function AdminNoticePanel() {
 
       <div className={styles.content} role="tabpanel">
         {isLoading && (
-          <p className={`${styles.status} caption gray-65`}>목록 불러오는 중…</p>
+          <p className={`${styles.status} caption gray-65`}>
+            목록 불러오는 중…
+          </p>
         )}
 
         {error && (
@@ -111,14 +113,21 @@ export function AdminNoticePanel() {
         {!isLoading && !error && (
           <>
             <div className={styles.toolbar}>
-              <Link href={createHref} className={`${styles.createButton} caption`}>
+              <Link
+                href={createHref}
+                className={`${styles.createButton} caption`}
+              >
                 {createLabel}
               </Link>
             </div>
 
             {selectedTab === "notice" && <AdminNoticeTable notices={notices} />}
-            {selectedTab === "popup" && <AdminNoticePopupTable popups={popups} />}
-            {selectedTab === "banner" && <AdminNoticeBannerTable banners={banners} />}
+            {selectedTab === "popup" && (
+              <AdminNoticePopupTable popups={popups} />
+            )}
+            {selectedTab === "banner" && (
+              <AdminNoticeBannerTable banners={banners} />
+            )}
           </>
         )}
       </div>
