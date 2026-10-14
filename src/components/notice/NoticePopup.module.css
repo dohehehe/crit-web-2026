@@ -1,0 +1,84 @@
+@import "../../app/breakpoints.css";
+
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 10px 20px;
+}
+
+.popup {
+  /* position: absolute; */
+  /* bottom: 20px;
+  right: 20px; */
+  z-index: calc(300 - var(--popup-index, 0));
+  width: min(480px, calc(100vw - 32px));
+  max-height: min(80vh, 720px);
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: 1px solid var(--black);
+  box-shadow: 4px 3px 30px 1px rgba(0, 0, 0, 0.21);
+  transform: translate(calc(- var(--popup-offset, 0px)),
+      calc(- var(--popup-offset, 0px)));
+  pointer-events: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--gray-65);
+}
+
+.closeButton {
+  border: 0;
+  background: transparent;
+  padding: 4px 6px;
+  color: var(--black);
+  font: inherit;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  color: var(--crit-orange);
+}
+
+.body {
+  overflow: auto;
+  min-height: 0;
+}
+
+.imageLink,
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.content {
+  padding: 20px;
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .layer {
+    display: block;
+  }
+
+  .popup {
+    position: absolute;
+    top: 70px;
+    left: 16px;
+    right: 16px;
+    width: min(480px, calc(100vw - 32px));
+    max-height: unset;
+    height: auto;
+  }
+}

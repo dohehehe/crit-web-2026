@@ -7,7 +7,7 @@ export function writePostPreviewRecord(record) {
 
   window.localStorage.setItem(
     ADMIN_POST_PREVIEW_STORAGE_KEY,
-    JSON.stringify(record),
+    JSON.stringify(record)
   );
 }
 
@@ -28,10 +28,7 @@ export function readPostPreviewRecord() {
   }
 }
 
-export function mergePostIntoIssuePosts(
-  issuePosts,
-  { postId, title, slug },
-) {
+export function mergePostIntoIssuePosts(issuePosts, { postId, title, slug }) {
   const previewId = postId ?? "preview";
   const previewPost = {
     id: previewId,
@@ -48,12 +45,12 @@ export function mergePostIntoIssuePosts(
   }
 
   const existingIndex = issuePosts.findIndex(
-    (post) => post.id === postId || post.id === previewId,
+    (post) => post.id === postId || post.id === previewId
   );
 
   if (existingIndex >= 0) {
     return issuePosts.map((post, index) =>
-      index === existingIndex ? previewPost : post,
+      index === existingIndex ? previewPost : post
     );
   }
 
@@ -88,13 +85,12 @@ export function buildPostPreviewRecord({
     title: form.title,
     subtitle: form.subtitle,
     slug: form.slug,
+    description: form.description,
     date: form.date,
     thumnail_img: form.thumnail_img,
     video_url: form.video_url,
     content,
-    author: author?.name
-      ? { id: author.id ?? null, name: author.name }
-      : null,
+    author: author?.name ? { id: author.id ?? null, name: author.name } : null,
     keywords: keywords.map((keyword) => ({
       id: keyword.id ?? null,
       name: keyword.name,
@@ -164,6 +160,7 @@ export function mapPostPreviewRecordToPostView(record) {
     title: record.title ?? "",
     subtitle: record.subtitle ?? "",
     slug: record.slug ?? "",
+    description: record.description ?? "",
     thumbnailImg: record.thumnail_img ?? "",
     date: record.date ?? null,
     content: record.content ?? null,

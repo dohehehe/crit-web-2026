@@ -1,5 +1,7 @@
 .cardLink {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   color: inherit;
   text-decoration: none;
 }
@@ -7,7 +9,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
   position: relative;
   cursor: pointer;
@@ -38,7 +40,6 @@
 .card:hover .sectionName {
   display: inline;
 }
-
 
 .thumbnail {
   position: relative;
@@ -91,13 +92,23 @@
 
 .meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 12px;
+  flex-direction: column;
+  gap: 8px;
 }
-
 
 .title {
   margin: 0;
+}
+
+.titleClosed::before {
+  content: "마감";
+  margin-right: 0.3em;
+  color: var(--gray-65);
+}
+
+.workshopDate {
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .keywords {

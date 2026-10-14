@@ -1,8 +1,14 @@
 import { notFound } from "next/navigation";
 import { PostList } from "@/components/posts/PostList";
-import { getSectionMode, sectionUsesIssuePostSortOrder } from "@/lib/admin/section-mode";
+import {
+  getSectionMode,
+  sectionUsesIssuePostSortOrder,
+} from "@/lib/admin/section-mode";
 import { getPostsBySection } from "@/lib/posts/getPosts";
+import { getSectionHref } from "@/lib/sections/getSectionHref";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
+import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
+import { resolvePostShareImage } from "@/lib/seo/resolveShareImage";
 import styles from "./page.module.css";
 
 export const revalidate = 60;
@@ -15,9 +21,18 @@ export async function generateMetadata({ params }) {
     return {};
   }
 
-  return {
+  const posts = await getPostsBySection(section.id, {
+    orderBy: sectionUsesIssuePostSortOrder(getSectionMode(section))
+      ? "sort_order"
+      : "date",
+  });
+  const image = posts.map((post) => resolvePostShareImage(post)).find(Boolean);
+
+  return buildPageMetadata({
     title: section.name ?? section.slug,
-  };
+    path: getSectionHref(section),
+    image,
+  });
 }
 
 export default async function SectionPage({ params }) {
@@ -36,8 +51,15 @@ export default async function SectionPage({ params }) {
   });
 
   return (
-    <main className={styles.main} {...(isChannelSection ? { "data-channel-section": "" } : {})}>
-      <PostList posts={posts} />
+    <main
+      className={styles.main}
+      {...(isChannelSection ? { "data-channel-section": "" } : {})}
+    >
+      <PostList
+        posts={posts}
+        showWorkshopDate={sectionMode === "workshop"}
+        showChannelFeatured={isChannelSection}
+      />
     </main>
   );
 }

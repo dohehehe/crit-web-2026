@@ -1,8 +1,13 @@
 import { notFound } from "next/navigation";
 import { JournalCritView } from "@/components/journal/JournalCritView";
 import { getIssueByNumber, getOtherIssues } from "@/lib/issues/getIssues";
+import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
 import { getPostsBySection } from "@/lib/posts/getPosts";
+import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
+import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
+import { resolveIssueShareImage } from "@/lib/seo/resolveShareImage";
+import { truncatePlainText } from "@/lib/text/truncatePlainText";
 import styles from "@/components/journal/JournalCritView.module.css";
 
 export const revalidate = 60;
@@ -25,9 +30,16 @@ export async function generateMetadata({ params }) {
     titleParts.push(issue.title);
   }
 
-  return {
+  const description = truncatePlainText(
+    getEditorParagraphPlainText(issue.contents)
+  );
+
+  return buildPageMetadata({
     title: titleParts.length ? titleParts.join(" — ") : "Journal Crit",
-  };
+    description,
+    path: getJournalCritIssuePath(issue.issueNumber),
+    image: resolveIssueShareImage(issue),
+  });
 }
 
 export default async function JournalCritIssuePage({ params }) {
@@ -44,16 +56,13 @@ export default async function JournalCritIssuePage({ params }) {
   ]);
   const posts = section
     ? await getPostsBySection(section.id, {
-      issueId: issue.id,
-      orderBy: "sort_order",
-    })
+        issueId: issue.id,
+        orderBy: "sort_order",
+      })
     : [];
 
   return (
-    <main
-      className={`${styles.main} ${styles.mainOrange}`}
-      data-journal-issue
-    >
+    <main className={`${styles.main} ${styles.mainOrange}`} data-journal-issue>
       <JournalCritView issue={issue} posts={posts} otherIssues={otherIssues} />
     </main>
   );
