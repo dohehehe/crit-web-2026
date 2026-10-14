@@ -1,6 +1,6 @@
-import { Navigation } from '@/components/navigation/Navigation';
+import { Navigation } from "@/components/navigation/Navigation";
+import Footer from "@/components/Footter";
 import "./globals.css";
-import Footer from '@/components/Footter';
 
 export const metadata = {
   title: "CRIT",
