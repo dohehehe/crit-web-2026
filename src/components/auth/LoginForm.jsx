@@ -12,13 +12,17 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={`tag-keyword ${styles.submit}`} disabled={pending}>
+    <button
+      type="submit"
+      className={`tag-keyword ${styles.submit}`}
+      disabled={pending}
+    >
       {pending ? "로그인 중…" : "로그인하기"}
     </button>
   );
 }
 
-export function LoginForm({ registered, passwordReset }) {
+export function LoginForm({ registered, passwordReset, nextPath }) {
   const [state, formAction] = useActionState(signInAction, null);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
@@ -35,13 +39,11 @@ export function LoginForm({ registered, passwordReset }) {
       <header className={styles.header}>
         <h1 className="menu-kr">로그인</h1>
 
-
         {registered ? (
           <p className={`p ${styles.success}`} role="status">
             회원가입이 완료되었습니다. 로그인해 주세요.
           </p>
         ) : null}
-
 
         {passwordReset ? (
           <p className={`p ${styles.success}`} role="status">
@@ -51,6 +53,7 @@ export function LoginForm({ registered, passwordReset }) {
       </header>
 
       <form className={styles.form} action={formAction}>
+        {nextPath ? <input type="hidden" name="next" value={nextPath} /> : null}
         <label className={styles.field}>
           <span className="tag-keyword">이메일</span>
           <input
@@ -84,7 +87,12 @@ export function LoginForm({ registered, passwordReset }) {
         <div className={styles.actions}>
           <SubmitButton />
           <div className={styles.footerLink}>
-            <Link href="/subscription" className={`${styles.footerLinkButton} tag-keyword gray-65`}>회원가입</Link>
+            <Link
+              href="/subscription"
+              className={`${styles.footerLinkButton} tag-keyword gray-65`}
+            >
+              회원가입
+            </Link>
             <button
               type="button"
               className={`${styles.footerLinkButton} tag-keyword gray-65`}

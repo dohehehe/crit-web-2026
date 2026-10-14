@@ -3,7 +3,7 @@
 
 :root {
   /* Colors */
-  --crit-orange: rgba(255, 100, 0, 1);
+  --crit-orange: #ff6400;
   --white: rgba(255, 255, 255, 1);
   --black: rgba(0, 0, 0, 1);
   --gray-65: rgba(166, 166, 166, 1);
