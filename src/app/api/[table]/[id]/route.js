@@ -1,12 +1,14 @@
 import { isAllowedTable } from "@/lib/api/constants";
-import {
-  handleDelete,
-  handleGetOne,
-  handleUpdate,
-} from "@/lib/api/handlers";
+import { handleDelete, handleGetOne, handleUpdate } from "@/lib/api/handlers";
+import { requireAdminApi } from "@/lib/auth/requireAdminApi";
 import { jsonError } from "@/lib/api/response";
 
 export async function GET(request, { params }) {
+  const authError = await requireAdminApi();
+  if (authError) {
+    return authError;
+  }
+
   const { table, id } = await params;
 
   if (!isAllowedTable(table)) {
@@ -17,6 +19,11 @@ export async function GET(request, { params }) {
 }
 
 export async function PATCH(request, { params }) {
+  const authError = await requireAdminApi();
+  if (authError) {
+    return authError;
+  }
+
   const { table, id } = await params;
 
   if (!isAllowedTable(table)) {
@@ -27,6 +34,11 @@ export async function PATCH(request, { params }) {
 }
 
 export async function DELETE(_request, { params }) {
+  const authError = await requireAdminApi();
+  if (authError) {
+    return authError;
+  }
+
   const { table, id } = await params;
 
   if (!isAllowedTable(table)) {

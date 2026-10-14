@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth/constants";
 import { getSiteOrigin } from "@/lib/auth/getSiteOrigin";
 import { getSubscriberRoleId } from "@/lib/auth/getSubscriberRoleId";
+import { isAdminUser } from "@/lib/auth/isAdminUser";
+import { getSafeRedirectPath } from "@/lib/auth/safeRedirect";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -19,6 +21,7 @@ function readString(formData, key) {
 export async function signInAction(_prevState, formData) {
   const email = normalizeEmail(formData.get("email"));
   const password = formData.get("password");
+  const nextPath = getSafeRedirectPath(readString(formData, "next"));
 
   if (!email) {
     return { error: "이메일을 입력해 주세요." };
@@ -29,13 +32,24 @@ export async function signInAction(_prevState, formData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
     return { error: "이메일 또는 비밀번호가 올바르지 않습니다." };
   }
 
-  redirect("/");
+  if (nextPath?.startsWith("/admin")) {
+    if (!(await isAdminUser(data.user?.id))) {
+      return { error: "관리자만 접근할 수 있습니다." };
+    }
+
+    redirect(nextPath);
+  }
+
+  redirect(nextPath ?? "/");
 }
 
 export async function signUpAction(_prevState, formData) {

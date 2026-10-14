@@ -1,4 +1,5 @@
 import { AdminNav } from "@/components/admin/layout/admin-nav";
+import { requireAdmin } from "@/lib/auth/requireAdmin";
 import styles from "@/app/admin/admin-layout.module.css";
 
 export const metadata = {
@@ -8,7 +9,9 @@ export const metadata = {
   },
 };
 
-export default function AdminLayout({ children }) {
+export default async function AdminLayout({ children }) {
+  await requireAdmin("/admin");
+
   return (
     <div className={styles.shell}>
       <AdminNav />
