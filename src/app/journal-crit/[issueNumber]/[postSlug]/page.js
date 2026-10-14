@@ -2,9 +2,9 @@ import { notFound } from "next/navigation";
 import { PostView } from "@/components/posts/PostView";
 import { getIssueByNumber } from "@/lib/issues/getIssues";
 import { getRandomActiveBanner } from "@/lib/banner/getBanner";
-import { getPostMetaDescription } from "@/lib/posts/getPostMetaDescription";
 import { getPostDetail, getPostsByIssue } from "@/lib/posts/getPosts";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
+import { buildPostMetadata } from "@/lib/seo/buildPostMetadata";
 import styles from "@/components/journal/JournalCritView.module.css";
 
 export const revalidate = 60;
@@ -40,12 +40,11 @@ export async function generateMetadata({ params }) {
     titleParts.push(post.title);
   }
 
-  const description = getPostMetaDescription(post);
-
-  return {
+  return buildPostMetadata({
+    post,
     title: titleParts.length ? titleParts.join(" — ") : "Journal Crit",
-    description: description || undefined,
-  };
+    issueNumber: issue.issueNumber,
+  });
 }
 
 export default async function JournalCritPostPage({ params }) {

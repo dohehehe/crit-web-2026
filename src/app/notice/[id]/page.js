@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EditorContent } from "@/components/editor/EditorContent";
+import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
 import { getNoticeById } from "@/lib/notice/getNotices";
+import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
+import { resolveNoticeShareImage } from "@/lib/seo/resolveShareImage";
+import { truncatePlainText } from "@/lib/text/truncatePlainText";
 import styles from "@/app/notice/[id]/page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -29,9 +33,24 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   const notice = await getNoticeById(id);
 
-  return {
-    title: notice?.title ? `${notice.title}` : "공지사항",
-  };
+  if (!notice) {
+    return {
+      title: "공지사항",
+    };
+  }
+
+  const description = truncatePlainText(
+    getEditorParagraphPlainText(notice.content)
+  );
+
+  return buildPageMetadata({
+    title: notice.title ?? "공지사항",
+    description,
+    path: `/notice/${notice.id}`,
+    image: resolveNoticeShareImage(notice),
+    type: "article",
+    publishedTime: notice.date ? `${notice.date}T00:00:00+09:00` : undefined,
+  });
 }
 
 export default async function NoticeDetailPage({ params }) {

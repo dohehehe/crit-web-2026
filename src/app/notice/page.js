@@ -3,13 +3,17 @@ import { NoticeList } from "@/components/notice/NoticeList";
 import { NoticePagination } from "@/components/notice/NoticePagination";
 import { NOTICE_PAGE_SIZE } from "@/lib/notice/constants";
 import { getNoticesPage } from "@/lib/notice/getNotices";
+import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
 import styles from "@/app/notice/page.module.css";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "공지사항",
-};
+export async function generateMetadata() {
+  return buildPageMetadata({
+    title: "공지사항",
+    path: "/notice",
+  });
+}
 
 function parsePage(value) {
   const parsed = Number.parseInt(String(value ?? "1"), 10);

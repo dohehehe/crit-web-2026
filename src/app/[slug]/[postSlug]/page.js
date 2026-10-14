@@ -2,9 +2,9 @@ import { notFound } from "next/navigation";
 import { PostView } from "@/components/posts/PostView";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getRandomActiveBanner } from "@/lib/banner/getBanner";
-import { getPostMetaDescription } from "@/lib/posts/getPostMetaDescription";
 import { getPostDetail } from "@/lib/posts/getPosts";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
+import { buildPostMetadata } from "@/lib/seo/buildPostMetadata";
 import styles from "../page.module.css";
 
 export const revalidate = 60;
@@ -33,12 +33,10 @@ export async function generateMetadata({ params }) {
     titleParts.push(post.title);
   }
 
-  const description = getPostMetaDescription(post);
-
-  return {
+  return buildPostMetadata({
+    post,
     title: titleParts.length ? titleParts.join(" — ") : undefined,
-    description: description || undefined,
-  };
+  });
 }
 
 export default async function SectionPostPage({ params }) {
