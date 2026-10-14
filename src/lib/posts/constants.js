@@ -30,6 +30,7 @@ export const POST_DETAIL_SELECT = `
   title,
   subtitle,
   slug,
+  description,
   content,
   thumnail_img,
   video_url,

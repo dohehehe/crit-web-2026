@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14T09:00:34.667Z",
+  "generatedAt": "2026-10-14T09:52:39.552Z",
   "projectUrl": null,
   "tables": [
     {
@@ -515,6 +515,13 @@
         {
           "name": "date",
           "type": "date",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "description",
+          "type": "text",
           "required": false,
           "default": null,
           "notes": []

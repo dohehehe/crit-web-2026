@@ -2,7 +2,7 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-10-14T09:00:34.667Z
+- Updated: 2026-10-14T09:52:39.552Z
 - Tables: 13
 
 ## `authors`
@@ -117,6 +117,7 @@
 | `content` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
 | `date` | date | no |  |  |
+| `description` | text | no |  |  |
 | `end_at` | timestamp with time zone | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
 | `is_active` | boolean | no |  |  |

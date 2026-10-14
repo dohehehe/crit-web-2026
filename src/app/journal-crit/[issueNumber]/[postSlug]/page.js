@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { PostView } from "@/components/posts/PostView";
 import { getIssueByNumber } from "@/lib/issues/getIssues";
 import { getRandomActiveBanner } from "@/lib/banner/getBanner";
+import { getPostMetaDescription } from "@/lib/posts/getPostMetaDescription";
 import { getPostDetail, getPostsByIssue } from "@/lib/posts/getPosts";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
 import styles from "@/components/journal/JournalCritView.module.css";
@@ -18,7 +19,11 @@ export async function generateMetadata({ params }) {
 
   const section = await getSectionByPathSlug("journal-crit");
   const post = section
-    ? await getPostDetail({ sectionId: section.id, postSlug, issueId: issue.id })
+    ? await getPostDetail({
+        sectionId: section.id,
+        postSlug,
+        issueId: issue.id,
+      })
     : null;
 
   if (!post) {
@@ -35,8 +40,11 @@ export async function generateMetadata({ params }) {
     titleParts.push(post.title);
   }
 
+  const description = getPostMetaDescription(post);
+
   return {
     title: titleParts.length ? titleParts.join(" — ") : "Journal Crit",
+    description: description || undefined,
   };
 }
 
@@ -66,7 +74,12 @@ export default async function JournalCritPostPage({ params }) {
 
   return (
     <main className={styles.main}>
-      <PostView post={post} issue={issue} issuePosts={issuePosts} banner={banner} />
+      <PostView
+        post={post}
+        issue={issue}
+        issuePosts={issuePosts}
+        banner={banner}
+      />
     </main>
   );
 }

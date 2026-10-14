@@ -29,7 +29,7 @@ import { KeywordInput } from "@/components/admin/shared/keyword/KeywordInput";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const POST_SELECT =
-  "id,title,subtitle,slug,content,section_id,category_id,issue_id,author_id,authors(id,name),date,thumnail_img,video_url,workshop_url,start_at,end_at";
+  "id,title,subtitle,slug,description,content,section_id,category_id,issue_id,author_id,authors(id,name),date,thumnail_img,video_url,workshop_url,start_at,end_at";
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);
@@ -71,6 +71,7 @@ function emptyForm(defaults = {}) {
     title: "",
     subtitle: "",
     slug: "",
+    description: "",
     section_id: defaults.sectionId ?? "",
     category_id: defaults.categoryId ?? "",
     issue_id: defaults.issueId ?? "",
@@ -116,6 +117,7 @@ function postToForm(post) {
     title: post.title ?? "",
     subtitle: post.subtitle ?? "",
     slug: post.slug ?? "",
+    description: post.description ?? "",
     section_id: post.section_id ?? "",
     category_id: post.category_id ?? "",
     issue_id: post.issue_id ?? "",
@@ -146,9 +148,21 @@ function PostFormFields({
   const isEdit = mode === "edit";
   const isWorkshop = sectionMode === "workshop";
 
-  const { mutate: createPost, isLoading: isCreating, error: createError } = useApiMutation("POST");
-  const { mutate: updatePost, isLoading: isUpdating, error: updateError } = useApiMutation("PATCH");
-  const { mutate: deletePost, isLoading: isDeleting, error: deleteError } = useApiMutation("DELETE");
+  const {
+    mutate: createPost,
+    isLoading: isCreating,
+    error: createError,
+  } = useApiMutation("POST");
+  const {
+    mutate: updatePost,
+    isLoading: isUpdating,
+    error: updateError,
+  } = useApiMutation("PATCH");
+  const {
+    mutate: deletePost,
+    isLoading: isDeleting,
+    error: deleteError,
+  } = useApiMutation("DELETE");
   const { uploadImageToServer } = useImageUpload();
 
   const [form, setForm] = useState(initialValues);
@@ -226,6 +240,7 @@ function PostFormFields({
       title: form.title.trim() || null,
       subtitle: form.subtitle.trim() || null,
       slug: form.slug.trim() || null,
+      description: form.description.replace(/\r\n/g, "\n").trim() || null,
       content,
       section_id: form.section_id || null,
       category_id: form.category_id || null,
@@ -321,7 +336,11 @@ function PostFormFields({
     }
 
     const label = form.title.trim() || "이 게시물";
-    if (!window.confirm(`${label}을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`)) {
+    if (
+      !window.confirm(
+        `${label}을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.`
+      )
+    ) {
       return;
     }
 
@@ -339,10 +358,12 @@ function PostFormFields({
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-
       {section && (
         <p className="p-bold black">
-          대분류: <span className="p-bold crit-orange">{section.name} {section.slug}</span>
+          대분류:{" "}
+          <span className="p-bold crit-orange">
+            {section.name} {section.slug}
+          </span>
         </p>
       )}
 
@@ -356,7 +377,9 @@ function PostFormFields({
               <select
                 className={styles.select}
                 value={form.category_id}
-                onChange={(event) => updateField("category_id", event.target.value)}
+                onChange={(event) =>
+                  updateField("category_id", event.target.value)
+                }
               >
                 <option value="">선택 안 함</option>
                 {categories.map((category) => (
@@ -374,7 +397,9 @@ function PostFormFields({
               <select
                 className={styles.select}
                 value={form.issue_id}
-                onChange={(event) => updateField("issue_id", event.target.value)}
+                onChange={(event) =>
+                  updateField("issue_id", event.target.value)
+                }
               >
                 <option value="">선택 안 함</option>
                 {issues.map((issue) => (
@@ -392,7 +417,6 @@ function PostFormFields({
       <div className={styles.section}>
         <h2 className={`${styles.sectionTitle} p-bold`}>기본 정보</h2>
 
-
         <label className={styles.field}>
           <span className="caption">제목</span>
           <input
@@ -406,7 +430,9 @@ function PostFormFields({
 
         <label className={styles.field}>
           <span className="caption">영문 제목</span>
-          <span className="caption gray-65">(영문 제목은 주소창의 URL에 사용됩니다.)</span>
+          <span className="caption gray-65">
+            (영문 제목은 주소창의 URL에 사용됩니다.)
+          </span>
           <input
             className={styles.input}
             type="text"
@@ -425,13 +451,22 @@ function PostFormFields({
           />
         </label>
 
+        <label className={styles.field}>
+          <span className="caption">설명</span>
+          <span className="caption gray-65">
+            (검색·공유용 요약입니다. 비우면 본문 텍스트를 사용합니다.)
+          </span>
+          <textarea
+            className={styles.textarea}
+            value={form.description}
+            onChange={(event) => updateField("description", event.target.value)}
+            rows={5}
+          />
+        </label>
+
         <div className={styles.field}>
           <span className="caption">작성자</span>
-          <AuthorInput
-            value={author}
-            onChange={setAuthor}
-            disabled={isBusy}
-          />
+          <AuthorInput value={author} onChange={setAuthor} disabled={isBusy} />
           {authorError && (
             <p className={`${styles.error} caption`}>{authorError}</p>
           )}
@@ -455,7 +490,9 @@ function PostFormFields({
                 className={styles.input}
                 type="datetime-local"
                 value={form.start_at}
-                onChange={(event) => updateField("start_at", event.target.value)}
+                onChange={(event) =>
+                  updateField("start_at", event.target.value)
+                }
               />
             </label>
 
@@ -529,7 +566,9 @@ function PostFormFields({
                 className={styles.input}
                 type="url"
                 value={form.video_url}
-                onChange={(event) => updateField("video_url", event.target.value)}
+                onChange={(event) =>
+                  updateField("video_url", event.target.value)
+                }
               />
             </label>
           )}
@@ -542,7 +581,9 @@ function PostFormFields({
                   className={styles.input}
                   type="url"
                   value={form.workshop_url}
-                  onChange={(event) => updateField("workshop_url", event.target.value)}
+                  onChange={(event) =>
+                    updateField("workshop_url", event.target.value)
+                  }
                 />
               </label>
             </>
@@ -570,8 +611,16 @@ function PostFormFields({
 
       <div className={styles.actions}>
         <div className={styles.primaryActions}>
-          <button type="submit" className={`${styles.submitButton} caption`} disabled={isBusy}>
-            {isSaving && !isDeleting ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
+          <button
+            type="submit"
+            className={`${styles.submitButton} caption`}
+            disabled={isBusy}
+          >
+            {isSaving && !isDeleting
+              ? "저장 중…"
+              : isEdit
+                ? "수정 저장"
+                : "생성"}
           </button>
           <button
             type="button"
@@ -581,7 +630,10 @@ function PostFormFields({
           >
             {isPreviewing ? "미리보기 여는 중…" : "미리보기"}
           </button>
-          <Link href="/admin/contents" className={`${styles.cancelButton} caption`}>
+          <Link
+            href="/admin/contents"
+            className={`${styles.cancelButton} caption`}
+          >
             취소
           </Link>
         </div>
@@ -600,7 +652,13 @@ function PostFormFields({
   );
 }
 
-export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIssueId }) {
+export function PostForm({
+  mode,
+  postId,
+  sectionId,
+  defaultCategoryId,
+  defaultIssueId,
+}) {
   const isEdit = mode === "edit";
 
   const {
@@ -614,47 +672,55 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
 
   const effectiveSectionId = isEdit ? (postData?.section_id ?? "") : sectionId;
 
-  const { data: sectionsData, isLoading: sectionsLoading } = useAdminQuery("sections", {
-    params: {
-      order: "sort_order.asc",
-      limit: 20,
-    },
-  });
+  const { data: sectionsData, isLoading: sectionsLoading } = useAdminQuery(
+    "sections",
+    {
+      params: {
+        order: "sort_order.asc",
+        limit: 20,
+      },
+    }
+  );
 
   const sections = sectionsData?.items ?? [];
-  const section = sections.find((item) => item.id === effectiveSectionId) ?? null;
+  const section =
+    sections.find((item) => item.id === effectiveSectionId) ?? null;
   const sectionMode = getSectionMode(section);
 
-  const { data: categoriesData, isLoading: categoriesLoading } = useAdminQuery("categories", {
-    params: {
-      "eq.section_id": effectiveSectionId,
-      select: "id,name,slug,sort_order",
-      order: "sort_order.asc",
-      limit: 100,
-    },
-    enabled: Boolean(effectiveSectionId) && sectionHasCategories(sectionMode),
-  });
-
-  const { data: issuesData, isLoading: issuesLoading } = useAdminQuery("issues", {
-    params: {
-      select: "id,title,issue_number",
-      order: "issue_number.desc",
-      limit: 100,
-    },
-    enabled: sectionMode === "journal",
-  });
-
-  const { data: postKeywordsData, isLoading: postKeywordsLoading } = useAdminQuery(
-    "post_keywords",
+  const { data: categoriesData, isLoading: categoriesLoading } = useAdminQuery(
+    "categories",
     {
+      params: {
+        "eq.section_id": effectiveSectionId,
+        select: "id,name,slug,sort_order",
+        order: "sort_order.asc",
+        limit: 100,
+      },
+      enabled: Boolean(effectiveSectionId) && sectionHasCategories(sectionMode),
+    }
+  );
+
+  const { data: issuesData, isLoading: issuesLoading } = useAdminQuery(
+    "issues",
+    {
+      params: {
+        select: "id,title,issue_number",
+        order: "issue_number.desc",
+        limit: 100,
+      },
+      enabled: sectionMode === "journal",
+    }
+  );
+
+  const { data: postKeywordsData, isLoading: postKeywordsLoading } =
+    useAdminQuery("post_keywords", {
       params: {
         "eq.post_id": postId,
         select: "keyword_id,keywords(id,name)",
         limit: 50,
       },
       enabled: isEdit && Boolean(postId),
-    }
-  );
+    });
 
   const categories = categoriesData?.items ?? [];
   const issues = issuesData?.items ?? [];
@@ -666,7 +732,9 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
     (sectionMode === "journal" && issuesLoading);
 
   if (isEdit && postLoading) {
-    return <p className={`${styles.status} caption gray-65`}>게시물 불러오는 중…</p>;
+    return (
+      <p className={`${styles.status} caption gray-65`}>게시물 불러오는 중…</p>
+    );
   }
 
   if (isEdit && postError) {
@@ -688,14 +756,12 @@ export function PostForm({ mode, postId, sectionId, defaultCategoryId, defaultIs
   const initialValues = isEdit
     ? postToForm(postData)
     : emptyForm({
-      sectionId,
-      categoryId: defaultCategoryId,
-      issueId: defaultIssueId,
-    });
+        sectionId,
+        categoryId: defaultCategoryId,
+        issueId: defaultIssueId,
+      });
 
-  const initialContent = isEdit
-    ? parseContent(postData.content)
-    : null;
+  const initialContent = isEdit ? parseContent(postData.content) : null;
 
   const initialKeywords = isEdit
     ? mapPostKeywords(postKeywordsData?.items)

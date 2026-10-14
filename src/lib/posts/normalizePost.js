@@ -29,6 +29,7 @@ export function normalizePostDetail(post) {
   return {
     ...normalizePost(post),
     subtitle: post.subtitle ?? "",
+    description: post.description ?? "",
     content: post.content ?? null,
     author: post.authors ?? null,
     videoUrl: post.video_url ?? "",

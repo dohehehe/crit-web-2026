@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { PostView } from "@/components/posts/PostView";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getRandomActiveBanner } from "@/lib/banner/getBanner";
+import { getPostMetaDescription } from "@/lib/posts/getPostMetaDescription";
 import { getPostDetail } from "@/lib/posts/getPosts";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
 import styles from "../page.module.css";
@@ -32,8 +33,11 @@ export async function generateMetadata({ params }) {
     titleParts.push(post.title);
   }
 
+  const description = getPostMetaDescription(post);
+
   return {
     title: titleParts.length ? titleParts.join(" — ") : undefined,
+    description: description || undefined,
   };
 }
 
@@ -57,7 +61,10 @@ export default async function SectionPostPage({ params }) {
   const isChannelSection = getSectionMode(section) === "channel";
 
   return (
-    <main className={styles.main} {...(isChannelSection ? { "data-channel-section": "" } : {})}>
+    <main
+      className={styles.main}
+      {...(isChannelSection ? { "data-channel-section": "" } : {})}
+    >
       <PostView post={post} banner={banner} />
     </main>
   );
