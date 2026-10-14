@@ -9,6 +9,8 @@ export function normalizePost(post) {
     slug: post.slug ?? "",
     thumbnailImg: post.thumnail_img ?? "",
     date: post.date ?? null,
+    startAt: post.start_at ?? null,
+    endAt: post.end_at ?? null,
     category: post.categories ?? null,
     section: post.sections ?? null,
     issueNumber: post.issues?.issue_number ?? "",

@@ -43,7 +43,11 @@ function PostAsideBanner({ banner }) {
 
 export function PostView({ post, issue, issuePosts = [], banner = null }) {
   if (!post) {
-    return <p className={`${styles.empty} caption gray-65`}>표시할 게시물이 없습니다.</p>;
+    return (
+      <p className={`${styles.empty} caption gray-65`}>
+        표시할 게시물이 없습니다.
+      </p>
+    );
   }
 
   const isJournal = post.section && getSectionMode(post.section) === "journal";
@@ -77,8 +81,14 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
         ) : null}
 
         <header className={styles.header}>
-          {post.title ? <h1 className={`title-1 ${styles.title}`}>{post.title}</h1> : null}
-          {post.subtitle ? <h2 className={`thumb-title ${styles.subtitle}`}>{post.subtitle}</h2> : null}
+          {post.title ? (
+            <h1 className={`title-1 ${styles.title}`}>{post.title}</h1>
+          ) : null}
+          {post.subtitle ? (
+            <h2 className={`thumb-title ${styles.subtitle}`}>
+              {post.subtitle}
+            </h2>
+          ) : null}
           <div className={styles.infoContainer}>
             {post.author?.name ? (
               post.author.id ? (
@@ -89,25 +99,25 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                   {post.author.name}
                 </Link>
               ) : (
-                <p className={`tag-keyword black ${styles.author}`}>{post.author.name}</p>
+                <p className={`tag-keyword black ${styles.author}`}>
+                  {post.author.name}
+                </p>
               )
             ) : null}
             {post.date ? (
-              <p className={`tag-keyword gray-65 ${styles.date}`}>{post.date}</p>
+              <p className={`tag-keyword gray-65 ${styles.date}`}>
+                {post.date}
+              </p>
             ) : null}
           </div>
         </header>
-
-
 
         {post.content ? (
           <section className={styles.contents}>
             <EditorContent contents={post.content} />
           </section>
         ) : null}
-
-
-      </article >
+      </article>
       <aside className={styles.aside}>
         {isJournal && issue?.fileUrl ? (
           <div className={`${styles.asideItem} menu-en`}>
@@ -127,8 +137,13 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
             <div className={`${styles.asideTitle} menu-en`}>Tag</div>
             <ul className={styles.tagList}>
               {category ? (
-                <li className={`${styles.tagItem} ${styles.tagCategory}`} key={`category-${category.id}`}>
-                  <Link href={`/search?tag=category-${category.id}`}>{category.name}</Link>
+                <li
+                  className={`${styles.tagItem} ${styles.tagCategory}`}
+                  key={`category-${category.id}`}
+                >
+                  <Link href={`/search?tag=category-${category.id}`}>
+                    {category.name}
+                  </Link>
                 </li>
               ) : null}
               {keywords.map((keyword) => (
@@ -144,10 +159,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           <div className={styles.asideItem}>
             <div className={`${styles.asideTitle} menu-en`}>
               {issue.issueNumber ? (
-                <Link
-                  href={getJournalCritIssuePath(issue.issueNumber)}
-
-                >
+                <Link href={getJournalCritIssuePath(issue.issueNumber)}>
                   Issue {issue.issueNumber} <br /> From This Issue
                 </Link>
               ) : null}
@@ -168,7 +180,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                         </span>
                       ) : (
                         <Link
-                          href={getPostPath(issuePost, { issueNumber: issue.issueNumber })}
+                          href={getPostPath(issuePost, {
+                            issueNumber: issue.issueNumber,
+                          })}
                           className={`${styles.issuePostItem} p-bold`}
                         >
                           {issuePost.title}

@@ -55,7 +55,10 @@ export default async function SectionPage({ params }) {
       className={styles.main}
       {...(isChannelSection ? { "data-channel-section": "" } : {})}
     >
-      <PostList posts={posts} />
+      <PostList
+        posts={posts}
+        showWorkshopDate={sectionMode === "workshop"}
+      />
     </main>
   );
 }
