@@ -138,7 +138,7 @@ export async function signUpAction(_prevState, formData) {
     redirect("/");
   }
 
-  redirect("/login?registered=1");
+  return { success: true };
 }
 
 export async function signOutAction() {

@@ -1,0 +1,64 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.dialog {
+  width: 100%;
+  max-width: 440px;
+  background: var(--white);
+  border: 1px solid var(--black);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+}
+
+.message {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.button,
+.cancelButton {
+  padding: 10px 16px;
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:hover,
+.cancelButton:hover {
+  border-color: var(--crit-orange);
+  color: var(--crit-orange);
+}
+
+.buttonPrimary {
+  background: var(--crit-orange);
+  border-color: var(--crit-orange);
+  color: var(--white);
+}
+
+.buttonPrimary:hover {
+  opacity: 0.9;
+  color: var(--white);
+}

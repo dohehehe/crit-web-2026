@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { AlertDialog } from "@/components/auth/AlertDialog";
+import { UNSUBSCRIBE_CONFIRM_ALERT } from "@/lib/auth/constants";
 import { deleteAccountAction, signOutAction } from "@/lib/auth/actions";
 import styles from "@/app/mypage/page.module.css";
-
-const UNSUBSCRIBE_CONFIRM_MESSAGE =
-  "구독을 취소하면 회원 탈퇴로 처리됩니다. 계정과 회원 정보가 삭제되며 되돌릴 수 없습니다. 계속할까요?";
 
 function LogoutSubmit() {
   const { pending } = useFormStatus();
@@ -21,12 +20,10 @@ function LogoutSubmit() {
 export function MyPageActions() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [showUnsubscribeConfirm, setShowUnsubscribeConfirm] = useState(false);
 
-  async function handleUnsubscribe() {
-    if (!window.confirm(UNSUBSCRIBE_CONFIRM_MESSAGE)) {
-      return;
-    }
-
+  async function handleUnsubscribeConfirm() {
+    setShowUnsubscribeConfirm(false);
     setPending(true);
     setError("");
 
@@ -47,7 +44,7 @@ export function MyPageActions() {
         <button
           type="button"
           className={`caption gray-65 ${styles.unsubscribe}`}
-          onClick={handleUnsubscribe}
+          onClick={() => setShowUnsubscribeConfirm(true)}
           disabled={pending}
         >
           {pending ? "취소 중…" : "구독 취소"}
@@ -58,6 +55,16 @@ export function MyPageActions() {
           {error}
         </p>
       ) : null}
+
+      <AlertDialog
+        open={showUnsubscribeConfirm}
+        title={UNSUBSCRIBE_CONFIRM_ALERT.title}
+        message={UNSUBSCRIBE_CONFIRM_ALERT.message}
+        confirmLabel="구독 취소"
+        cancelLabel="닫기"
+        onConfirm={handleUnsubscribeConfirm}
+        onCancel={() => setShowUnsubscribeConfirm(false)}
+      />
     </div>
   );
 }
