@@ -2,6 +2,7 @@ export const POST_LIST_SELECT = `
   id,
   title,
   slug,
+  description,
   thumnail_img,
   date,
   sort_order,

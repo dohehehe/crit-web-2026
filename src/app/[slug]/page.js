@@ -58,6 +58,7 @@ export default async function SectionPage({ params }) {
       <PostList
         posts={posts}
         showWorkshopDate={sectionMode === "workshop"}
+        showChannelFeatured={isChannelSection}
       />
     </main>
   );

@@ -7,6 +7,7 @@ export function normalizePost(post) {
     id: post.id,
     title: post.title ?? "",
     slug: post.slug ?? "",
+    description: post.description ?? "",
     thumbnailImg: post.thumnail_img ?? "",
     date: post.date ?? null,
     startAt: post.start_at ?? null,

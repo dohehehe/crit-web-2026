@@ -6,8 +6,12 @@
   list-style: none;
 }
 
-.list>li {
+.list > li {
   min-width: 0;
+}
+
+.featured {
+  grid-column: 1 / -1;
 }
 
 .empty {
