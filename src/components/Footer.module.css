@@ -1,7 +1,7 @@
 @import "../app/breakpoints.css";
 
 .footer {
-  padding: 80px 24px 20px;
+  padding: 0px 24px 20px;
   color: var(--black);
   transition: background-color 0.4s ease, color 0.4s ease;
   position: relative;
@@ -73,7 +73,7 @@
 
 @media (max-width: var(--breakpoint-tablet)) {
   .footer {
-    padding: 80px 10px 30px;
+    padding: 0px 10px 30px;
     word-break: keep-all;
     position: relative;
   }
