@@ -1,3 +1,4 @@
+import { getThumbnailUrl } from "@/lib/posts/thumbnail";
 import { extractContentImageUrl } from "@/lib/seo/extractContentImageUrl";
 import {
   getYoutubeThumbnailUrl,
@@ -15,7 +16,10 @@ function firstNonEmpty(...values) {
 }
 
 export function resolvePostShareImage(post) {
-  const direct = firstNonEmpty(post?.thumbnailImg, post?.thumnail_img);
+  const direct = firstNonEmpty(
+    getThumbnailUrl(post?.thumbnailImg),
+    getThumbnailUrl(post?.thumnail_img),
+  );
 
   if (direct) {
     return direct;

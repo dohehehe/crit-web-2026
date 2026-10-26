@@ -1,3 +1,5 @@
+import { getThumbnailUrl } from "@/lib/posts/thumbnail";
+
 export function normalizePost(post) {
   const keywords = (post.post_keywords ?? [])
     .map((row) => row.keywords)
@@ -8,7 +10,7 @@ export function normalizePost(post) {
     title: post.title ?? "",
     slug: post.slug ?? "",
     description: post.description ?? "",
-    thumbnailImg: post.thumnail_img ?? "",
+    thumbnailImg: getThumbnailUrl(post.thumnail_img) ?? "",
     date: post.date ?? null,
     startAt: post.start_at ?? null,
     endAt: post.end_at ?? null,
