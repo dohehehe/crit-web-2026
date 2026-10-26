@@ -23,8 +23,22 @@ import {
 import styles from "@/components/admin/shared/editor/Editor.module.css";
 import proseStyles from "@/components/editor/editorProse.module.css";
 
-const INLINE_TOOLS = ["link", "bold", "italic", "underline", "marker", "color"];
+const INLINE_TOOLS = [
+  "link",
+  "bold",
+  "italic",
+  "underline",
+  "marker",
+  "color",
+  "textStyle",
+];
 const TEXT_INLINE_TOOLS = [...INLINE_TOOLS, "alignment"];
+
+const TEXT_STYLE_FONTS = [
+  { label: "Pretendard", value: "Pretendard, sans-serif" },
+  { label: "Libre Caslon Text", value: '"Libre Caslon Text", serif' },
+  { label: "Noto Serif CJK KR", value: '"Noto Serif KR", serif' },
+];
 
 const TEXT_COLORS = ["#000000", "#FF6400", "#A6A6A6", "#FFFFFF"];
 
@@ -281,6 +295,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           { default: Sortable },
           { default: Underline },
           colorModule,
+          textStyleModule,
           FootnotesTune,
           GalleryTool,
         ] = await Promise.all([
@@ -295,6 +310,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
           import("sortablejs"),
           import("@editorjs/underline"),
           import("editorjs-text-color-plugin"),
+          import("@skchawala/editorjs-text-style"),
           loadFootnotesTune(),
           loadGalleryTool(),
         ]);
@@ -308,6 +324,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
         );
         const ColorPlugin = colorModule.default ?? colorModule;
         const ColorTool = createColorTool(ColorPlugin);
+        const TextStyleTool = textStyleModule.default ?? textStyleModule;
 
         editor = new EditorJS({
           holder: holderId,
@@ -320,6 +337,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
                 Gallery: "이미지 슬라이더",
                 Color: "글자색",
                 Alignment: "정렬",
+                "Text Style": "글꼴",
               },
               tools: {
                 image: {
@@ -384,6 +402,15 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
             },
             alignment: {
               class: TextAlignTool,
+            },
+            textStyle: {
+              class: TextStyleTool,
+              config: {
+                fontSizeEnabled: false,
+                fontFamilyEnabled: true,
+                fontFamilies: TEXT_STYLE_FONTS,
+                defaultFontFamily: "Pretendard, sans-serif",
+              },
             },
             embed: {
               class: Embed,

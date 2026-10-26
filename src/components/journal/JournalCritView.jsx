@@ -51,7 +51,7 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
 
         {posts?.length ? (
           <section className={styles.posts} aria-label="이슈 게시물">
-            <h3 className={`p-bold ${styles.postsTitle}`}>Contents</h3>
+            <h3 className={`tag-keyword ${styles.postsTitle}`}>Contents</h3>
             <ol className={styles.postList}>
               {posts.map((post) => (
                 <li key={post.id} className={styles.postItem}>
@@ -60,10 +60,10 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
                     className={`${styles.postLink}`}
                   >
                     {/* <hr className={styles.postSeparator} /> */}
-                    <span className={`${styles.title} menu-kr`}>{post.title}</span>
+                    <span className={`${styles.title} thumb-title`}>{post.title}</span>
                     {/* <hr className={styles.postSeparator} /> */}
                     {post.author?.name ? (
-                      <span className={`${styles.author} caption`}>{post.author.name}</span>
+                      <span className={`${styles.author} p`}>{post.author.name}</span>
                     ) : null}
                   </Link>
                 </li>
@@ -75,21 +75,22 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
 
       {otherIssues.length ? (
         <aside className={styles.aside} aria-label="다른 이슈">
-          <h3 className={`p-bold ${styles.asideHeading}`}>Other Issues</h3>
+          <h3 className={`menu-en ${styles.asideHeading}`}>Other Issues</h3>
           <ol className={styles.asideList}>
             {otherIssues.map((otherIssue) => (
               <li key={otherIssue.id} className={styles.asideItem}>
                 <Link href={getJournalCritIssuePath(otherIssue.issueNumber)} className={styles.asideLink}>
                   {otherIssue.issueNumber ? (
-                    <span className={`${styles.asideIssueNumber} caption`}>Issue {otherIssue.issueNumber}</span>
+                    <span className={`${styles.asideIssueNumber} tag-keyword`}>Issue {otherIssue.issueNumber}</span>
                   ) : null}
                   {otherIssue.title ? (
-                    <span className={`${styles.asideIssueTitle} menu-en`}>{otherIssue.title}</span>
+                    <span className={`${styles.asideIssueTitle} thumb-title`}>{otherIssue.title}</span>
                   ) : null}
                 </Link>
               </li>
             ))}
           </ol>
+          <div className={styles.asideBlank}></div>
         </aside>
       ) : null}
     </>

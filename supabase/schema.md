@@ -2,7 +2,7 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-10-14T09:52:39.552Z
+- Updated: 2026-10-26T06:08:40.696Z
 - Tables: 13
 
 ## `authors`
@@ -10,6 +10,7 @@
 | Column | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
 | `content` | jsonb | no |  |  |
+| `content_en` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
 | `email` | text | no |  |  |
 | `id` | uuid | yes | gen_random_uuid() | PK |
@@ -115,6 +116,7 @@
 | `author_id` | uuid | no | gen_random_uuid() | FK → authors.id |
 | `category_id` | uuid | no | gen_random_uuid() | FK → categories.id |
 | `content` | jsonb | no |  |  |
+| `content_en` | jsonb | no |  |  |
 | `created_at` | timestamp with time zone | yes | now() |  |
 | `date` | date | no |  |  |
 | `description` | text | no |  |  |
@@ -127,7 +129,8 @@
 | `sort_order` | numeric | no |  |  |
 | `start_at` | timestamp with time zone | no |  |  |
 | `subtitle` | text | no |  |  |
-| `thumnail_img` | text | no |  |  |
+| `subtitle_en` | text | no |  |  |
+| `thumnail_img` | jsonb | no |  |  |
 | `title` | text | no |  |  |
 | `updated_at` | timestamp with time zone | no |  |  |
 | `video_url` | text | no |  |  |

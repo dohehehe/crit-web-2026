@@ -26,9 +26,17 @@ export const metadata = {
   },
 };
 
+const EDITOR_FONT_STYLESHEET =
+  "https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;500;600;700&display=swap";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="ko-KR">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="stylesheet" href={EDITOR_FONT_STYLESHEET} />
+      </head>
       <body>
         <Navigation />
         {children}

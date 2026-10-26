@@ -104,6 +104,35 @@
   width: 100%;
 }
 
+.wrapper :global(.cdx-text-style-actions) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.wrapper :global(.cdx-text-style-actions select) {
+  width: 100%;
+  min-width: 180px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+}
+
+.wrapper :global(#text-style-font-family option[value="Pretendard, sans-serif"]) {
+  font-family: Pretendard, sans-serif;
+}
+
+.wrapper :global(#text-style-font-family option[value='"Libre Caslon Text", serif']) {
+  font-family: "Libre Caslon Text", serif;
+}
+
+.wrapper :global(#text-style-font-family option[value='"Noto Serif KR", serif']) {
+  font-family: "Noto Serif KR", serif;
+}
+
 .wrapper :global([data-text-align="center"] .cdx-list) {
   justify-items: center;
 }
