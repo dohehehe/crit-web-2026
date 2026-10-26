@@ -126,6 +126,26 @@ export const getSiteInfo = cache(async () => {
   };
 });
 
+export const getInfoText = cache(async () => {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("info")
+    .select("info_text")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return parseEditorContents(data.info_text);
+});
+
 export const getSubscriptionText = cache(async () => {
   const supabase = createAdminClient();
   const { data, error } = await supabase
