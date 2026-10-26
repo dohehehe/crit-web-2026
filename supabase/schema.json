@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14T09:52:39.552Z",
+  "generatedAt": "2026-10-26T06:08:40.696Z",
   "projectUrl": null,
   "tables": [
     {
@@ -7,6 +7,13 @@
       "columns": [
         {
           "name": "content",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "content_en",
           "type": "jsonb",
           "required": false,
           "default": null,
@@ -506,6 +513,13 @@
           "notes": []
         },
         {
+          "name": "content_en",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
           "name": "created_at",
           "type": "timestamp with time zone",
           "required": true,
@@ -596,8 +610,15 @@
           "notes": []
         },
         {
-          "name": "thumnail_img",
+          "name": "subtitle_en",
           "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "thumnail_img",
+          "type": "jsonb",
           "required": false,
           "default": null,
           "notes": []

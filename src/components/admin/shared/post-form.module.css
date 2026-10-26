@@ -16,6 +16,52 @@
   border-bottom: 2px solid var(--black);
 }
 
+.contentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--black);
+}
+
+.contentTitle {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.contentTabs {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.contentTab {
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  padding: 6px 14px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.contentTab:hover:not(:disabled) {
+  background: var(--black);
+  color: var(--white);
+}
+
+.contentTabActive,
+.contentTabActive:hover:not(:disabled) {
+  background: var(--crit-orange);
+  border-color: var(--crit-orange);
+  color: var(--white);
+}
+
+.contentTab:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 .field {
   display: flex;
   flex-direction: column;

@@ -12,6 +12,10 @@ import {
   sectionHasMediaFields,
 } from "@/lib/admin/section-mode";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import {
+  parseThumbnail,
+  serializeThumbnail,
+} from "@/lib/posts/thumbnail";
 import { findOrCreateAuthor } from "@/lib/authors/findOrCreateAuthor";
 import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
 import {
@@ -29,7 +33,12 @@ import { KeywordInput } from "@/components/admin/shared/keyword/KeywordInput";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const POST_SELECT =
-  "id,title,subtitle,slug,description,content,section_id,category_id,issue_id,author_id,authors(id,name),date,thumnail_img,video_url,workshop_url,start_at,end_at";
+  "id,title,subtitle,subtitle_en,slug,description,content,content_en,section_id,category_id,issue_id,author_id,authors(id,name),date,thumnail_img,video_url,workshop_url,start_at,end_at";
+
+const CONTENT_LOCALES = [
+  { id: "ko", label: "한글" },
+  { id: "en", label: "영어" },
+];
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);
@@ -70,6 +79,7 @@ function emptyForm(defaults = {}) {
   return {
     title: "",
     subtitle: "",
+    subtitle_en: "",
     slug: "",
     description: "",
     section_id: defaults.sectionId ?? "",
@@ -77,6 +87,8 @@ function emptyForm(defaults = {}) {
     issue_id: defaults.issueId ?? "",
     date: "",
     thumnail_img: "",
+    thumbnail_caption_kr: "",
+    thumbnail_caption_en: "",
     video_url: "",
     workshop_url: "",
     start_at: "",
@@ -113,16 +125,21 @@ function mapPostKeywords(items) {
 }
 
 function postToForm(post) {
+  const thumbnail = parseThumbnail(post.thumnail_img);
+
   return {
     title: post.title ?? "",
     subtitle: post.subtitle ?? "",
+    subtitle_en: post.subtitle_en ?? "",
     slug: post.slug ?? "",
     description: post.description ?? "",
     section_id: post.section_id ?? "",
     category_id: post.category_id ?? "",
     issue_id: post.issue_id ?? "",
     date: post.date ?? "",
-    thumnail_img: post.thumnail_img ?? "",
+    thumnail_img: thumbnail.url,
+    thumbnail_caption_kr: thumbnail.captionKr,
+    thumbnail_caption_en: thumbnail.captionEn,
     video_url: post.video_url ?? "",
     workshop_url: post.workshop_url ?? "",
     start_at: toDatetimeLocalValue(post.start_at),
@@ -135,6 +152,7 @@ function PostFormFields({
   postId,
   initialValues,
   initialContent,
+  initialContentEn,
   initialKeywords,
   initialAuthor,
   section,
@@ -144,6 +162,10 @@ function PostFormFields({
 }) {
   const router = useRouter();
   const editorRef = useRef(null);
+  const contentByLocaleRef = useRef({
+    ko: initialContent,
+    en: initialContentEn,
+  });
   const thumbnailInputRef = useRef(null);
   const isEdit = mode === "edit";
   const isWorkshop = sectionMode === "workshop";
@@ -168,6 +190,10 @@ function PostFormFields({
   const [form, setForm] = useState(initialValues);
   const [keywords, setKeywords] = useState(initialKeywords);
   const [author, setAuthor] = useState(initialAuthor);
+  const [contentLocale, setContentLocale] = useState("ko");
+  const [editorData, setEditorData] = useState(initialContent);
+  const [editorMountKey, setEditorMountKey] = useState(0);
+  const [isSwitchingLocale, setIsSwitchingLocale] = useState(false);
   const [editorError, setEditorError] = useState(null);
   const [keywordError, setKeywordError] = useState(null);
   const [authorError, setAuthorError] = useState(null);
@@ -206,22 +232,51 @@ function PostFormFields({
     }
   }
 
+  async function saveActiveContent() {
+    if (!editorRef.current?.isReady?.()) {
+      throw new Error("에디터가 아직 준비되지 않았습니다.");
+    }
+
+    const savedData = await editorRef.current.save();
+    const content = serializeEditorContent(savedData);
+    contentByLocaleRef.current = {
+      ...contentByLocaleRef.current,
+      [contentLocale]: content,
+    };
+    return contentByLocaleRef.current;
+  }
+
+  async function handleContentLocaleChange(nextLocale) {
+    if (nextLocale === contentLocale || isSwitchingLocale) {
+      return;
+    }
+
+    setEditorError(null);
+    setIsSwitchingLocale(true);
+
+    try {
+      await saveActiveContent();
+      setEditorData(contentByLocaleRef.current[nextLocale] ?? null);
+      setContentLocale(nextLocale);
+      setEditorMountKey((key) => key + 1);
+    } catch (error) {
+      setEditorError(error.message ?? "에디터 내용을 저장하지 못했습니다.");
+    } finally {
+      setIsSwitchingLocale(false);
+    }
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setEditorError(null);
     setKeywordError(null);
     setAuthorError(null);
 
-    let content = null;
+    let contents = null;
     let authorId = null;
 
     try {
-      if (!editorRef.current?.isReady?.()) {
-        throw new Error("에디터가 아직 준비되지 않았습니다.");
-      }
-
-      const savedData = await editorRef.current.save();
-      content = serializeEditorContent(savedData);
+      contents = await saveActiveContent();
     } catch (error) {
       setEditorError(error.message ?? "에디터 내용을 저장하지 못했습니다.");
       return;
@@ -239,15 +294,21 @@ function PostFormFields({
     const payload = {
       title: form.title.trim() || null,
       subtitle: form.subtitle.trim() || null,
+      subtitle_en: form.subtitle_en.trim() || null,
       slug: form.slug.trim() || null,
       description: form.description.replace(/\r\n/g, "\n").trim() || null,
-      content,
+      content: contents.ko,
+      content_en: contents.en,
       section_id: form.section_id || null,
       category_id: form.category_id || null,
       issue_id: form.issue_id || null,
       author_id: authorId,
       date: form.date || null,
-      thumnail_img: form.thumnail_img.trim() || null,
+      thumnail_img: serializeThumbnail({
+        url: form.thumnail_img,
+        captionKr: form.thumbnail_caption_kr,
+        captionEn: form.thumbnail_caption_en,
+      }),
       video_url: form.video_url.trim() || null,
       workshop_url: form.workshop_url.trim() || null,
       start_at: fromDatetimeLocalValue(form.start_at),
@@ -284,12 +345,8 @@ function PostFormFields({
     setIsPreviewing(true);
 
     try {
-      if (!editorRef.current?.isReady?.()) {
-        throw new Error("에디터가 아직 준비되지 않았습니다.");
-      }
-
-      const savedData = await editorRef.current.save();
-      const content = serializeEditorContent(savedData);
+      const contents = await saveActiveContent();
+      const content = contents[contentLocale];
 
       let issuePosts = [];
       let issueFileUrl = null;
@@ -308,7 +365,10 @@ function PostFormFields({
       }
 
       const record = buildPostPreviewRecord({
-        form,
+        form:
+          contentLocale === "en"
+            ? { ...form, subtitle: form.subtitle_en }
+            : form,
         content,
         author,
         keywords,
@@ -353,7 +413,7 @@ function PostFormFields({
   }
 
   const isSaving = isCreating || isUpdating || isDeleting;
-  const isBusy = isSaving || isPreviewing;
+  const isBusy = isSaving || isPreviewing || isSwitchingLocale;
   const submitError = createError ?? updateError ?? deleteError;
 
   return (
@@ -448,6 +508,16 @@ function PostFormFields({
             type="text"
             value={form.subtitle}
             onChange={(event) => updateField("subtitle", event.target.value)}
+          />
+        </label>
+
+        <label className={styles.field}>
+          <span className="caption">영문 부제목</span>
+          <input
+            className={styles.input}
+            type="text"
+            value={form.subtitle_en}
+            onChange={(event) => updateField("subtitle_en", event.target.value)}
           />
         </label>
 
@@ -549,6 +619,28 @@ function PostFormFields({
               className={styles.thumbnailPreview}
             />
           ) : null}
+          <label className={styles.field}>
+            <span className="caption">캡션</span>
+            <input
+              className={styles.input}
+              type="text"
+              value={form.thumbnail_caption_kr}
+              onChange={(event) =>
+                updateField("thumbnail_caption_kr", event.target.value)
+              }
+            />
+          </label>
+          <label className={styles.field}>
+            <span className="caption">영문 캡션</span>
+            <input
+              className={styles.input}
+              type="text"
+              value={form.thumbnail_caption_en}
+              onChange={(event) =>
+                updateField("thumbnail_caption_en", event.target.value)
+              }
+            />
+          </label>
           {thumbnailError && (
             <p className={`${styles.error} caption`}>{thumbnailError}</p>
           )}
@@ -592,10 +684,47 @@ function PostFormFields({
       )}
 
       <div className={styles.section}>
-        <h2 className={`${styles.sectionTitle} p-bold`}>콘텐츠</h2>
+        <div className={styles.contentHeader}>
+          <h2 className={`${styles.sectionTitle} ${styles.contentTitle} p-bold`}>
+            콘텐츠
+          </h2>
+          <div className={styles.contentTabs} role="tablist" aria-label="콘텐츠 언어">
+            {CONTENT_LOCALES.map((tab) => {
+              const isSelected = contentLocale === tab.id;
 
-        <div className={styles.field}>
-          <EditorClient ref={editorRef} data={initialContent} />
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  id={`post-content-tab-${tab.id}`}
+                  aria-selected={isSelected}
+                  aria-controls="post-content-panel"
+                  className={`${styles.contentTab} caption${
+                    isSelected ? ` ${styles.contentTabActive}` : ""
+                  }`}
+                  onClick={() => handleContentLocaleChange(tab.id)}
+                  disabled={isBusy}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div
+          id="post-content-panel"
+          className={styles.field}
+          role="tabpanel"
+          aria-labelledby={`post-content-tab-${contentLocale}`}
+        >
+          <EditorClient
+            key={`${contentLocale}-${editorMountKey}`}
+            ref={editorRef}
+            holderId={`post-editor-${contentLocale}`}
+            data={editorData}
+          />
           {editorError && (
             <p className={`${styles.error} caption`}>{editorError}</p>
           )}
@@ -762,6 +891,7 @@ export function PostForm({
       });
 
   const initialContent = isEdit ? parseContent(postData.content) : null;
+  const initialContentEn = isEdit ? parseContent(postData.content_en) : null;
 
   const initialKeywords = isEdit
     ? mapPostKeywords(postKeywordsData?.items)
@@ -780,6 +910,7 @@ export function PostForm({
       postId={postId}
       initialValues={initialValues}
       initialContent={initialContent}
+      initialContentEn={initialContentEn}
       initialKeywords={initialKeywords}
       initialAuthor={initialAuthor}
       section={section}
