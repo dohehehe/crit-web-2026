@@ -47,21 +47,90 @@ const TEXT_STYLE_FONTS = {
 
 const TEXT_COLORS = ["#000000", "#FF6400", "#A6A6A6", "#FFFFFF"];
 
-function toColorInputValue(color) {
-  if (/^#[0-9a-f]{6}$/i.test(color)) {
-    return color;
+function toHexColor(color) {
+  const value = String(color || "").trim();
+
+  if (/^#[0-9a-f]{6}$/i.test(value)) {
+    return value.toUpperCase();
   }
 
-  const match = String(color).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+  const match = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
 
   if (!match) {
-    return "#FF6400";
+    return "";
   }
 
   return `#${match
     .slice(1, 4)
     .map((channel) => Number(channel).toString(16).padStart(2, "0"))
-    .join("")}`;
+    .join("")}`.toUpperCase();
+}
+
+function toColorInputValue(color) {
+  return toHexColor(color) || "#FF6400";
+}
+
+function uniqueColors(colors) {
+  const seen = new Set();
+  const list = [];
+
+  for (const color of colors) {
+    const hex = toHexColor(color);
+
+    if (!hex || seen.has(hex)) {
+      continue;
+    }
+
+    seen.add(hex);
+    list.push(hex);
+  }
+
+  return list;
+}
+
+function collectContentColors(root) {
+  const content = root?.querySelector(".codex-editor__redactor") ?? root;
+
+  if (!content) {
+    return [];
+  }
+
+  return [...content.querySelectorAll("font, span, mark")].map(
+    (element) => element.style.color,
+  );
+}
+
+const pickedColorsByEditor = new WeakMap();
+
+function pickedColorsFor(root) {
+  if (!root) {
+    return [];
+  }
+
+  return pickedColorsByEditor.get(root) || [];
+}
+
+function editorRootFor(picker) {
+  const fromPicker = picker?.closest(".codex-editor");
+
+  if (fromPicker) {
+    return fromPicker;
+  }
+
+  const node = window.getSelection()?.anchorNode;
+  const element = node instanceof Element ? node : node?.parentElement;
+
+  return element?.closest(".codex-editor") ?? null;
+}
+
+function rememberPickedColor(root, color) {
+  const hex = toHexColor(color);
+
+  if (!root || !hex) {
+    return;
+  }
+
+  pickedColorsByEditor.set(root, uniqueColors([...pickedColorsFor(root), hex]));
 }
 
 function usableRange(range) {
@@ -107,6 +176,90 @@ function createColorTool(Tool) {
       this.panel?.classList.remove("isOpen");
     }
 
+    checkState() {
+      const active = super.checkState();
+
+      if (this.panel?.classList.contains("isOpen")) {
+        return active;
+      }
+
+      const color = this.selectionTextColor();
+
+      if (!color) {
+        return active;
+      }
+
+      this.color = color;
+
+      if (this.dot) {
+        this.dot.style.backgroundColor = color;
+      }
+
+      const nextInputValue = toColorInputValue(color);
+
+      if (this.colorInput && /^#[0-9a-f]{6}$/i.test(nextInputValue)) {
+        this.colorInput.value = nextInputValue;
+      }
+
+      return active;
+    }
+
+    selectionTextColor() {
+      const colored =
+        this.api.selection.findParentTag(this.parentTag) ||
+        this.api.selection.findParentTag("SPAN");
+
+      if (colored?.style.color) {
+        return colored.style.color;
+      }
+
+      const node = window.getSelection()?.anchorNode;
+      const element = node instanceof Element ? node : node?.parentElement;
+      const block = element?.closest(
+        ".ce-paragraph, .ce-header, .cdx-quote__text, .cdx-list__item",
+      );
+
+      return block ? getComputedStyle(block).color : "";
+    }
+
+    rememberColor(color) {
+      rememberPickedColor(editorRootFor(this.picker), color);
+    }
+
+    syncPalette() {
+      if (!this.panel) {
+        return;
+      }
+
+      const root = editorRootFor(this.picker);
+      const colors = uniqueColors([
+        ...(this.config.colorCollections || []),
+        ...collectContentColors(root),
+        ...pickedColorsFor(root),
+      ]);
+
+      this.panel.querySelectorAll(".critColorSwatch").forEach((swatch) => {
+        swatch.remove();
+      });
+
+      for (const color of colors) {
+        const swatch = document.createElement("span");
+        swatch.className = "critColorSwatch";
+        swatch.title = color;
+        swatch.style.backgroundColor = color;
+        swatch.addEventListener("click", (event) => {
+          event.stopPropagation();
+          this.applyColor(color);
+        });
+
+        if (this.colorInput) {
+          this.panel.insertBefore(swatch, this.colorInput);
+        } else {
+          this.panel.append(swatch);
+        }
+      }
+    }
+
     applyColor(color) {
       this.clickedOnLeft = false;
       this.color = color;
@@ -141,7 +294,6 @@ function createColorTool(Tool) {
       const picker = document.createElement("div");
       const dot = document.createElement("span");
       const panel = document.createElement("div");
-      const colors = this.config.colorCollections || [];
 
       picker.className = "critColorPicker";
       dot.className = "critColorPickerDot";
@@ -160,20 +312,14 @@ function createColorTool(Tool) {
 
       dot.addEventListener("click", (event) => {
         event.stopPropagation();
+        const willOpen = !panel.classList.contains("isOpen");
+
+        if (willOpen) {
+          this.syncPalette();
+        }
+
         panel.classList.toggle("isOpen");
       });
-
-      for (const color of colors) {
-        const swatch = document.createElement("span");
-        swatch.className = "critColorSwatch";
-        swatch.title = color;
-        swatch.style.backgroundColor = color;
-        swatch.addEventListener("click", (event) => {
-          event.stopPropagation();
-          this.applyColor(color);
-        });
-        panel.append(swatch);
-      }
 
       if (this.config.customPicker) {
         const input = document.createElement("input");
@@ -189,10 +335,13 @@ function createColorTool(Tool) {
         });
         input.addEventListener("change", (event) => {
           event.stopPropagation();
+          this.rememberColor(input.value);
           this.applyColor(input.value);
         });
         panel.append(input);
       }
+
+      this.syncPalette();
 
       this.onDocumentPointerDown = (event) => {
         if (!panel.classList.contains("isOpen")) {
