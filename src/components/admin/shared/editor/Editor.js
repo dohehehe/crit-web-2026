@@ -399,6 +399,17 @@ function createColorTool(Tool) {
   };
 }
 
+function createTextStyleTool(Tool) {
+  return class extends Tool {
+    checkState(selection) {
+      super.checkState(selection);
+      return false;
+    }
+
+    surround() {}
+  };
+}
+
 const Editor = forwardRef(function Editor(
   { data, holderId = "editorjs", contentLocale = "ko" },
   ref,
@@ -481,7 +492,9 @@ const Editor = forwardRef(function Editor(
         );
         const ColorPlugin = colorModule.default ?? colorModule;
         const ColorTool = createColorTool(ColorPlugin);
-        const TextStyleTool = textStyleModule.default ?? textStyleModule;
+        const TextStyleTool = createTextStyleTool(
+          textStyleModule.default ?? textStyleModule,
+        );
 
         editor = new EditorJS({
           holder: holderId,
