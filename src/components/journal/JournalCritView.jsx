@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { EditorContent } from "@/components/editor/EditorContent";
+import { formatAuthorNames } from "@/lib/posts/formatAuthorNames";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./JournalCritView.module.css";
@@ -62,8 +63,8 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
                     {/* <hr className={styles.postSeparator} /> */}
                     <span className={`${styles.title} thumb-title`}>{post.title}</span>
                     {/* <hr className={styles.postSeparator} /> */}
-                    {post.author?.name ? (
-                      <span className={`${styles.author} p`}>{post.author.name}</span>
+                    {formatAuthorNames(post) ? (
+                      <span className={`${styles.author} p`}>{formatAuthorNames(post)}</span>
                     ) : null}
                   </Link>
                 </li>

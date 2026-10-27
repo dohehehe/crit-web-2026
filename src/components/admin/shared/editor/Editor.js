@@ -34,29 +34,103 @@ const INLINE_TOOLS = [
 ];
 const TEXT_INLINE_TOOLS = [...INLINE_TOOLS, "alignment"];
 
-const TEXT_STYLE_FONTS = [
-  { label: "Pretendard", value: "Pretendard, sans-serif" },
-  { label: "Libre Caslon Text", value: '"Libre Caslon Text", serif' },
-  { label: "Noto Serif CJK KR", value: '"Noto Serif KR", serif' },
-];
+const TEXT_STYLE_FONTS = {
+  ko: [
+    { label: "한글 산세리프: Pretendard", value: "Pretendard, sans-serif" },
+    { label: "한글 세리프: Noto Serif CJK KR", value: '"Noto Serif KR", serif' },
+  ],
+  en: [
+    { label: "영어 산세리프: Pretendard", value: "Pretendard, sans-serif" },
+    { label: "영어 세리프: Libre Caslon Text", value: '"Libre Caslon Text", serif' },
+  ],
+};
 
 const TEXT_COLORS = ["#000000", "#FF6400", "#A6A6A6", "#FFFFFF"];
 
-function toColorInputValue(color) {
-  if (/^#[0-9a-f]{6}$/i.test(color)) {
-    return color;
+function toHexColor(color) {
+  const value = String(color || "").trim();
+
+  if (/^#[0-9a-f]{6}$/i.test(value)) {
+    return value.toUpperCase();
   }
 
-  const match = String(color).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+  const match = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
 
   if (!match) {
-    return "#FF6400";
+    return "";
   }
 
   return `#${match
     .slice(1, 4)
     .map((channel) => Number(channel).toString(16).padStart(2, "0"))
-    .join("")}`;
+    .join("")}`.toUpperCase();
+}
+
+function toColorInputValue(color) {
+  return toHexColor(color) || "#FF6400";
+}
+
+function uniqueColors(colors) {
+  const seen = new Set();
+  const list = [];
+
+  for (const color of colors) {
+    const hex = toHexColor(color);
+
+    if (!hex || seen.has(hex)) {
+      continue;
+    }
+
+    seen.add(hex);
+    list.push(hex);
+  }
+
+  return list;
+}
+
+function collectContentColors(root) {
+  const content = root?.querySelector(".codex-editor__redactor") ?? root;
+
+  if (!content) {
+    return [];
+  }
+
+  return [...content.querySelectorAll("font, span, mark")].map(
+    (element) => element.style.color,
+  );
+}
+
+const pickedColorsByEditor = new WeakMap();
+
+function pickedColorsFor(root) {
+  if (!root) {
+    return [];
+  }
+
+  return pickedColorsByEditor.get(root) || [];
+}
+
+function editorRootFor(picker) {
+  const fromPicker = picker?.closest(".codex-editor");
+
+  if (fromPicker) {
+    return fromPicker;
+  }
+
+  const node = window.getSelection()?.anchorNode;
+  const element = node instanceof Element ? node : node?.parentElement;
+
+  return element?.closest(".codex-editor") ?? null;
+}
+
+function rememberPickedColor(root, color) {
+  const hex = toHexColor(color);
+
+  if (!root || !hex) {
+    return;
+  }
+
+  pickedColorsByEditor.set(root, uniqueColors([...pickedColorsFor(root), hex]));
 }
 
 function usableRange(range) {
@@ -91,8 +165,15 @@ function createColorTool(Tool) {
         event.preventDefault();
       });
 
-      button.querySelector("#color-left-btn")?.addEventListener("click", () => {
-        this.closePanel();
+      button.addEventListener("click", (event) => {
+        if (event.target.closest(".critColorPickerPanel")) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.clickedOnLeft = false;
+        this.togglePanel();
       });
 
       return button;
@@ -100,6 +181,100 @@ function createColorTool(Tool) {
 
     closePanel() {
       this.panel?.classList.remove("isOpen");
+    }
+
+    togglePanel() {
+      const willOpen = !this.panel?.classList.contains("isOpen");
+
+      if (willOpen) {
+        this.syncPalette();
+      }
+
+      this.panel?.classList.toggle("isOpen");
+    }
+
+    checkState() {
+      const active = super.checkState();
+
+      if (this.panel?.classList.contains("isOpen")) {
+        return active;
+      }
+
+      const color = this.selectionTextColor();
+
+      if (!color) {
+        return active;
+      }
+
+      this.color = color;
+
+      if (this.dot) {
+        this.dot.style.backgroundColor = color;
+      }
+
+      const nextInputValue = toColorInputValue(color);
+
+      if (this.colorInput && /^#[0-9a-f]{6}$/i.test(nextInputValue)) {
+        this.colorInput.value = nextInputValue;
+      }
+
+      return active;
+    }
+
+    selectionTextColor() {
+      const colored =
+        this.api.selection.findParentTag(this.parentTag) ||
+        this.api.selection.findParentTag("SPAN");
+
+      if (colored?.style.color) {
+        return colored.style.color;
+      }
+
+      const node = window.getSelection()?.anchorNode;
+      const element = node instanceof Element ? node : node?.parentElement;
+      const block = element?.closest(
+        ".ce-paragraph, .ce-header, .cdx-quote__text, .cdx-list__item",
+      );
+
+      return block ? getComputedStyle(block).color : "";
+    }
+
+    rememberColor(color) {
+      rememberPickedColor(editorRootFor(this.picker), color);
+    }
+
+    syncPalette() {
+      if (!this.panel) {
+        return;
+      }
+
+      const root = editorRootFor(this.picker);
+      const colors = uniqueColors([
+        ...(this.config.colorCollections || []),
+        ...collectContentColors(root),
+        ...pickedColorsFor(root),
+      ]);
+
+      this.panel.querySelectorAll(".critColorSwatch").forEach((swatch) => {
+        swatch.remove();
+      });
+
+      for (const color of colors) {
+        const swatch = document.createElement("span");
+        swatch.className = "critColorSwatch";
+        swatch.title = color;
+        swatch.style.backgroundColor = color;
+        swatch.addEventListener("click", (event) => {
+          event.stopPropagation();
+          this.applyColor(color);
+        });
+
+        if (this.colorInput) {
+          this.panel.insertBefore(swatch, this.colorInput);
+        } else {
+          this.panel.append(swatch);
+        }
+      }
     }
 
     applyColor(color) {
@@ -117,6 +292,8 @@ function createColorTool(Tool) {
       }
 
       this.closePanel();
+      this.applying = true;
+      this.clickedOnLeft = false;
 
       const selection = window.getSelection();
       const range =
@@ -125,6 +302,8 @@ function createColorTool(Tool) {
 
       if (range) {
         this.surround(range);
+      } else {
+        this.applying = false;
       }
     }
 
@@ -136,7 +315,6 @@ function createColorTool(Tool) {
       const picker = document.createElement("div");
       const dot = document.createElement("span");
       const panel = document.createElement("div");
-      const colors = this.config.colorCollections || [];
 
       picker.className = "critColorPicker";
       dot.className = "critColorPickerDot";
@@ -150,25 +328,7 @@ function createColorTool(Tool) {
         event.stopPropagation();
       };
 
-      picker.addEventListener("click", keepInPicker);
       panel.addEventListener("click", keepInPicker);
-
-      dot.addEventListener("click", (event) => {
-        event.stopPropagation();
-        panel.classList.toggle("isOpen");
-      });
-
-      for (const color of colors) {
-        const swatch = document.createElement("span");
-        swatch.className = "critColorSwatch";
-        swatch.title = color;
-        swatch.style.backgroundColor = color;
-        swatch.addEventListener("click", (event) => {
-          event.stopPropagation();
-          this.applyColor(color);
-        });
-        panel.append(swatch);
-      }
 
       if (this.config.customPicker) {
         const input = document.createElement("input");
@@ -184,10 +344,13 @@ function createColorTool(Tool) {
         });
         input.addEventListener("change", (event) => {
           event.stopPropagation();
+          this.rememberColor(input.value);
           this.applyColor(input.value);
         });
         panel.append(input);
       }
+
+      this.syncPalette();
 
       this.onDocumentPointerDown = (event) => {
         if (!panel.classList.contains("isOpen")) {
@@ -196,7 +359,7 @@ function createColorTool(Tool) {
 
         const path = event.composedPath?.() ?? [];
 
-        if (path.includes(picker)) {
+        if (path.includes(picker) || path.includes(this.button)) {
           return;
         }
 
@@ -222,6 +385,14 @@ function createColorTool(Tool) {
     }
 
     surround(range) {
+      if (!this.applying) {
+        this.clickedOnLeft = false;
+        return;
+      }
+
+      this.applying = false;
+      this.clickedOnLeft = false;
+
       if (!range) {
         return;
       }
@@ -245,7 +416,21 @@ function createColorTool(Tool) {
   };
 }
 
-const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) {
+function createTextStyleTool(Tool) {
+  return class extends Tool {
+    checkState(selection) {
+      super.checkState(selection);
+      return false;
+    }
+
+    surround() {}
+  };
+}
+
+const Editor = forwardRef(function Editor(
+  { data, holderId = "editorjs", contentLocale = "ko" },
+  ref,
+) {
   const editorInstanceRef = useRef(null);
   const initialDataRef = useRef(data);
   const { uploadImageToServer } = useImageUpload();
@@ -271,8 +456,8 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
 
     let editor = null;
     let cancelled = false;
-    let removePasteNormalizer = () => {};
-    let removeImageOrientation = () => {};
+    let removePasteNormalizer = () => { };
+    let removeImageOrientation = () => { };
 
     const initEditor = async () => {
       try {
@@ -324,7 +509,9 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
         );
         const ColorPlugin = colorModule.default ?? colorModule;
         const ColorTool = createColorTool(ColorPlugin);
-        const TextStyleTool = textStyleModule.default ?? textStyleModule;
+        const TextStyleTool = createTextStyleTool(
+          textStyleModule.default ?? textStyleModule,
+        );
 
         editor = new EditorJS({
           holder: holderId,
@@ -408,7 +595,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               config: {
                 fontSizeEnabled: false,
                 fontFamilyEnabled: true,
-                fontFamilies: TEXT_STYLE_FONTS,
+                fontFamilies: TEXT_STYLE_FONTS[contentLocale] ?? TEXT_STYLE_FONTS.ko,
                 defaultFontFamily: "Pretendard, sans-serif",
               },
             },
@@ -496,7 +683,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
         editorInstanceRef.current = null;
       }
     };
-  }, [holderId]);
+  }, [holderId, contentLocale]);
 
   return (
     <div className={`${styles.wrapper} ${proseStyles.root}`}>

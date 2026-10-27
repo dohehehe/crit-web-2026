@@ -1,4 +1,5 @@
 import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
+import { formatAuthorNames } from "@/lib/posts/formatAuthorNames";
 import { getAuthorPath } from "@/lib/routes/authors";
 import { getPostPath } from "@/lib/routes/posts";
 import { truncatePlainText } from "@/lib/text/truncatePlainText";
@@ -10,7 +11,7 @@ export function postToSearchEntry(post) {
     title: post.title ?? "",
     thumbnailImg: post.thumbnailImg ?? "",
     date: post.date ?? null,
-    authorName: post.author?.name ?? "",
+    authorName: formatAuthorNames(post),
     section: post.section ?? null,
     category: post.category ?? null,
     keywords: post.keywords ?? [],

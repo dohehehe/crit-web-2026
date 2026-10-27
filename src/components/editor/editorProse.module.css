@@ -12,11 +12,19 @@
 
 .root>*:first-child {
   margin-top: 0;
-  /* padding: 20px 40px 20px 70px; */
+
 }
 
 .root :global(#editorjs) {
-  padding: 20px 40px 20px 60px;
+  padding: 20px 40px 20px 70px;
+}
+
+.root :global(#post-editor-ko) {
+  padding: 20px 40px 20px 70px;
+}
+
+.root :global(#post-editor-en) {
+  padding: 20px 40px 20px 70px;
 }
 
 .root a:hover {
@@ -42,8 +50,8 @@
   margin-bottom: -28px;
   margin-top: 0;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 17.5px;
+  line-height: 29px;
   letter-spacing: 4%;
 }
 
@@ -285,7 +293,9 @@
 }
 
 .root :global(b) {
-  font-weight: var(--p-bold-weight);
+  font-weight: 700;
+  font-size: 17.5px;
+  line-height: 29px;
 }
 
 .root :global(i),
@@ -358,6 +368,10 @@
   .root h3,
   .root :global(h3.ce-header) {
     margin-top: 28px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 4%;
   }
 
   .imagePortrait {

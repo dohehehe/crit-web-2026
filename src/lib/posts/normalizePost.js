@@ -1,9 +1,25 @@
+import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
 import { getThumbnailUrl } from "@/lib/posts/thumbnail";
+
+function normalizeAuthors(post) {
+  return (post.post_author ?? [])
+    .map((row) => row.authors)
+    .filter((author) => author?.name)
+    .map((author) => ({
+      id: author.id ?? null,
+      name: author.name,
+      imgUrl: author.img_url ?? author.imgUrl ?? "",
+      description: author.content
+        ? getEditorParagraphPlainText(author.content)
+        : author.description ?? "",
+    }));
+}
 
 export function normalizePost(post) {
   const keywords = (post.post_keywords ?? [])
     .map((row) => row.keywords)
     .filter(Boolean);
+  const authors = normalizeAuthors(post);
 
   return {
     id: post.id,
@@ -17,7 +33,8 @@ export function normalizePost(post) {
     category: post.categories ?? null,
     section: post.sections ?? null,
     issueNumber: post.issues?.issue_number ?? "",
-    author: post.authors ?? null,
+    author: authors[0] ?? null,
+    authors,
     keywords,
   };
 }
@@ -36,7 +53,6 @@ export function normalizePostDetail(post) {
     subtitle: post.subtitle ?? "",
     description: post.description ?? "",
     content: post.content ?? null,
-    author: post.authors ?? null,
     videoUrl: post.video_url ?? "",
   };
 }

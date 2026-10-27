@@ -2,8 +2,8 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-10-26T06:08:40.696Z
-- Tables: 13
+- Updated: 2026-10-27T06:28:59.335Z
+- Tables: 14
 
 ## `authors`
 
@@ -100,6 +100,15 @@
 | `link_url` | text | no |  |  |
 | `thumbnail_img` | text | no |  |  |
 
+## `post_author`
+
+| Column | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `author_id` | uuid | no | gen_random_uuid() | FK → authors.id |
+| `created_at` | timestamp with time zone | yes | now() |  |
+| `id` | uuid | yes | gen_random_uuid() | PK |
+| `post_id` | uuid | no | gen_random_uuid() | FK → posts.id |
+
 ## `post_keywords`
 
 | Column | Type | Required | Default | Notes |
@@ -113,7 +122,6 @@
 
 | Column | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
-| `author_id` | uuid | no | gen_random_uuid() | FK → authors.id |
 | `category_id` | uuid | no | gen_random_uuid() | FK → categories.id |
 | `content` | jsonb | no |  |  |
 | `content_en` | jsonb | no |  |  |

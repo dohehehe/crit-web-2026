@@ -16,7 +16,14 @@ function normalizeAuthor(author) {
   };
 }
 
-export function AuthorInput({ value = null, onChange, disabled = false }) {
+function isDuplicate(authors, name) {
+  const normalized = name.trim();
+  return authors.some(
+    (author) => author.name.toLowerCase() === normalized.toLowerCase()
+  );
+}
+
+export function AuthorInput({ value = [], onChange, disabled = false }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -28,21 +35,28 @@ export function AuthorInput({ value = null, onChange, disabled = false }) {
   const isComposingRef = useRef(false);
   const ignoreNextEnterRef = useRef(false);
 
-  const setAuthor = useCallback(
+  const addAuthor = useCallback(
     (author) => {
       const normalized = normalizeAuthor(author);
-      onChange(normalized);
+      if (!normalized || isDuplicate(value, normalized.name)) {
+        return;
+      }
+
+      onChange([...value, normalized]);
       setQuery("");
       setSuggestions([]);
       setIsOpen(false);
       setActiveIndex(-1);
     },
-    [onChange]
+    [onChange, value]
   );
 
-  const clearAuthor = useCallback(() => {
-    onChange(null);
-  }, [onChange]);
+  const removeAuthor = useCallback(
+    (index) => {
+      onChange(value.filter((_, itemIndex) => itemIndex !== index));
+    },
+    [onChange, value]
+  );
 
   function clearSuggestions() {
     setSuggestions([]);
@@ -84,10 +98,7 @@ export function AuthorInput({ value = null, onChange, disabled = false }) {
         const items = (result.items ?? [])
           .map(normalizeAuthor)
           .filter(Boolean)
-          .filter(
-            (item) =>
-              item.name.toLowerCase() !== value?.name?.trim().toLowerCase()
-          );
+          .filter((item) => !isDuplicate(value, item.name));
 
         setSuggestions(items);
         setIsOpen(items.length > 0);
@@ -127,11 +138,11 @@ export function AuthorInput({ value = null, onChange, disabled = false }) {
     }
 
     if (activeIndex >= 0 && suggestions[activeIndex]) {
-      setAuthor(suggestions[activeIndex]);
+      addAuthor(suggestions[activeIndex]);
       return;
     }
 
-    setAuthor({ name: trimmed });
+    addAuthor({ name: trimmed });
   }
 
   function isImeComposing(event) {
@@ -219,20 +230,22 @@ export function AuthorInput({ value = null, onChange, disabled = false }) {
       data-author-input
       onKeyDownCapture={handleEnterCapture}
     >
-      {value && (
+      {value.length > 0 && (
         <div className={styles.chips}>
-          <span className={`${styles.chip} tag-keyword`}>
-            {value.name}
-            <button
-              type="button"
-              className={styles.chipRemove}
-              onClick={clearAuthor}
-              disabled={disabled}
-              aria-label={`${value.name} 제거`}
-            >
-              ×
-            </button>
-          </span>
+          {value.map((author, index) => (
+            <span key={`${author.id ?? author.name}-${index}`} className={`${styles.chip} tag-keyword`}>
+              {author.name}
+              <button
+                type="button"
+                className={styles.chipRemove}
+                onClick={() => removeAuthor(index)}
+                disabled={disabled}
+                aria-label={`${author.name} 제거`}
+              >
+                ×
+              </button>
+            </span>
+          ))}
         </div>
       )}
 
@@ -264,7 +277,7 @@ export function AuthorInput({ value = null, onChange, disabled = false }) {
                   type="button"
                   className={`${styles.suggestion} ${index === activeIndex ? styles.suggestionActive : ""}`}
                   onMouseEnter={() => setActiveIndex(index)}
-                  onClick={() => setAuthor(suggestion)}
+                  onClick={() => addAuthor(suggestion)}
                 >
                   {suggestion.name}
                 </button>

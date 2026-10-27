@@ -175,7 +175,6 @@
   max-width: 100%;
   margin: 0;
   padding-bottom: 0px;
-  white-space: nowrap;
 }
 
 .asideList {
@@ -202,7 +201,7 @@
   flex-direction: column;
   gap: 0x;
   padding: 12px 0 12px 0px;
-  border-top: solid 1px var(--crit-orange);
+  border-bottom: solid 1px var(--crit-orange);
 
   &:last-child {
     border-bottom: none;
@@ -242,6 +241,11 @@
     padding-bottom: 100px;
   }
 
+  .aside {
+    padding-top: 12px;
+    gap: 36px;
+  }
+
   .asideHeading {
     width: 100%;
     max-width: 800px;
@@ -256,7 +260,16 @@
   }
 
   .asideItem {
-    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0x;
+    padding: 12px 0 12px 0px;
+    border-top: solid 1px var(--crit-orange);
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
 
   .asideLink {
@@ -318,10 +331,7 @@
     margin-top: 2px;
   }
 
-  .aside {
-    padding-top: 12px;
-    gap: 36px;
-  }
+
 
 
 

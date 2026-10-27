@@ -25,9 +25,13 @@
 }
 
 .wrapper :global(.colorPlugin.ce-inline-tool) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: auto;
   min-width: 34px;
-  padding: 0 2px;
+  padding: 0 4px;
+  gap: 3px;
   overflow: visible;
 }
 
@@ -36,8 +40,15 @@
   height: 16px;
 }
 
-.wrapper :global(#color-left-btn) {
+.wrapper :global(#color-left-btn),
+.wrapper :global(.critColorPicker) {
   height: 100%;
+  pointer-events: none;
+}
+
+.wrapper :global(.critColorPickerPanel),
+.wrapper :global(.critColorPickerPanel *) {
+  pointer-events: auto;
 }
 
 .wrapper :global(.ce-popover-item-html),
