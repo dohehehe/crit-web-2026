@@ -13,6 +13,14 @@ function formatActiveStatus(isActive) {
   return isActive ? "공개" : "비공개";
 }
 
+function formatPostAuthors(post) {
+  const names = (post.post_author ?? [])
+    .map((row) => row.authors?.name)
+    .filter(Boolean);
+
+  return names.length > 0 ? names.join(", ") : "—";
+}
+
 function formatPostDate(date) {
   if (!date) {
     return "—";
@@ -140,7 +148,7 @@ export function AdminJournalPostsTable({ posts, onPostsChanged }) {
                     {post.title ?? "—"}
                   </Link>
                 </td>
-                <td className="p">{post.authors?.name ?? "—"}</td>
+                <td className="p">{formatPostAuthors(post)}</td>
                 <td className="p">
                   <button
                     type="button"

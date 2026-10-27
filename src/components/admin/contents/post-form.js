@@ -16,7 +16,7 @@ import {
   parseThumbnail,
   serializeThumbnail,
 } from "@/lib/posts/thumbnail";
-import { findOrCreateAuthor } from "@/lib/authors/findOrCreateAuthor";
+import { syncPostAuthors } from "@/lib/authors/syncPostAuthors";
 import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
 import {
   fetchIssueFileUrlForPreview,
@@ -33,7 +33,7 @@ import { KeywordInput } from "@/components/admin/shared/keyword/KeywordInput";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const POST_SELECT =
-  "id,title,subtitle,subtitle_en,slug,description,content,content_en,section_id,category_id,issue_id,author_id,authors(id,name),date,thumnail_img,video_url,workshop_url,start_at,end_at";
+  "id,title,subtitle,subtitle_en,slug,description,content,content_en,section_id,category_id,issue_id,date,thumnail_img,video_url,workshop_url,start_at,end_at";
 
 const CONTENT_LOCALES = [
   { id: "ko", label: "한글" },
@@ -96,16 +96,20 @@ function emptyForm(defaults = {}) {
   };
 }
 
-function mapPostAuthor(post) {
-  const author = post.authors;
-  if (!author?.name) {
-    return null;
-  }
+function mapPostAuthors(items) {
+  return (items ?? [])
+    .map((item) => {
+      const author = item.authors;
+      if (!author?.name) {
+        return null;
+      }
 
-  return {
-    id: author.id ?? null,
-    name: author.name,
-  };
+      return {
+        id: author.id,
+        name: author.name,
+      };
+    })
+    .filter(Boolean);
 }
 
 function mapPostKeywords(items) {
@@ -154,7 +158,7 @@ function PostFormFields({
   initialContent,
   initialContentEn,
   initialKeywords,
-  initialAuthor,
+  initialAuthors,
   section,
   sectionMode,
   categories,
@@ -189,7 +193,7 @@ function PostFormFields({
 
   const [form, setForm] = useState(initialValues);
   const [keywords, setKeywords] = useState(initialKeywords);
-  const [author, setAuthor] = useState(initialAuthor);
+  const [authors, setAuthors] = useState(initialAuthors);
   const [contentLocale, setContentLocale] = useState("ko");
   const [editorData, setEditorData] = useState(initialContent);
   const [editorMountKey, setEditorMountKey] = useState(0);
@@ -273,21 +277,11 @@ function PostFormFields({
     setAuthorError(null);
 
     let contents = null;
-    let authorId = null;
 
     try {
       contents = await saveActiveContent();
     } catch (error) {
       setEditorError(error.message ?? "에디터 내용을 저장하지 못했습니다.");
-      return;
-    }
-
-    try {
-      if (author?.name?.trim()) {
-        authorId = await findOrCreateAuthor(author.name);
-      }
-    } catch (error) {
-      setAuthorError(error.message ?? "작가를 저장하지 못했습니다.");
       return;
     }
 
@@ -302,7 +296,6 @@ function PostFormFields({
       section_id: form.section_id || null,
       category_id: form.category_id || null,
       issue_id: form.issue_id || null,
-      author_id: authorId,
       date: form.date || null,
       thumnail_img: serializeThumbnail({
         url: form.thumnail_img,
@@ -318,6 +311,7 @@ function PostFormFields({
 
     try {
       const keywordNames = keywords.map((keyword) => keyword.name);
+      const authorNames = authors.map((author) => author.name);
       let savedPostId = postId;
 
       if (isEdit) {
@@ -325,6 +319,13 @@ function PostFormFields({
       } else {
         const created = await createPost("posts", payload);
         savedPostId = created.id;
+      }
+
+      try {
+        await syncPostAuthors(savedPostId, authorNames);
+      } catch (error) {
+        setAuthorError(error.message ?? "작가를 저장하지 못했습니다.");
+        return;
       }
 
       try {
@@ -370,7 +371,7 @@ function PostFormFields({
             ? { ...form, subtitle: form.subtitle_en }
             : form,
         content,
-        author,
+        authors,
         keywords,
         section,
         sectionMode,
@@ -536,7 +537,7 @@ function PostFormFields({
 
         <div className={styles.field}>
           <span className="caption">작성자</span>
-          <AuthorInput value={author} onChange={setAuthor} disabled={isBusy} />
+          <AuthorInput value={authors} onChange={setAuthors} disabled={isBusy} />
           {authorError && (
             <p className={`${styles.error} caption`}>{authorError}</p>
           )}
@@ -723,6 +724,7 @@ function PostFormFields({
             key={`${contentLocale}-${editorMountKey}`}
             ref={editorRef}
             holderId={`post-editor-${contentLocale}`}
+            contentLocale={contentLocale}
             data={editorData}
           />
           {editorError && (
@@ -851,12 +853,23 @@ export function PostForm({
       enabled: isEdit && Boolean(postId),
     });
 
+  const { data: postAuthorsData, isLoading: postAuthorsLoading } =
+    useAdminQuery("post_author", {
+      params: {
+        "eq.post_id": postId,
+        select: "author_id,authors(id,name)",
+        order: "created_at.asc",
+        limit: 50,
+      },
+      enabled: isEdit && Boolean(postId),
+    });
+
   const categories = categoriesData?.items ?? [];
   const issues = issuesData?.items ?? [];
 
   const isLoadingMeta =
     sectionsLoading ||
-    (isEdit && postKeywordsLoading) ||
+    (isEdit && (postKeywordsLoading || postAuthorsLoading)) ||
     (sectionHasCategories(sectionMode) && categoriesLoading) ||
     (sectionMode === "journal" && issuesLoading);
 
@@ -897,7 +910,7 @@ export function PostForm({
     ? mapPostKeywords(postKeywordsData?.items)
     : [];
 
-  const initialAuthor = isEdit ? mapPostAuthor(postData) : null;
+  const initialAuthors = isEdit ? mapPostAuthors(postAuthorsData?.items) : [];
 
   const formKey = isEdit
     ? postId
@@ -912,7 +925,7 @@ export function PostForm({
       initialContent={initialContent}
       initialContentEn={initialContentEn}
       initialKeywords={initialKeywords}
-      initialAuthor={initialAuthor}
+      initialAuthors={initialAuthors}
       section={section}
       sectionMode={sectionMode}
       categories={categories}

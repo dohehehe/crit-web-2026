@@ -129,6 +129,28 @@ export async function handleDelete(table, id) {
         const mapped = mapSupabaseError(keywordsError);
         return jsonError(mapped.message, mapped.status);
       }
+
+      const { error: authorsError } = await supabase
+        .from("post_author")
+        .delete()
+        .eq("post_id", id);
+
+      if (authorsError) {
+        const mapped = mapSupabaseError(authorsError);
+        return jsonError(mapped.message, mapped.status);
+      }
+    }
+
+    if (table === "authors") {
+      const { error: postAuthorsError } = await supabase
+        .from("post_author")
+        .delete()
+        .eq("author_id", id);
+
+      if (postAuthorsError) {
+        const mapped = mapSupabaseError(postAuthorsError);
+        return jsonError(mapped.message, mapped.status);
+      }
     }
 
     if (table === "keywords") {

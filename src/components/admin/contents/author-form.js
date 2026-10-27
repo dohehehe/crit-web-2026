@@ -12,7 +12,7 @@ import { slugifyKeyword } from "@/lib/keywords/slugify";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import styles from "@/components/admin/shared/post-form.module.css";
 
-const AUTHOR_SELECT = "id,name,slug,email,img_url,content,posts(count)";
+const AUTHOR_SELECT = "id,name,slug,email,img_url,content,post_author(count)";
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);

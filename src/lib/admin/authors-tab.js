@@ -10,7 +10,7 @@ export function isAuthorsTabSelected(selectedId) {
 }
 
 export function getAuthorPostCount(author) {
-  const countData = author.posts;
+  const countData = author.post_author;
 
   if (Array.isArray(countData) && countData.length > 0) {
     return countData[0].count ?? 0;
