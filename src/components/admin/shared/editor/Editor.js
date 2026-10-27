@@ -165,8 +165,15 @@ function createColorTool(Tool) {
         event.preventDefault();
       });
 
-      button.querySelector("#color-left-btn")?.addEventListener("click", () => {
-        this.closePanel();
+      button.addEventListener("click", (event) => {
+        if (event.target.closest(".critColorPickerPanel")) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.clickedOnLeft = false;
+        this.togglePanel();
       });
 
       return button;
@@ -174,6 +181,16 @@ function createColorTool(Tool) {
 
     closePanel() {
       this.panel?.classList.remove("isOpen");
+    }
+
+    togglePanel() {
+      const willOpen = !this.panel?.classList.contains("isOpen");
+
+      if (willOpen) {
+        this.syncPalette();
+      }
+
+      this.panel?.classList.toggle("isOpen");
     }
 
     checkState() {
@@ -275,6 +292,8 @@ function createColorTool(Tool) {
       }
 
       this.closePanel();
+      this.applying = true;
+      this.clickedOnLeft = false;
 
       const selection = window.getSelection();
       const range =
@@ -283,6 +302,8 @@ function createColorTool(Tool) {
 
       if (range) {
         this.surround(range);
+      } else {
+        this.applying = false;
       }
     }
 
@@ -307,19 +328,7 @@ function createColorTool(Tool) {
         event.stopPropagation();
       };
 
-      picker.addEventListener("click", keepInPicker);
       panel.addEventListener("click", keepInPicker);
-
-      dot.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const willOpen = !panel.classList.contains("isOpen");
-
-        if (willOpen) {
-          this.syncPalette();
-        }
-
-        panel.classList.toggle("isOpen");
-      });
 
       if (this.config.customPicker) {
         const input = document.createElement("input");
@@ -350,7 +359,7 @@ function createColorTool(Tool) {
 
         const path = event.composedPath?.() ?? [];
 
-        if (path.includes(picker)) {
+        if (path.includes(picker) || path.includes(this.button)) {
           return;
         }
 
@@ -376,6 +385,14 @@ function createColorTool(Tool) {
     }
 
     surround(range) {
+      if (!this.applying) {
+        this.clickedOnLeft = false;
+        return;
+      }
+
+      this.applying = false;
+      this.clickedOnLeft = false;
+
       if (!range) {
         return;
       }

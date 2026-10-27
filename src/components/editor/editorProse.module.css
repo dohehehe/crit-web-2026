@@ -289,7 +289,9 @@
 }
 
 .root :global(b) {
-  font-weight: var(--p-bold-weight);
+  font-weight: 700;
+  font-size: 17.5px;
+  line-height: 29px;
 }
 
 .root :global(i),
