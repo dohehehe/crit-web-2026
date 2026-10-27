@@ -158,6 +158,26 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           </div>
         ) : null}
 
+        <div className={styles.asideItem}>
+          <div className={`${styles.asideTitle} menu-en`}>Author</div>
+          <div className={styles.authorContainer}>
+            <ul className={styles.authorNameList}>
+              <li className={styles.authorNameItem}>
+                <Link href={getAuthorPath(post.author)}>
+                  {post.author.name}
+                </Link>
+              </li>
+            </ul>
+            <ul className={styles.authorCardList}>
+              <li className={styles.authorCardItem}>
+                <Link href={getAuthorPath(post.author)}>
+                  {post.author.name}
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         {isJournal && issue ? (
           <div className={styles.asideItem}>
             <div className={`${styles.asideTitle} menu-en`}>

@@ -38,11 +38,26 @@ export async function getPostsByAuthorId(authorId, { limit = 100 } = {}) {
 
   const supabase = createAdminClient();
 
+  const { data: links, error: linksError } = await supabase
+    .from("post_author")
+    .select("post_id")
+    .eq("author_id", authorId);
+
+  if (linksError) {
+    throw new Error(linksError.message);
+  }
+
+  const postIds = [...new Set((links ?? []).map((row) => row.post_id).filter(Boolean))];
+
+  if (postIds.length === 0) {
+    return [];
+  }
+
   const { data, error } = await supabase
     .from("posts")
     .select(POST_LIST_SELECT)
     .eq("is_active", true)
-    .eq("author_id", authorId)
+    .in("id", postIds)
     .order("date", { ascending: false, nullsFirst: false })
     .limit(limit);
 

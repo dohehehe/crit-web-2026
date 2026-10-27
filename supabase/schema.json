@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T06:08:40.696Z",
+  "generatedAt": "2026-10-27T06:28:59.335Z",
   "projectUrl": null,
   "tables": [
     {
@@ -446,6 +446,45 @@
       ]
     },
     {
+      "name": "post_author",
+      "columns": [
+        {
+          "name": "author_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → authors.id"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "post_id",
+          "type": "uuid",
+          "required": false,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "FK → posts.id"
+          ]
+        }
+      ]
+    },
+    {
       "name": "post_keywords",
       "columns": [
         {
@@ -487,15 +526,6 @@
     {
       "name": "posts",
       "columns": [
-        {
-          "name": "author_id",
-          "type": "uuid",
-          "required": false,
-          "default": "gen_random_uuid()",
-          "notes": [
-            "FK → authors.id"
-          ]
-        },
         {
           "name": "category_id",
           "type": "uuid",

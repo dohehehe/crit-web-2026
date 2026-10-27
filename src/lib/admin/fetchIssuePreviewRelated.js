@@ -9,12 +9,19 @@ function parseIssueNumber(value) {
 }
 
 function mapPostForPreview(post) {
+  const authors = (post.post_author ?? [])
+    .map((row) => row.authors)
+    .filter((author) => author?.name);
+
   return {
     id: post.id,
     title: post.title ?? "",
     slug: post.slug ?? "",
-    author: post.authors?.name
-      ? { id: post.authors.id, name: post.authors.name }
+    author: authors[0]
+      ? {
+          id: authors[0].id,
+          name: authors.map((author) => author.name).join(", "),
+        }
       : null,
   };
 }
@@ -88,7 +95,7 @@ export async function fetchIssuePreviewRelated({ issueId, issueNumber }) {
         params: {
           ...adminParams,
           "eq.issue_id": issueId,
-          select: "id,title,slug,sort_order,authors!author_id(id,name)",
+          select: "id,title,slug,sort_order,post_author(authors(id,name))",
           order: "sort_order.asc",
           limit: 100,
         },

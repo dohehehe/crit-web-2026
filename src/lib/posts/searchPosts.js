@@ -94,6 +94,25 @@ async function fetchPostIdsByKeywordName(pattern) {
   return [...new Set((data ?? []).map((row) => row.post_id).filter(Boolean))];
 }
 
+async function fetchPostIdsByAuthorIds(authorIds) {
+  if (!authorIds.length) {
+    return [];
+  }
+
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from("post_author")
+    .select("post_id")
+    .in("author_id", authorIds);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return [...new Set((data ?? []).map((row) => row.post_id).filter(Boolean))];
+}
+
 async function fetchAuthorIdsByName(pattern) {
   const supabase = createAdminClient();
 
@@ -123,10 +142,10 @@ export async function searchPosts(query) {
     fetchPostIdsByKeywordName(pattern),
   ]);
 
+  const authorPostIds = await fetchPostIdsByAuthorIds(authorIds);
+
   const [byAuthor, byKeyword] = await Promise.all([
-    authorIds.length
-      ? fetchPosts((query) => query.in("author_id", authorIds))
-      : Promise.resolve([]),
+    fetchPostsByIds(authorPostIds),
     fetchPostsByIds(keywordPostIds),
   ]);
 
