@@ -4,9 +4,98 @@ import { EditorContent } from "@/components/editor/EditorContent";
 import { PostVideoEmbed } from "@/components/posts/PostVideoEmbed";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
+import {
+  formatAuthorNames,
+  getPostAuthors,
+} from "@/lib/posts/formatAuthorNames";
 import { getAuthorPath } from "@/lib/routes/authors";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostView.module.css";
+
+function PostAuthorNames({ post, className }) {
+  const authors = getPostAuthors(post);
+  if (authors.length === 0) {
+    return null;
+  }
+
+  return (
+    <p className={className}>
+      {authors.map((author, index) => (
+        <span key={author.id ?? `${author.name}-${index}`}>
+          {index > 0 ? ", " : null}{author.id ? (
+            <Link href={getAuthorPath(author)} className={styles.authorLink}>
+              {author.name}
+            </Link>
+          ) : (
+            author.name
+          )}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+function AuthorAside({ authors }) {
+  const cards = authors.filter((author) => author.imgUrl || author.description);
+
+  return (
+    <div className={styles.authorContainer}>
+      <ul className={styles.authorNameList}>
+        {authors.map((author, index) => (
+          <li
+            key={author.id ?? `${author.name}-${index}`}
+            className={styles.authorNameItem}
+          >
+            {author.id ? (
+              <Link href={getAuthorPath(author)}>{author.name}</Link>
+            ) : (
+              author.name
+            )}
+          </li>
+        ))}
+      </ul>
+      {cards.length > 0 ? (
+        <ul className={styles.authorCardList}>
+          {cards.map((author, index) => {
+            const card = (
+              <>
+                {author.imgUrl ? (
+                  <Image
+                    src={author.imgUrl}
+                    alt=""
+                    width={100}
+                    height={100}
+                    className={styles.authorCardImage}
+                  />
+                ) : null}
+                {author.description ? (
+                  <p className={`${styles.authorCardDescription}`}>
+                    {author.description}
+                  </p>
+                ) : null}
+              </>
+            );
+
+            return (
+              <li
+                key={author.id ?? `${author.name}-${index}`}
+                className={styles.authorCardItem}
+              >
+                {author.id ? (
+                  <Link href={getAuthorPath(author)} className={styles.authorCardLink}>
+                    {card}
+                  </Link>
+                ) : (
+                  <div className={styles.authorCardLink}>{card}</div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
 
 function PostAsideBanner({ banner }) {
   if (!banner?.imgUrl) {
@@ -93,20 +182,10 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
             </h2>
           ) : null}
           <div className={styles.infoContainer}>
-            {post.author?.name ? (
-              post.author.id ? (
-                <Link
-                  href={getAuthorPath(post.author)}
-                  className={`tag-keyword black ${styles.author} ${styles.authorLink}`}
-                >
-                  {post.author.name}
-                </Link>
-              ) : (
-                <p className={`tag-keyword black ${styles.author}`}>
-                  {post.author.name}
-                </p>
-              )
-            ) : null}
+            <PostAuthorNames
+              post={post}
+              className={`tag-keyword black ${styles.author}`}
+            />
             {post.date ? (
               <p className={`tag-keyword gray-65 ${styles.date}`}>
                 {post.date}
@@ -158,25 +237,12 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           </div>
         ) : null}
 
-        <div className={styles.asideItem}>
-          <div className={`${styles.asideTitle} menu-en`}>Author</div>
-          <div className={styles.authorContainer}>
-            <ul className={styles.authorNameList}>
-              <li className={styles.authorNameItem}>
-                <Link href={getAuthorPath(post.author)}>
-                  {post.author.name}
-                </Link>
-              </li>
-            </ul>
-            <ul className={styles.authorCardList}>
-              <li className={styles.authorCardItem}>
-                <Link href={getAuthorPath(post.author)}>
-                  {post.author.name}
-                </Link>
-              </li>
-            </ul>
+        {getPostAuthors(post).length > 0 ? (
+          <div className={styles.asideItem}>
+            <div className={`${styles.asideTitle} menu-en`}>Author</div>
+            <AuthorAside authors={getPostAuthors(post)} />
           </div>
-        </div>
+        ) : null}
 
         {isJournal && issue ? (
           <div className={styles.asideItem}>
@@ -198,9 +264,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                       className={`${styles.issuePostItem} p-bold`}
                     >
                       <span className={`${styles.issuePostTitle} thumb-title`}>{issuePost.title}</span>
-                      {issuePost.author?.name ? (
+                      {formatAuthorNames(issuePost) ? (
                         <span className={`${styles.issuePostAuthor} p`}>
-                          {issuePost.author.name}
+                          {formatAuthorNames(issuePost)}
                         </span>
                       ) : null}
                     </Link>

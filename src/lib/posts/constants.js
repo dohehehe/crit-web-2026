@@ -43,7 +43,7 @@ export const POST_DETAIL_SELECT = `
   categories ( id, name, slug ),
   sections ( id, name, slug ),
   issues ( issue_number ),
-  post_author ( authors ( id, name ) ),
+  post_author ( authors ( id, name, img_url, content ) ),
   post_keywords ( keywords ( id, name, slug ) )
 `;
 

@@ -15,6 +15,10 @@
 
 }
 
+.root :global(#editorjs) {
+  padding: 20px 40px 20px 70px;
+}
+
 .root :global(#post-editor-ko) {
   padding: 20px 40px 20px 70px;
 }

@@ -1,9 +1,18 @@
+import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
 import { getThumbnailUrl } from "@/lib/posts/thumbnail";
 
 function normalizeAuthors(post) {
   return (post.post_author ?? [])
     .map((row) => row.authors)
-    .filter((author) => author?.name);
+    .filter((author) => author?.name)
+    .map((author) => ({
+      id: author.id ?? null,
+      name: author.name,
+      imgUrl: author.img_url ?? author.imgUrl ?? "",
+      description: author.content
+        ? getEditorParagraphPlainText(author.content)
+        : author.description ?? "",
+    }));
 }
 
 export function normalizePost(post) {

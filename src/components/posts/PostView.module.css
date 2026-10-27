@@ -141,7 +141,7 @@
   padding-bottom: 10px;
   border-top: 1px solid var(--black);
   align-items: flex-start;
-  padding-top: 12px;
+  padding-top: 8px;
 }
 
 :global(html.channelBackground) .asideItem,
@@ -211,16 +211,76 @@
   text-decoration-thickness: 1.8px;
 }
 
-.authorList {
-  margin: 0;
-  list-style: none;
+.authorContainer {
   max-width: 800px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
+.authorNameList,
+.authorCardList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.authorNameList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+
+.authorNameItem a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 36px;
+  letter-spacing: 0%;
+}
+
+.authorNameItem a:hover,
+.authorNameItem a:focus-visible {
+  color: var(--crit-orange);
+}
+
+.authorCardList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.authorCardLink {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 36px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0%;
+}
+
+.authorCardImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  object-position: center;
+  flex-shrink: 0;
+  margin-top: 5.2px;
+  margin-bottom: 5.2px;
+  border-radius: 50%;
+  border: solid 1.07px var(--gray-65);
+}
+
+.authorCardDescription {
+  margin: 0;
+}
 
 
 .issuePostList {
@@ -282,8 +342,12 @@
     width: 100%;
   }
 
-  .tagList {
+  .tagList,
+  .authorContainer {
     margin-top: 16px;
+  }
+
+  .tagList {
     flex-wrap: wrap;
   }
 
@@ -300,6 +364,42 @@
   .bannerLink {
     margin-top: 100px;
   }
+
+  .asideItem {
+    padding-top: 6px;
+    padding-bottom: 9px;
+    gap: 9px;
+  }
+
+  .tagList {
+    margin-top: 0;
+  }
+
+  .authorContainer {
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  .authorNameItem a {
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: 0%;
+  }
+
+
+  .authorCardLink {
+    gap: 20px;
+  }
+
+  .authorCardImage {
+    width: 90px;
+    height: 90px;
+    margin-top: 4.68px;
+    margin-bottom: 4.68px;
+    border: solid 0.96px var(--gray-65);
+  }
+
 
 
 }

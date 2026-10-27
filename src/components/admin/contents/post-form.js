@@ -371,7 +371,7 @@ function PostFormFields({
             ? { ...form, subtitle: form.subtitle_en }
             : form,
         content,
-        author: authors[0] ?? null,
+        authors,
         keywords,
         section,
         sectionMode,

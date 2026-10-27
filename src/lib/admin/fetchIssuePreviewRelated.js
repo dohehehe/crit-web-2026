@@ -17,12 +17,8 @@ function mapPostForPreview(post) {
     id: post.id,
     title: post.title ?? "",
     slug: post.slug ?? "",
-    author: authors[0]
-      ? {
-          id: authors[0].id,
-          name: authors.map((author) => author.name).join(", "),
-        }
-      : null,
+    author: authors[0] ?? null,
+    authors,
   };
 }
 
@@ -62,7 +58,7 @@ export async function fetchIssuePostsForPreview(issueId) {
     params: {
       scope: ADMIN_SCOPE,
       "eq.issue_id": issueId,
-      select: "id,title,slug,sort_order",
+      select: "id,title,slug,sort_order,post_author(authors(id,name))",
       order: "sort_order.asc",
       limit: 100,
     },
