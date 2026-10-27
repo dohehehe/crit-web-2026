@@ -34,11 +34,16 @@ const INLINE_TOOLS = [
 ];
 const TEXT_INLINE_TOOLS = [...INLINE_TOOLS, "alignment"];
 
-const TEXT_STYLE_FONTS = [
-  { label: "Pretendard", value: "Pretendard, sans-serif" },
-  { label: "Libre Caslon Text", value: '"Libre Caslon Text", serif' },
-  { label: "Noto Serif CJK KR", value: '"Noto Serif KR", serif' },
-];
+const TEXT_STYLE_FONTS = {
+  ko: [
+    { label: "한글 산세리프: Pretendard", value: "Pretendard, sans-serif" },
+    { label: "한글 세리프: Noto Serif CJK KR", value: '"Noto Serif KR", serif' },
+  ],
+  en: [
+    { label: "영어 산세리프: Pretendard", value: "Pretendard, sans-serif" },
+    { label: "영어 세리프: Libre Caslon Text", value: '"Libre Caslon Text", serif' },
+  ],
+};
 
 const TEXT_COLORS = ["#000000", "#FF6400", "#A6A6A6", "#FFFFFF"];
 
@@ -245,7 +250,10 @@ function createColorTool(Tool) {
   };
 }
 
-const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) {
+const Editor = forwardRef(function Editor(
+  { data, holderId = "editorjs", contentLocale = "ko" },
+  ref,
+) {
   const editorInstanceRef = useRef(null);
   const initialDataRef = useRef(data);
   const { uploadImageToServer } = useImageUpload();
@@ -271,8 +279,8 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
 
     let editor = null;
     let cancelled = false;
-    let removePasteNormalizer = () => {};
-    let removeImageOrientation = () => {};
+    let removePasteNormalizer = () => { };
+    let removeImageOrientation = () => { };
 
     const initEditor = async () => {
       try {
@@ -408,7 +416,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
               config: {
                 fontSizeEnabled: false,
                 fontFamilyEnabled: true,
-                fontFamilies: TEXT_STYLE_FONTS,
+                fontFamilies: TEXT_STYLE_FONTS[contentLocale] ?? TEXT_STYLE_FONTS.ko,
                 defaultFontFamily: "Pretendard, sans-serif",
               },
             },
@@ -496,7 +504,7 @@ const Editor = forwardRef(function Editor({ data, holderId = "editorjs" }, ref) 
         editorInstanceRef.current = null;
       }
     };
-  }, [holderId]);
+  }, [holderId, contentLocale]);
 
   return (
     <div className={`${styles.wrapper} ${proseStyles.root}`}>

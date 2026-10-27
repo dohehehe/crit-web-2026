@@ -723,6 +723,7 @@ function PostFormFields({
             key={`${contentLocale}-${editorMountKey}`}
             ref={editorRef}
             holderId={`post-editor-${contentLocale}`}
+            contentLocale={contentLocale}
             data={editorData}
           />
           {editorError && (
