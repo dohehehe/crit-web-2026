@@ -58,6 +58,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
     : null;
   const keywords = post.keywords ?? [];
   const hasTags = category || keywords.length > 0;
+  const otherIssuePosts = issuePosts.filter(
+    (issuePost) => issuePost.id !== post.id,
+  );
 
   return (
     <>
@@ -164,33 +167,25 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                 </Link>
               ) : null}
             </div>
-            {issuePosts.length ? (
+            {otherIssuePosts.length ? (
               <ol className={styles.issuePostList}>
-                {issuePosts.map((issuePost) => {
-                  const isActive = issuePost.id === post.id;
-
-                  return (
-                    <li key={issuePost.id}>
-                      {isActive ? (
-                        <span
-                          className={`${styles.issuePostItem} ${styles.issuePostItemActive} p-bold`}
-                          aria-current="page"
-                        >
-                          {issuePost.title}
+                {otherIssuePosts.map((issuePost) => (
+                  <li key={issuePost.id}>
+                    <Link
+                      href={getPostPath(issuePost, {
+                        issueNumber: issue.issueNumber,
+                      })}
+                      className={`${styles.issuePostItem} p-bold`}
+                    >
+                      <span className={`${styles.issuePostTitle} thumb-title`}>{issuePost.title}</span>
+                      {issuePost.author?.name ? (
+                        <span className={`${styles.issuePostAuthor} p`}>
+                          {issuePost.author.name}
                         </span>
-                      ) : (
-                        <Link
-                          href={getPostPath(issuePost, {
-                            issueNumber: issue.issueNumber,
-                          })}
-                          className={`${styles.issuePostItem} p-bold`}
-                        >
-                          {issuePost.title}
-                        </Link>
-                      )}
-                    </li>
-                  );
-                })}
+                      ) : null}
+                    </Link>
+                  </li>
+                ))}
               </ol>
             ) : null}
           </div>
