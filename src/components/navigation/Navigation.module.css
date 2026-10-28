@@ -193,6 +193,7 @@
     top: var(--header-sticky-top, -67px);
     margin-left: 0;
     background: white;
+    padding-top: 12px;
     /* flex-direction: row; */
     /* padding-bottom: 10px; */
   }
@@ -236,6 +237,9 @@
     height: 100dvh;
     left: 0;
     background: var(--white);
+    padding-bottom: 0px;
+    overflow-y: auto;
+    overscroll-behavior: none;
   }
 
   .headerChannel .navContainer.open {
@@ -243,9 +247,6 @@
     color: var(--white);
   }
 
-  .navContent {
-    display: none;
-  }
 
   .navContainer.open .navContent {
     display: flex;
@@ -253,8 +254,9 @@
     align-items: flex-start;
     justify-content: flex-end;
     gap: 60px;
-    padding-bottom: 60px;
+    padding-bottom: 70px;
   }
+
 
   .navigationSub {
     display: block;
