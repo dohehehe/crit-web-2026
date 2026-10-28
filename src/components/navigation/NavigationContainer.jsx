@@ -29,6 +29,7 @@ export function NavigationContainer({
     const body = document.body;
     const html = document.documentElement;
     let lockedScrollY = 0;
+    let lockedPath = "";
     let locked = false;
 
     const lock = () => {
@@ -37,6 +38,7 @@ export function NavigationContainer({
       }
 
       lockedScrollY = window.scrollY;
+      lockedPath = window.location.pathname;
       body.style.position = "fixed";
       body.style.top = `-${lockedScrollY}px`;
       body.style.left = "0";
@@ -59,7 +61,8 @@ export function NavigationContainer({
       body.style.overflow = "";
       const previousScrollBehavior = html.style.scrollBehavior;
       html.style.scrollBehavior = "auto";
-      window.scrollTo(0, lockedScrollY);
+      const samePage = window.location.pathname === lockedPath;
+      window.scrollTo(0, samePage ? lockedScrollY : 0);
       html.style.scrollBehavior = previousScrollBehavior;
       locked = false;
     };

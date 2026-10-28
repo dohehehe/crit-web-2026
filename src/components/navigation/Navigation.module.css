@@ -194,7 +194,7 @@
   .header {
     /* position: fixed; */
     left: 0;
-    top: var(--header-sticky-top, -67px);
+    top: var(--header-sticky-top, -75px);
     margin-left: 0;
     background: white;
     padding-top: 12px;
@@ -232,7 +232,7 @@
     top: 0;
     right: 0;
     z-index: 100;
-    padding: 6px 10px;
+    padding: 5px 10px;
     background: none;
   }
 
@@ -266,5 +266,41 @@
     display: block;
     margin-top: 5px;
     padding-bottom: 10px;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding-bottom: 7px;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .logoLink {
+    grid-column: 1 / -1;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .logoJournal {
+    width: 100%;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .navigationSub {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .navContainer {
+    position: static;
+    grid-column: 2;
+    grid-row: 2;
+    top: auto;
+    right: auto;
+    left: auto;
+    z-index: auto;
+    width: auto;
+    height: auto;
+    padding: 0;
+    background: transparent;
   }
 }

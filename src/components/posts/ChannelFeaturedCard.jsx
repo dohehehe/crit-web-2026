@@ -14,7 +14,7 @@ export function ChannelFeaturedCard({ post }) {
 
   return (
     <article className={styles.card}>
-      <Link href={getPostPath(post)} className={styles.cardLink}>
+      <div className={styles.cardLink}>
         {thumbnailImg ? (
           <div className={styles.thumbnail}>
             <Image
@@ -35,8 +35,18 @@ export function ChannelFeaturedCard({ post }) {
 
         <div className={styles.body}>
           {title ? (
-            <h2 className={`title-1 ${styles.title}`}>{title}</h2>
-          ) : null}
+            <h2 className={`title-1 ${styles.title}`}>
+              <Link href={getPostPath(post)} className={styles.postLink}>
+                {title}
+              </Link>
+            </h2>
+          ) : (
+            <Link
+              href={getPostPath(post)}
+              className={styles.postLink}
+              aria-label="게시물 보기"
+            />
+          )}
 
           <div className={styles.meta}>
             <ul className={styles.keywords} aria-label="키워드">
@@ -63,7 +73,7 @@ export function ChannelFeaturedCard({ post }) {
             <p className={`p ${styles.description}`}>{trimmedDescription}</p>
           ) : null}
         </div>
-      </Link>
+      </div>
     </article>
   );
 }
