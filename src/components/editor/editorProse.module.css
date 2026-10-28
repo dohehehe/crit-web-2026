@@ -15,14 +15,8 @@
 
 }
 
-.root :global(#editorjs) {
-  padding: 20px 40px 20px 70px;
-}
-
-.root :global(#post-editor-ko) {
-  padding: 20px 40px 20px 70px;
-}
-
+.root :global(#editorjs),
+.root :global(#post-editor-ko),
 .root :global(#post-editor-en) {
   padding: 20px 40px 20px 70px;
 }
@@ -249,12 +243,22 @@
 .footnoteItem {
   margin: 0;
   display: flex;
+  scroll-margin-top: 80px;
 }
 
 .footnoteMarker {
   width: 24px;
   flex-shrink: 0;
   font-size: 14px;
+}
+
+.footnoteBacklink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.root .footnoteBacklink:hover {
+  text-decoration: underline;
 }
 
 .root :global(.footnote-ref),
@@ -271,6 +275,7 @@
   color: inherit;
   text-decoration: none;
   font-weight: 400;
+  scroll-margin-top: 80px;
 }
 
 .root :global(.footnote-ref a:hover),
