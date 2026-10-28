@@ -86,11 +86,26 @@
 
 .socialIcon {
   display: block;
+  background-color: currentColor;
+  -webkit-mask-image: var(--icon-url);
+  mask-image: var(--icon-url);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  mask-mode: alpha;
 }
 
-.footerJournal .socialIcon,
-.footerChannel .socialIcon {
-  filter: invert(1);
+.socialIconInstagram {
+  width: 23.79px;
+  height: 22.79px;
+}
+
+.socialIconYoutube {
+  width: 24.53px;
+  height: 17.11px;
 }
 
 

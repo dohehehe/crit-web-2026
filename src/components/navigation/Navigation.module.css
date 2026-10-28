@@ -16,9 +16,12 @@
 }
 
 .headerJournal {
-  background: var(--crit-orange);
   top: var(--header-sticky-top, -145px);
   transition: none;
+}
+
+.headerJournalTone {
+  background: var(--crit-orange);
 }
 
 .headerChannel {
@@ -185,6 +188,7 @@
 @media (max-width: var(--breakpoint-mobile)) {
   .navContent {
     text-align: left;
+    display: none;
   }
 
   .header {
@@ -204,7 +208,7 @@
     background: none;
   }
 
-  .headerJournal {
+  .headerJournalTone {
     background: var(--crit-orange);
   }
 

@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { isJournalCritPath } from "@/lib/routes/journalCrit";
+import { isJournalCritOrangeBackgroundPath } from "@/lib/routes/journalCrit";
 import { isChannelPath } from "@/lib/routes/channel";
 import styles from "@/components/Footer.module.css";
 
@@ -17,10 +16,11 @@ export default function FooterClient({ email, instagramHref, youtubeHref }) {
     return null;
   }
 
-  const isJournalCrit = isJournalCritPath(pathname);
+  const isJournalCrit = isJournalCritOrangeBackgroundPath(pathname);
   const isChannel = isChannelPath(pathname);
 
   const footerClassName = [
+    "footer",
     styles.footer,
     isJournalCrit ? styles.footerJournal : "",
     isChannel ? styles.footerChannel : "",
@@ -29,7 +29,7 @@ export default function FooterClient({ email, instagramHref, youtubeHref }) {
     .join(" ");
 
   return (
-    <footer className={`footer ${styles.footer}`}>
+    <footer className={footerClassName}>
       <div className={styles.footerLeft}>
         <div>
           <p className={styles.footerTitle}>Journal Crit.</p>
@@ -73,12 +73,9 @@ export default function FooterClient({ email, instagramHref, youtubeHref }) {
                   rel="noopener noreferrer"
                   aria-label="Instagram"
                 >
-                  <Image
-                    src="/Instagram.svg"
-                    alt=""
-                    width={23.79}
-                    height={22.79}
-                    className={styles.socialIcon}
+                  <span
+                    className={`${styles.socialIcon} ${styles.socialIconInstagram}`}
+                    style={{ "--icon-url": "url(/Instagram.svg)" }}
                     aria-hidden
                   />
                 </a>
@@ -91,12 +88,9 @@ export default function FooterClient({ email, instagramHref, youtubeHref }) {
                   rel="noopener noreferrer"
                   aria-label="YouTube"
                 >
-                  <Image
-                    src="/Youtube.svg"
-                    alt=""
-                    width={24.53}
-                    height={17.11}
-                    className={styles.socialIcon}
+                  <span
+                    className={`${styles.socialIcon} ${styles.socialIconYoutube}`}
+                    style={{ "--icon-url": "url(/Youtube.svg)" }}
                     aria-hidden
                   />
                 </a>
