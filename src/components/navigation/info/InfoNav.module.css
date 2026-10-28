@@ -49,6 +49,7 @@
 }
 
 .labelStack {
+  position: relative;
   display: inline-grid;
   grid-template-columns: max-content;
   grid-template-rows: max-content;
@@ -56,29 +57,39 @@
 
 .labelEn,
 .labelKr {
-  grid-area: 1 / 1;
   white-space: nowrap;
   transition: opacity 0.15s ease;
 }
 
 .labelEn {
+  grid-area: 1 / 1;
   opacity: 1;
 }
 
 .labelKr {
+  position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
+  pointer-events: none;
 }
 
 .infoLink[aria-current="page"] .labelEn,
-.infoLink:hover .labelEn,
 .infoLink:focus-visible .labelEn {
+  position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
+  pointer-events: none;
 }
 
 .infoLink[aria-current="page"] .labelKr,
-.infoLink:hover .labelKr,
 .infoLink:focus-visible .labelKr {
+  position: relative;
+  top: auto;
+  left: auto;
   opacity: 1;
+  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {

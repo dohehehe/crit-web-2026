@@ -29,13 +29,13 @@
 }
 
 .labelStack {
+  position: relative;
   display: inline-grid;
   grid-template-columns: max-content;
   grid-template-rows: max-content;
 }
 
 .labelEn,
-.labelKr,
 .homeIcon {
   grid-area: 1 / 1;
 }
@@ -46,7 +46,11 @@
 }
 
 .labelKr {
+  position: absolute;
+  top: 0;
+  left: 0;
   padding-top: 1px;
+  pointer-events: none;
 }
 
 .homeLink {
@@ -69,25 +73,23 @@
 }
 
 .sectionLink[aria-current="page"] .labelEn,
-.sectionLink:hover .labelEn,
-.sectionLink:focus-visible .labelEn {
+.sectionLink:focus-visible .labelEn,
+.homeLink:focus-visible .homeIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
+  pointer-events: none;
 }
 
 .sectionLink[aria-current="page"] .labelKr,
-.sectionLink:hover .labelKr,
-.sectionLink:focus-visible .labelKr {
-  opacity: 1;
-}
-
-.homeLink:hover .homeIcon,
-.homeLink:focus-visible .homeIcon {
-  opacity: 0;
-}
-
-.homeLink:hover .labelKr,
+.sectionLink:focus-visible .labelKr,
 .homeLink:focus-visible .labelKr {
+  position: relative;
+  top: auto;
+  left: auto;
   opacity: 1;
+  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
