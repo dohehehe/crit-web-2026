@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
@@ -10,7 +9,7 @@ import styles from "@/components/navigation/section/SectionNav.module.css";
 
 const HOME_HREF = "/";
 const HEADER_SCROLL_THRESHOLD = 140;
-const HOME_ICON_SIZE = 10;
+const HOME_LABELS = { en: "Home", kr: "홈" };
 
 function getSectionLabels(section) {
   return {
@@ -36,19 +35,13 @@ export function SectionNavList({ sections }) {
           <li className={styles.item}>
             <Link
               href={HOME_HREF}
-              className={styles.homeLink}
-              aria-label={isHomeActive ? "홈" : "Home"}
+              className={styles.sectionLink}
+              aria-label={isHomeActive ? HOME_LABELS.kr : HOME_LABELS.en}
               aria-current={isHomeActive ? "page" : undefined}
             >
               <span className={styles.labelStack} aria-hidden>
-                <Image
-                  src="/home.svg"
-                  alt=""
-                  width={HOME_ICON_SIZE}
-                  height={HOME_ICON_SIZE}
-                  className={styles.homeIcon}
-                />
-                <span className={`${styles.labelKr} menu-kr`}>홈</span>
+                <span className={`${styles.labelEn} menu-en`}>{HOME_LABELS.en}</span>
+                <span className={`${styles.labelKr} menu-kr`}>{HOME_LABELS.kr}</span>
               </span>
             </Link>
           </li>
