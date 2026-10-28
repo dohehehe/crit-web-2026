@@ -1,3 +1,5 @@
+import { parseThumbnail, serializeThumbnail } from "@/lib/posts/thumbnail";
+
 export const ADMIN_POST_PREVIEW_STORAGE_KEY = "crit-admin-post-preview";
 
 export function writePostPreviewRecord(record) {
@@ -89,7 +91,11 @@ export function buildPostPreviewRecord({
     slug: form.slug,
     description: form.description,
     date: form.date,
-    thumnail_img: form.thumnail_img,
+    thumnail_img: serializeThumbnail({
+      url: form.thumnail_img,
+      captionKr: form.thumbnail_caption_kr,
+      captionEn: form.thumbnail_caption_en,
+    }),
     video_url: form.video_url,
     content,
     contentEn,
@@ -160,6 +166,7 @@ export function mapPostPreviewRecordToPostView(record) {
     return null;
   }
 
+  const thumbnail = parseThumbnail(record.thumnail_img);
   const post = {
     id: record.postId ?? "preview",
     title: record.title ?? "",
@@ -167,7 +174,9 @@ export function mapPostPreviewRecordToPostView(record) {
     subtitleEn: record.subtitleEn ?? "",
     slug: record.slug ?? "",
     description: record.description ?? "",
-    thumbnailImg: record.thumnail_img ?? "",
+    thumbnailImg: thumbnail.url,
+    thumbnailCaptionKr: thumbnail.captionKr,
+    thumbnailCaptionEn: thumbnail.captionEn,
     date: record.date ?? null,
     content: record.content ?? null,
     contentEn: record.contentEn ?? null,

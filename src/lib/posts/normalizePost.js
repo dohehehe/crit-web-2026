@@ -1,5 +1,5 @@
 import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
-import { getThumbnailUrl } from "@/lib/posts/thumbnail";
+import { getThumbnailUrl, parseThumbnail } from "@/lib/posts/thumbnail";
 
 function normalizeAuthors(post) {
   return (post.post_author ?? [])
@@ -48,6 +48,8 @@ export function normalizePostDetail(post) {
     return null;
   }
 
+  const thumbnail = parseThumbnail(post.thumnail_img);
+
   return {
     ...normalizePost(post),
     subtitle: post.subtitle ?? "",
@@ -56,5 +58,8 @@ export function normalizePostDetail(post) {
     content: post.content ?? null,
     contentEn: post.content_en ?? null,
     videoUrl: post.video_url ?? "",
+    thumbnailImg: thumbnail.url,
+    thumbnailCaptionKr: thumbnail.captionKr,
+    thumbnailCaptionEn: thumbnail.captionEn,
   };
 }

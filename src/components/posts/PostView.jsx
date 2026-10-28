@@ -160,6 +160,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
   const activeLocale = hasEnglishContent && locale === "en" ? "en" : "ko";
   const subtitle = activeLocale === "en" ? post.subtitleEn : post.subtitle;
   const content = activeLocale === "en" ? post.contentEn : post.content;
+  const thumbnailCaption = (
+    activeLocale === "en" ? post.thumbnailCaptionEn : post.thumbnailCaptionKr
+  )?.trim() ?? "";
 
   return (
     <>
@@ -168,17 +171,26 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           <PostVideoEmbed videoUrl={post.videoUrl} title={post.title} />
         ) : post.thumbnailImg ? (
           <section className={styles.thumbnailSection}>
-            <div className={styles.thumbnail}>
+            <figure className={styles.thumbnail}>
               <Image
                 src={post.thumbnailImg}
-                alt={post.title ?? ""}
+                alt={thumbnailCaption ? "" : post.title ?? ""}
                 width={0}
                 height={0}
                 sizes="100vw"
                 className={styles.thumbnailImage}
                 priority
               />
-            </div>
+              {thumbnailCaption ? (
+                <figcaption
+                  className={`caption ${styles.thumbnailCaption}${
+                    hasEnglishContent ? ` ${styles.thumbnailCaptionWithSwitch}` : ""
+                  }`}
+                >
+                  {thumbnailCaption}
+                </figcaption>
+              ) : null}
+            </figure>
           </section>
         ) : null}
 
