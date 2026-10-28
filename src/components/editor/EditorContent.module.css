@@ -43,58 +43,9 @@
   object-fit: contain;
 }
 
-.galleryNav {
-  position: absolute;
-  top: 15px;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  color: var(--black);
-  background: none;
-  cursor: pointer;
-}
-
-.galleryNavIcon {
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 22px solid transparent;
-  border-bottom: 22px solid transparent;
-  border-right: 32px solid currentColor;
-}
-
-.galleryNavIconNext {
-  border-right: 0;
-  border-left: 32px solid currentColor;
-}
-
-.galleryNav:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-:global(html.channelBackground) .galleryNav,
-:global(html:has([data-channel-section])) .galleryNav {
-  color: var(--white);
-}
-
-.galleryNavPrev {
-  right: 80px;
-}
-
-.galleryNavNext {
-  right: 24px;
-}
-
 .galleryItemCaption {
   display: block;
-  color: var(--white);
+  color: var(--black);
 }
 
 .galleryItem:first-child .galleryItemCaption {
@@ -104,7 +55,7 @@
 .galleryCaption {
   display: block;
   margin-top: 4px;
-  color: var(--white);
+  color: var(--black);
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
@@ -114,10 +65,5 @@
 
   .galleryImage {
     height: 200px;
-  }
-
-  .galleryNav {
-    top: 100px;
-    display: none;
   }
 }
