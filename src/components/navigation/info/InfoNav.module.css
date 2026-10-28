@@ -138,6 +138,30 @@
   }
 }
 
+@media (max-width: var(--breakpoint-tablet)) and (min-width: calc(var(--breakpoint-mobile) + 1px)) {
+  .labelEn,
+  .labelKr {
+    position: static;
+    top: auto;
+    left: auto;
+    grid-area: 1 / 1;
+  }
+
+  .infoLink:hover .labelEn,
+  .infoLink[aria-current="page"] .labelEn,
+  .infoLink:focus-visible .labelEn {
+    position: static;
+    opacity: 0;
+  }
+
+  .infoLink:hover .labelKr,
+  .infoLink[aria-current="page"] .labelKr,
+  .infoLink:focus-visible .labelKr {
+    position: static;
+    opacity: 1;
+  }
+}
+
 @media (max-width: var(--breakpoint-mobile)) {
   .infoPanel {
     margin-left: unset;

@@ -117,4 +117,28 @@
   }
 }
 
+@media (max-width: var(--breakpoint-tablet)) and (min-width: calc(var(--breakpoint-mobile) + 1px)) {
+  .labelEn,
+  .labelKr {
+    position: static;
+    top: auto;
+    left: auto;
+    grid-area: 1 / 1;
+  }
+
+  .sectionLink:hover .labelEn,
+  .sectionLink[aria-current="page"] .labelEn,
+  .sectionLink:focus-visible .labelEn {
+    position: static;
+    opacity: 0;
+  }
+
+  .sectionLink:hover .labelKr,
+  .sectionLink[aria-current="page"] .labelKr,
+  .sectionLink:focus-visible .labelKr {
+    position: static;
+    opacity: 1;
+  }
+}
+
 @media (max-width: var(--breakpoint-mobile)) {}
