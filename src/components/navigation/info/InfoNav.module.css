@@ -22,12 +22,16 @@
   justify-content: center;
   line-height: 0;
   color: inherit;
+  width: 28px;
+  height: 28px;
 }
 
 .socialIcon {
   display: block;
-  width: 24px;
-  height: auto;
+}
+
+:global(html.channelBackground) img.socialIcon {
+  filter: invert(1);
 }
 
 .infoList {
@@ -110,18 +114,23 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 28px;
   }
 
-  .infoPanel.open .infoSocial {
+  .infoPanel.open {
     display: flex;
-    margin-top: 28px;
+  }
+
+  .infoSocial {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
   }
 
   .infoList {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 3px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -139,6 +148,7 @@
 }
 
 @media (max-width: var(--breakpoint-tablet)) and (min-width: calc(var(--breakpoint-mobile) + 1px)) {
+
   .infoPanel.open .labelEn,
   .infoPanel.open .labelKr {
     position: static;

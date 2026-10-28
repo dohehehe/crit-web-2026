@@ -133,6 +133,7 @@
     align-items: stretch;
     gap: 20px;
     padding-bottom: 20px;
+    padding-top: 4px;
   }
 
   .navContainer.open .navActions {
@@ -172,6 +173,8 @@
 
   .closeButton {
     display: inline-flex;
+    position: relative;
+    z-index: 3;
   }
 
   .navBar {
