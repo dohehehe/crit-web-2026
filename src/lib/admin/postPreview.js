@@ -60,6 +60,7 @@ export function mergePostIntoIssuePosts(issuePosts, { postId, title, slug }) {
 export function buildPostPreviewRecord({
   form,
   content,
+  contentEn = null,
   authors = [],
   keywords,
   section,
@@ -84,12 +85,14 @@ export function buildPostPreviewRecord({
       : null,
     title: form.title,
     subtitle: form.subtitle,
+    subtitleEn: form.subtitle_en ?? "",
     slug: form.slug,
     description: form.description,
     date: form.date,
     thumnail_img: form.thumnail_img,
     video_url: form.video_url,
     content,
+    contentEn,
     authors: authors
       .filter((author) => author?.name)
       .map((author) => ({ id: author.id ?? null, name: author.name })),
@@ -161,11 +164,13 @@ export function mapPostPreviewRecordToPostView(record) {
     id: record.postId ?? "preview",
     title: record.title ?? "",
     subtitle: record.subtitle ?? "",
+    subtitleEn: record.subtitleEn ?? "",
     slug: record.slug ?? "",
     description: record.description ?? "",
     thumbnailImg: record.thumnail_img ?? "",
     date: record.date ?? null,
     content: record.content ?? null,
+    contentEn: record.contentEn ?? null,
     videoUrl: record.video_url ?? "",
     authors: Array.isArray(record.authors)
       ? record.authors.filter((author) => author?.name)

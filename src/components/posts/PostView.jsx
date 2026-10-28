@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EditorContent } from "@/components/editor/EditorContent";
+import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import { PostVideoEmbed } from "@/components/posts/PostVideoEmbed";
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
@@ -131,6 +135,8 @@ function PostAsideBanner({ banner }) {
 }
 
 export function PostView({ post, issue, issuePosts = [], banner = null }) {
+  const [locale, setLocale] = useState("ko");
+
   if (!post) {
     return (
       <p className={`${styles.empty} caption gray-65`}>
@@ -150,6 +156,10 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
   const otherIssuePosts = issuePosts.filter(
     (issuePost) => issuePost.id !== post.id,
   );
+  const hasEnglishContent = normalizeBlocks(post.contentEn).length > 0;
+  const activeLocale = hasEnglishContent && locale === "en" ? "en" : "ko";
+  const subtitle = activeLocale === "en" ? post.subtitleEn : post.subtitle;
+  const content = activeLocale === "en" ? post.contentEn : post.content;
 
   return (
     <>
@@ -173,12 +183,36 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
         ) : null}
 
         <header className={styles.header}>
+          {hasEnglishContent ? (
+            <div className={styles.langueSwitch}>
+              <button
+                type="button"
+                className={`${styles.langueSwitchButton}${
+                  activeLocale === "ko" ? ` ${styles.langueSwitchButtonActive}` : ""
+                }`}
+                aria-pressed={activeLocale === "ko"}
+                onClick={() => setLocale("ko")}
+              >
+                한국어
+              </button>
+              <button
+                type="button"
+                className={`${styles.langueSwitchButton}${
+                  activeLocale === "en" ? ` ${styles.langueSwitchButtonActive}` : ""
+                }`}
+                aria-pressed={activeLocale === "en"}
+                onClick={() => setLocale("en")}
+              >
+                English
+              </button>
+            </div>
+          ) : null}
           {post.title ? (
             <h1 className={`title-1 ${styles.title}`}>{post.title}</h1>
           ) : null}
-          {post.subtitle ? (
+          {subtitle ? (
             <h2 className={`thumb-title ${styles.subtitle}`}>
-              {post.subtitle}
+              {subtitle}
             </h2>
           ) : null}
           <div className={styles.infoContainer}>
@@ -194,9 +228,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           </div>
         </header>
 
-        {post.content ? (
+        {content ? (
           <section className={styles.contents}>
-            <EditorContent contents={post.content} />
+            <EditorContent contents={content} />
           </section>
         ) : null}
       </article>

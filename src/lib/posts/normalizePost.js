@@ -51,8 +51,10 @@ export function normalizePostDetail(post) {
   return {
     ...normalizePost(post),
     subtitle: post.subtitle ?? "",
+    subtitleEn: post.subtitle_en ?? "",
     description: post.description ?? "",
     content: post.content ?? null,
+    contentEn: post.content_en ?? null,
     videoUrl: post.video_url ?? "",
   };
 }
