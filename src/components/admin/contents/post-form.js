@@ -347,7 +347,6 @@ function PostFormFields({
 
     try {
       const contents = await saveActiveContent();
-      const content = contents[contentLocale];
 
       let issuePosts = [];
       let issueFileUrl = null;
@@ -366,11 +365,9 @@ function PostFormFields({
       }
 
       const record = buildPostPreviewRecord({
-        form:
-          contentLocale === "en"
-            ? { ...form, subtitle: form.subtitle_en }
-            : form,
-        content,
+        form,
+        content: contents.ko,
+        contentEn: contents.en,
         authors,
         keywords,
         section,

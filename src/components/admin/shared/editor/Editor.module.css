@@ -52,11 +52,15 @@
 }
 
 .wrapper :global(.ce-popover-item-html),
-.wrapper :global(.ce-inline-toolbar),
 .wrapper :global(.ce-popover__container),
 .wrapper :global(.ce-popover__items) {
+  overflow: scroll;
+}
+
+.wrapper :global(.ce-inline-toolbar) {
   overflow: visible;
 }
+
 
 .wrapper :global(.critColorPicker) {
   position: relative;

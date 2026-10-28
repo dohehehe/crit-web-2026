@@ -16,7 +16,14 @@ function DocumentFootnotes({ footnotes }) {
     <aside className={`${proseStyles.footnotesSection} caption black`}>
       {footnotes.map((note) => (
         <p key={note.footnoteId} id={note.footnoteId} className={proseStyles.footnoteItem}>
-          <sup className={proseStyles.footnoteMarker}>{note.superscript}</sup>
+          <sup className={proseStyles.footnoteMarker}>
+            <a
+              href={`#${note.footnoteId}-ref`}
+              className={proseStyles.footnoteBacklink}
+            >
+              {note.superscript}
+            </a>
+          </sup>
           <span dangerouslySetInnerHTML={{ __html: note.content }} />
         </p>
       ))}
