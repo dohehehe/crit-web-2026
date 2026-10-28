@@ -14,5 +14,11 @@ export default async function Footer() {
 
   const email = info?.email ?? DEFAULT_EMAIL;
 
-  return <FooterClient email={email} />;
+  return (
+    <FooterClient
+      email={email}
+      instagramHref={info?.instagramHref}
+      youtubeHref={info?.youtubeHref}
+    />
+  );
 }

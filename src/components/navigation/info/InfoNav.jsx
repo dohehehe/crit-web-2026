@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
 import { getInfoNavItems, isInfoNavActive } from "@/lib/navigation/infoNavItems";
-import { YoutubeIcon } from "@/components/icons/YoutubeIcon";
 import styles from "@/components/navigation/info/InfoNav.module.css";
 
 export function InfoNav({ instagramHref, youtubeHref, isLoggedIn = false }) {
@@ -75,7 +74,14 @@ export function InfoNav({ instagramHref, youtubeHref, isLoggedIn = false }) {
               rel="noopener noreferrer"
               aria-label="YouTube"
             >
-              <YoutubeIcon width={24.53} height={17.11} className={styles.socialIcon} />
+              <Image
+                src="/Youtube.svg"
+                alt=""
+                width={24.53}
+                height={17.11}
+                className={styles.socialIcon}
+                aria-hidden
+              />
             </a>
           ) : null}
         </div>
