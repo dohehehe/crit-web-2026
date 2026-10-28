@@ -118,24 +118,24 @@
 }
 
 @media (max-width: var(--breakpoint-tablet)) and (min-width: calc(var(--breakpoint-mobile) + 1px)) {
-  .labelEn,
-  .labelKr {
+  .sectionList.menuOpen .labelEn,
+  .sectionList.menuOpen .labelKr {
     position: static;
     top: auto;
     left: auto;
     grid-area: 1 / 1;
   }
 
-  .sectionLink:hover .labelEn,
-  .sectionLink[aria-current="page"] .labelEn,
-  .sectionLink:focus-visible .labelEn {
+  .sectionList.menuOpen .sectionLink:hover .labelEn,
+  .sectionList.menuOpen .sectionLink[aria-current="page"] .labelEn,
+  .sectionList.menuOpen .sectionLink:focus-visible .labelEn {
     position: static;
     opacity: 0;
   }
 
-  .sectionLink:hover .labelKr,
-  .sectionLink[aria-current="page"] .labelKr,
-  .sectionLink:focus-visible .labelKr {
+  .sectionList.menuOpen .sectionLink:hover .labelKr,
+  .sectionList.menuOpen .sectionLink[aria-current="page"] .labelKr,
+  .sectionList.menuOpen .sectionLink:focus-visible .labelKr {
     position: static;
     opacity: 1;
   }

@@ -25,12 +25,12 @@
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
+  padding-bottom: 4px;
 }
 
 .searchForm.open .searchInput {
   width: 50vw;
   height: 100%;
-  padding: 0 2px;
   opacity: 1;
   pointer-events: auto;
   position: absolute;
