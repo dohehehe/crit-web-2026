@@ -30,6 +30,32 @@ function getSortedFootnotesTunes() {
   );
 }
 
+function editorRootFor(tune) {
+  return tune.wrapper?.closest(".codex-editor") ?? null;
+}
+
+function renumberTuneGroup(tunes) {
+  let displayNumber = 0;
+
+  tunes.forEach((tune) => {
+    tune.syncNotesFromDom();
+
+    getFootnoteElements(tune.wrapper).forEach((sup) => {
+      const note = tune.notes.find((entry) => entry.node === sup);
+
+      if (!note) {
+        return;
+      }
+
+      displayNumber += 1;
+
+      if (note.index !== displayNumber) {
+        note.index = displayNumber;
+      }
+    });
+  });
+}
+
 export function renumberAllFootnotes() {
   if (isRenumberingFootnotes) {
     return;
@@ -38,21 +64,22 @@ export function renumberAllFootnotes() {
   isRenumberingFootnotes = true;
 
   try {
-    let displayNumber = 0;
+    const tunesByEditor = new Map();
 
     getSortedFootnotesTunes().forEach((tune) => {
-      tune.syncNotesFromDom();
+      const root = editorRootFor(tune);
+      const group = tunesByEditor.get(root);
 
-      getFootnoteElements(tune.wrapper).forEach((sup) => {
-        const note = tune.notes.find((entry) => entry.node === sup);
+      if (group) {
+        group.push(tune);
+        return;
+      }
 
-        if (!note) {
-          return;
-        }
+      tunesByEditor.set(root, [tune]);
+    });
 
-        displayNumber += 1;
-        note.index = displayNumber;
-      });
+    tunesByEditor.forEach((tunes) => {
+      renumberTuneGroup(tunes);
     });
   } finally {
     isRenumberingFootnotes = false;
