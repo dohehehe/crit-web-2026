@@ -3,7 +3,6 @@ import "server-only";
 import { cache } from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
-  NOTICE_DETAIL_SELECT,
   NOTICE_LIST_SELECT,
   NOTICE_PAGE_SIZE,
 } from "@/lib/notice/constants";
@@ -67,24 +66,4 @@ export const getNoticesPage = cache(async function getNoticesPage({
     total,
     totalPages,
   };
-});
-
-export const getNoticeById = cache(async function getNoticeById(id) {
-  if (!id) {
-    return null;
-  }
-
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from("notice")
-    .select(NOTICE_DETAIL_SELECT)
-    .eq("id", id)
-    .eq("is_active", true)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return normalizeNotice(data);
 });

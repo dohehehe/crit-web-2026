@@ -65,6 +65,11 @@
 .paragraph {
   margin: 0;
   word-break: keep-all;
+  font-weight: var(--p-weight);
+  font-style: var(--p-style);
+  font-size: var(--p-size);
+  line-height: var(--p-line-height);
+  letter-spacing: var(--p-letter-spacing);
 }
 
 .root :global(.ce-paragraph),

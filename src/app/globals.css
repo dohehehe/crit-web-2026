@@ -10,13 +10,13 @@
 
   /* Typography — desktop (> 1020px) */
   --menu-en-weight: 600;
-  --menu-en-style: normal;
+  --menu-en-style: semi-bold;
   --menu-en-size: 24px;
   --menu-en-line-height: 24px;
   --menu-en-letter-spacing: 0.02em;
 
   --menu-kr-weight: 700;
-  --menu-kr-style: normal;
+  --menu-kr-style: bold;
   --menu-kr-size: 22px;
   --menu-kr-line-height: 24px;
   --menu-kr-letter-spacing: 0;
@@ -34,13 +34,13 @@
   --tag-keyword-letter-spacing: 0.03em;
 
   --thumb-title-weight: 600;
-  --thumb-title-style: normal;
+  --thumb-title-style: semi-bold;
   --thumb-title-size: 26px;
   --thumb-title-line-height: 36px;
   --thumb-title-letter-spacing: 0;
 
   --title-1-weight: 600;
-  --title-1-style: normal;
+  --title-1-style: semi-bold;
   --title-1-size: 52px;
   --title-1-line-height: 62px;
   --title-1-letter-spacing: 0.01em;
@@ -51,8 +51,26 @@
   --p-line-height: 29px;
   --p-letter-spacing: 0.04em;
 
+  --p-new-weight: 600;
+  --p-new-style: semi-bold;
+  --p-new-size: 17.5px;
+  --p-new-line-height: 29px;
+  --p-new-letter-spacing: 0.04em;
+
+  --new-p-en-weight: 400;
+  --new-p-en-style: regular;
+  --new-p-en-size: 17.5px;
+  --new-p-en-line-height: 24px;
+  --new-p-en-letter-spacing: 0.04em;
+
+  --new-p-en-serif-weight: 400;
+  --new-p-en-serif-style: regular;
+  --new-p-en-serif-size: 17.5px;
+  --new-p-en-serif-line-height: 25px;
+  --new-p-en-serif-letter-spacing: 0.015em;
+
   --p-bold-weight: 700;
-  --p-bold-style: normal;
+  --p-bold-style: bold;
 
   --footer-weight: 400;
   --footer-style: normal;
@@ -67,7 +85,7 @@
   --caption-letter-spacing: 0;
 
   --mobile-title-1-weight: 600;
-  --mobile-title-1-style: normal;
+  --mobile-title-1-style: semi-bold;
   --mobile-title-1-size: 40px;
   --mobile-title-1-line-height: 48px;
   --mobile-title-1-letter-spacing: 0.01em;
@@ -108,10 +126,12 @@ body {
   letter-spacing: var(--p-letter-spacing);
   color: var(--black);
   background-color: var(--white);
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 
   /* padding: 0 24px; */
+}
+
+main {
+  min-height: calc(100vh - 100px);
 }
 
 html.journalIssueBackground,
@@ -146,6 +166,12 @@ body:has([data-channel-section]) .black {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 a {
