@@ -2,6 +2,7 @@ export const ALLOWED_TABLES = [
   "authors",
   "banner",
   "categories",
+  "editors",
   "info",
   "issues",
   "keywords",

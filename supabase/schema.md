@@ -2,8 +2,8 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-10-27T06:28:59.335Z
-- Tables: 14
+- Updated: 2026-10-29T10:18:04.120Z
+- Tables: 15
 
 ## `authors`
 
@@ -41,6 +41,17 @@
 | `sort_order` | numeric | no |  |  |
 | `updated_at` | timestamp with time zone | no |  |  |
 
+## `editors`
+
+| Column | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `created_at` | timestamp with time zone | yes | now() |  |
+| `description` | jsonb | no |  |  |
+| `id` | uuid | yes | gen_random_uuid() | PK |
+| `name` | text | no |  |  |
+| `name_en` | text | no |  |  |
+| `order` | numeric | no |  |  |
+
 ## `info`
 
 | Column | Type | Required | Default | Notes |
@@ -50,6 +61,7 @@
 | `id` | uuid | yes | gen_random_uuid() | PK |
 | `info_text` | jsonb | no |  |  |
 | `insta` | text | no |  |  |
+| `manifesto_text` | jsonb | no |  |  |
 | `submission_text` | jsonb | no |  |  |
 | `subscription_text` | jsonb | no |  |  |
 | `youtube` | text | no |  |  |

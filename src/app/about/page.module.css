@@ -17,8 +17,107 @@
   margin-bottom: 60px;
 }
 
+.contentsBeforeManifesto {
+  margin-bottom: 28px;
+}
+
+.manifesto {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.manifestoLast {
+  margin-bottom: 60px;
+}
+
+.manifestoTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 36px;
+}
+
+.manifestoMark {
+  color: var(--crit-orange);
+}
+
 .empty {
   margin: 0;
+}
+
+.editors {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--black);
+}
+
+.editorsFirst {
+  padding-top: 0;
+  border-top: none;
+}
+
+.editorsTitle {
+  margin: 0;
+}
+
+.editorList {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.editorName {
+  margin: 0;
+  word-break: keep-all;
+}
+
+.editorNameEn {
+  margin: 0;
+  color: var(--gray-65);
+}
+
+.authors {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--black);
+}
+
+.authorsFirst {
+  padding-top: 0;
+  border-top: none;
+}
+
+.authorsTitle {
+  margin: 0;
+}
+
+.authorList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.authorLink:hover {
+  color: var(--crit-orange);
 }
 
 @media (max-width: var(--breakpoint-tablet)) {

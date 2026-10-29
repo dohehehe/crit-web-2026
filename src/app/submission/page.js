@@ -1,6 +1,6 @@
 import { EditorContent } from "@/components/editor/EditorContent";
 import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
-import { getSubscriptionText } from "@/lib/info/getSiteInfo";
+import { getSubmissionText } from "@/lib/info/getSiteInfo";
 import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
 import { truncatePlainText } from "@/lib/text/truncatePlainText";
 import styles from "./page.module.css";
@@ -8,9 +8,9 @@ import styles from "./page.module.css";
 export const revalidate = 60;
 
 export async function generateMetadata() {
-  const subscriptionText = await getSubscriptionText();
+  const submissionText = await getSubmissionText();
   const description = truncatePlainText(
-    getEditorParagraphPlainText(subscriptionText)
+    getEditorParagraphPlainText(submissionText)
   );
 
   return buildPageMetadata({
@@ -21,14 +21,14 @@ export async function generateMetadata() {
 }
 
 export default async function SubmissionPage() {
-  const subscriptionText = await getSubscriptionText();
+  const submissionText = await getSubmissionText();
 
   return (
     <main className={styles.main}>
       <article className={styles.article}>
-        {subscriptionText ? (
+        {submissionText ? (
           <section className={styles.contents}>
-            <EditorContent contents={subscriptionText} />
+            <EditorContent contents={submissionText} />
           </section>
         ) : (
           <p className={`${styles.empty} caption gray-65`}>

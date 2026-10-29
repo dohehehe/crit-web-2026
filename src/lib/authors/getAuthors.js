@@ -11,6 +11,23 @@ function isUuid(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
 
+export const getAuthorsByName = cache(async () => {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.from("authors").select("id,name");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data ?? [])
+    .map((row) => ({
+      id: row.id,
+      name: row.name?.trim() || "",
+    }))
+    .filter((row) => row.id && row.name)
+    .sort((a, b) => a.name.localeCompare(b.name, "ko"));
+});
+
 export const getAuthorById = cache(async (authorId) => {
   if (!authorId || !isUuid(authorId)) {
     return null;

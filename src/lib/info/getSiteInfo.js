@@ -165,3 +165,43 @@ export const getSubscriptionText = cache(async () => {
 
   return parseEditorContents(data.subscription_text);
 });
+
+export const getSubmissionText = cache(async () => {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("info")
+    .select("submission_text")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return parseEditorContents(data.submission_text);
+});
+
+export const getManifestoText = cache(async () => {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("info")
+    .select("manifesto_text")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return parseEditorContents(data.manifesto_text);
+});

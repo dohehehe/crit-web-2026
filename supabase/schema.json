@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T06:28:59.335Z",
+  "generatedAt": "2026-10-29T10:18:04.120Z",
   "projectUrl": null,
   "tables": [
     {
@@ -173,6 +173,55 @@
       ]
     },
     {
+      "name": "editors",
+      "columns": [
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "required": true,
+          "default": "now()",
+          "notes": []
+        },
+        {
+          "name": "description",
+          "type": "jsonb",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "default": "gen_random_uuid()",
+          "notes": [
+            "PK"
+          ]
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "name_en",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "order",
+          "type": "numeric",
+          "required": false,
+          "default": null,
+          "notes": []
+        }
+      ]
+    },
+    {
       "name": "info",
       "columns": [
         {
@@ -208,6 +257,13 @@
         {
           "name": "insta",
           "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "manifesto_text",
+          "type": "jsonb",
           "required": false,
           "default": null,
           "notes": []
