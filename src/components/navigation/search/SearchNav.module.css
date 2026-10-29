@@ -99,7 +99,7 @@
 @media (max-width: var(--breakpoint-tablet)) {
 
   .searchForm.open .searchInput {
-    width: calc(100vw - 40px);
+    width: calc(100vw - 20px);
     max-width: unset;
     height: 100%;
     padding: 0 2px;
@@ -130,10 +130,6 @@
 
   .searchForm.visibleOnMobile {
     display: flex;
-  }
-
-  .searchForm.open .searchInput {
-    width: calc(100vw - 20px);
   }
 }
 
