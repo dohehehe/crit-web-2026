@@ -1,24 +1,6 @@
 import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
-import { formatAuthorNames } from "@/lib/posts/formatAuthorNames";
 import { getAuthorPath } from "@/lib/routes/authors";
-import { getPostPath } from "@/lib/routes/posts";
 import { truncatePlainText } from "@/lib/text/truncatePlainText";
-
-export function postToSearchEntry(post) {
-  return {
-    key: `post:${post.id}`,
-    href: getPostPath(post),
-    title: post.title ?? "",
-    thumbnailImg: post.thumbnailImg ?? "",
-    date: post.date ?? null,
-    authorName: formatAuthorNames(post),
-    section: post.section ?? null,
-    category: post.category ?? null,
-    keywords: post.keywords ?? [],
-    excerpt: "",
-    showThumbnailPlaceholder: true,
-  };
-}
 
 export function authorToSearchEntry(author) {
   return {
@@ -26,16 +8,6 @@ export function authorToSearchEntry(author) {
     href: getAuthorPath(author),
     title: author.name ?? "",
     thumbnailImg: author.imgUrl ?? "",
-    date: null,
-    authorName: "",
-    section: null,
-    category: null,
-    keywords: [],
     excerpt: truncatePlainText(getEditorParagraphPlainText(author.content)),
-    showThumbnailPlaceholder: false,
   };
-}
-
-export function buildTextSearchEntries({ posts = [], authors = [] }) {
-  return [...authors.map(authorToSearchEntry), ...posts.map(postToSearchEntry)];
 }

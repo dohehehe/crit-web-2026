@@ -25,12 +25,13 @@
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
+  padding-bottom: 8px;
 }
 
 .searchForm.open .searchInput {
   width: 50vw;
+  max-width: 500px;
   height: 100%;
-  padding: 0 2px;
   opacity: 1;
   pointer-events: auto;
   position: absolute;
@@ -46,7 +47,7 @@
 }
 
 .searchInput::placeholder {
-  color: var(--black);
+  color: #A6A6A6;
 }
 
 .searchInput:focus {
@@ -74,6 +75,7 @@
   color: inherit;
   cursor: pointer;
   flex-shrink: 0;
+  z-index: 3;
 }
 
 :global(html.channelBackground) .searchButton img {
@@ -97,20 +99,28 @@
 @media (max-width: var(--breakpoint-tablet)) {
 
   .searchForm.open .searchInput {
-    width: calc(100vw - 92px);
+    width: calc(100vw - 20px);
+    max-width: unset;
     height: 100%;
     padding: 0 2px;
     opacity: 1;
     pointer-events: auto;
-    position: absolute;
-    z-index: 2;
-    background: var(--white);
     border-bottom: 1px solid var(--black);
     font-size: 24px;
     font-weight: 400;
     letter-spacing: 2%;
     line-height: 24px;
+    right: -30px;
+    padding-right: 64px;
+    padding-bottom: 8px;
+    margin-top: 3px;
+    background: transparent;
   }
+
+  .searchForm.open .searchButton {
+    position: relative;
+  }
+
 }
 
 @media (max-width: var(--breakpoint-mobile)) {

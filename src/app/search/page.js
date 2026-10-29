@@ -1,3 +1,4 @@
+import { PostList } from "@/components/posts/PostList";
 import { PostSearchList } from "@/components/posts/PostSearchList";
 import {
   getSearchTagLabel,
@@ -37,36 +38,45 @@ export default async function SearchPage({ searchParams }) {
   const hasQuery = Boolean(trimmedQuery);
   const hasTag = Boolean(tag);
 
-  let entries = [];
+  let posts = [];
+  let authors = [];
   let tagLabel = null;
 
   if (hasTag) {
-    [entries, tagLabel] = await Promise.all([searchByTag(tag), getSearchTagLabel(tag)]);
+    [posts, tagLabel] = await Promise.all([searchByTag(tag), getSearchTagLabel(tag)]);
   } else if (hasQuery) {
-    entries = await searchByQuery(trimmedQuery);
+    ({ posts, authors } = await searchByQuery(trimmedQuery));
   }
 
   const resultLabel = hasQuery ? trimmedQuery : tagLabel;
+  const hasResults = posts.length > 0 || authors.length > 0;
 
   return (
     <main className={styles.main}>
-      {resultLabel ? (
-        <header className={styles.header}>
-          <p className={`title-1 ${styles.query}`}>
-            &ldquo;<span className="crit-orange">{resultLabel}</span>&rdquo;
-          </p>
-          <h1 className={`title-1 ${styles.heading}`}>검색 결과</h1>
-        </header>
-      ) : null}
 
       {!hasQuery && !hasTag ? (
-        <p className={`caption gray-65 ${styles.prompt}`}>검색어를 입력하세요.</p>
+        <header className={`thumb-title ${styles.header}`}>
+          <span>검색어를 입력하세요.</span>
+        </header>
+      ) : hasResults ? (
+        <>
+          {resultLabel ? (
+            <header className={`thumb-title ${styles.header}`}>
+              <span>Search Result for: {resultLabel}</span>
+            </header>
+          ) : null}
+
+          <div className={styles.results}>
+            {authors.length > 0 ? <PostSearchList entries={authors} /> : null}
+            {posts.length > 0 ? <PostList posts={posts} showSectionLabel /> : null}
+          </div>
+        </>
       ) : (
-        <PostSearchList
-          key={hasTag ? `tag:${tag}` : `q:${trimmedQuery}`}
-          entries={entries}
-        />
+        <header className={`thumb-title ${styles.header}`}>
+          <span>검색 결과가 없습니다.</span>
+        </header>
       )}
+
     </main>
   );
 }

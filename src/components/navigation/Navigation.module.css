@@ -16,9 +16,12 @@
 }
 
 .headerJournal {
-  background: var(--crit-orange);
   top: var(--header-sticky-top, -145px);
   transition: none;
+}
+
+.headerJournalTone {
+  background: var(--crit-orange);
 }
 
 .headerChannel {
@@ -63,6 +66,21 @@
   width: 100%;
 }
 
+@media (min-width: calc(var(--breakpoint-mobile) + 1px)) {
+  .header:has(.logoLinkDetailHidden) {
+    top: 0;
+    padding-top: 12px;
+  }
+
+  .logoLinkDetailHidden {
+    display: none;
+  }
+
+  .header:has(.logoLinkDetailHidden) .navContainer {
+    padding: 0px 0 12px;
+  }
+}
+
 .logoJournal {
   width: 100%;
   height: auto;
@@ -74,14 +92,13 @@
   gap: 12px;
   /* box-shadow: inset 0 0 10px 10px yellow; */
   position: relative;
-  padding: 6px 0;
+  padding: 12px 0;
 }
 
 .navContent {
   display: flex;
   flex-grow: 1;
   align-items: center;
-  gap: 16px;
   text-align: center;
   /* box-shadow: inset 0 0 10px 10px pink; */
 }
@@ -120,7 +137,7 @@
 
 @media (max-width: var(--breakpoint-tablet)) {
   .header {
-    padding: 7px 10px;
+    padding: 6px 10px;
     padding-bottom: 0px;
   }
 
@@ -134,11 +151,12 @@
     align-items: stretch;
     gap: 20px;
     padding-bottom: 20px;
+    padding-top: 4px;
   }
 
   .navContainer.open .navActions {
     margin-left: auto;
-    padding: 6px 0;
+    padding: 0px 0;
   }
 
   .navContainer.open .navContent {
@@ -173,6 +191,8 @@
 
   .closeButton {
     display: inline-flex;
+    position: relative;
+    z-index: 3;
   }
 
   .navBar {
@@ -183,14 +203,16 @@
 @media (max-width: var(--breakpoint-mobile)) {
   .navContent {
     text-align: left;
+    display: none;
   }
 
   .header {
     /* position: fixed; */
     left: 0;
-    top: var(--header-sticky-top, -67px);
+    top: var(--header-sticky-top, -75px);
     margin-left: 0;
     background: white;
+    padding-top: 12px;
     /* flex-direction: row; */
     /* padding-bottom: 10px; */
   }
@@ -201,7 +223,7 @@
     background: none;
   }
 
-  .headerJournal {
+  .headerJournalTone {
     background: var(--crit-orange);
   }
 
@@ -225,7 +247,7 @@
     top: 0;
     right: 0;
     z-index: 100;
-    padding: 6px 10px;
+    padding: 10px;
     background: none;
   }
 
@@ -234,6 +256,9 @@
     height: 100dvh;
     left: 0;
     background: var(--white);
+    padding: 10px;
+    overflow-y: auto;
+    overscroll-behavior: none;
   }
 
   .headerChannel .navContainer.open {
@@ -241,9 +266,6 @@
     color: var(--white);
   }
 
-  .navContent {
-    display: none;
-  }
 
   .navContainer.open .navContent {
     display: flex;
@@ -251,12 +273,49 @@
     align-items: flex-start;
     justify-content: flex-end;
     gap: 60px;
-    padding-bottom: 60px;
+    padding-bottom: 70px;
   }
+
 
   .navigationSub {
     display: block;
     margin-top: 5px;
     padding-bottom: 10px;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding-bottom: 7px;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .logoLink {
+    grid-column: 1 / -1;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .logoJournal {
+    width: 100%;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .navigationSub {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+
+  .headerJournal:not(:has(.navContainer.open)) .navContainer {
+    position: static;
+    grid-column: 2;
+    grid-row: 2;
+    top: auto;
+    right: auto;
+    left: auto;
+    z-index: auto;
+    width: auto;
+    height: auto;
+    padding: 0;
+    background: transparent;
   }
 }

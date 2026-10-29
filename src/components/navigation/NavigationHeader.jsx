@@ -186,7 +186,7 @@ export function NavigationHeader({ children }) {
   return (
     <header
       ref={headerRef}
-      className={`${styles.header}${isHome ? ` ${styles.headerHome}` : ""}${isJournalCrit ? ` ${styles.headerJournal}` : ""}${isChannel ? ` ${styles.headerChannel}` : ""}`}
+      className={`${styles.header}${isHome ? ` ${styles.headerHome}` : ""}${isJournalCrit ? ` ${styles.headerJournal}` : ""}${isJournalCrit ? ` ${styles.headerJournalTone}` : ""}${isChannel ? ` ${styles.headerChannel}` : ""}`}
     >
       {children}
     </header>

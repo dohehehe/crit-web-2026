@@ -1,12 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
 import { getInfoNavItems, isInfoNavActive } from "@/lib/navigation/infoNavItems";
-import { InstagramIcon } from "@/components/icons/InstagramIcon";
-import { YoutubeIcon } from "@/components/icons/YoutubeIcon";
 import styles from "@/components/navigation/info/InfoNav.module.css";
 
 export function InfoNav({ instagramHref, youtubeHref, isLoggedIn = false }) {
@@ -57,7 +56,14 @@ export function InfoNav({ instagramHref, youtubeHref, isLoggedIn = false }) {
               rel="noopener noreferrer"
               aria-label="Instagram"
             >
-              <InstagramIcon className={styles.socialIcon} />
+              <Image
+                src="/Instagram.svg"
+                alt=""
+                width={23.79}
+                height={22.79}
+                className={styles.socialIcon}
+                aria-hidden
+              />
             </a>
           ) : null}
           {youtubeHref ? (
@@ -68,7 +74,14 @@ export function InfoNav({ instagramHref, youtubeHref, isLoggedIn = false }) {
               rel="noopener noreferrer"
               aria-label="YouTube"
             >
-              <YoutubeIcon className={styles.socialIcon} />
+              <Image
+                src="/Youtube.svg"
+                alt=""
+                width={24.53}
+                height={17.11}
+                className={styles.socialIcon}
+                aria-hidden
+              />
             </a>
           ) : null}
         </div>

@@ -25,6 +25,15 @@ export function SearchNav() {
     }
   }, [isSearchOpen]);
 
+  function handleSearchButtonClick(event) {
+    if (isSearchOpen) {
+      return;
+    }
+
+    event.preventDefault();
+    openSearch();
+  }
+
   return (
     <form
       action="/search"
@@ -36,21 +45,21 @@ export function SearchNav() {
         ref={inputRef}
         type="search"
         name="q"
-        placeholder="검색어를 입력하세요..."
+        placeholder="검색어를 입력하세요."
         className={styles.searchInput}
         tabIndex={isSearchOpen ? 0 : -1}
         aria-hidden={!isSearchOpen}
         autoComplete="off"
       />
       <button
-        type="button"
+        type="submit"
         className={styles.searchButton}
-        aria-label="검색 열기"
+        aria-label={isSearchOpen ? "검색" : "검색 열기"}
         aria-expanded={isSearchOpen}
         aria-controls="search-nav-content"
-        onClick={openSearch}
+        onClick={handleSearchButtonClick}
       >
-        <Image src="/search.svg" alt="" width={24} height={24} aria-hidden />
+        <Image src="/search.svg" alt="" width={26.05} height={26.05} aria-hidden />
       </button>
     </form>
   );

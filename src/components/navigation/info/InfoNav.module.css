@@ -22,12 +22,16 @@
   justify-content: center;
   line-height: 0;
   color: inherit;
+  width: 28px;
+  height: 28px;
 }
 
 .socialIcon {
   display: block;
-  width: 24px;
-  height: auto;
+}
+
+:global(html.channelBackground) img.socialIcon {
+  filter: invert(1);
 }
 
 .infoList {
@@ -49,6 +53,7 @@
 }
 
 .labelStack {
+  position: relative;
   display: inline-grid;
   grid-template-columns: max-content;
   grid-template-rows: max-content;
@@ -56,29 +61,39 @@
 
 .labelEn,
 .labelKr {
-  grid-area: 1 / 1;
   white-space: nowrap;
   transition: opacity 0.15s ease;
 }
 
 .labelEn {
+  grid-area: 1 / 1;
   opacity: 1;
 }
 
 .labelKr {
+  position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
+  pointer-events: none;
 }
 
 .infoLink[aria-current="page"] .labelEn,
-.infoLink:hover .labelEn,
 .infoLink:focus-visible .labelEn {
+  position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
+  pointer-events: none;
 }
 
 .infoLink[aria-current="page"] .labelKr,
-.infoLink:hover .labelKr,
 .infoLink:focus-visible .labelKr {
+  position: relative;
+  top: auto;
+  left: auto;
   opacity: 1;
+  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -99,18 +114,23 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 28px;
   }
 
-  .infoPanel.open .infoSocial {
+  .infoPanel.open {
     display: flex;
-    margin-top: 28px;
+  }
+
+  .infoSocial {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
   }
 
   .infoList {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 3px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -124,6 +144,31 @@
     line-height: 24px;
     letter-spacing: 1%;
     font-weight: 500;
+  }
+}
+
+@media (max-width: var(--breakpoint-tablet)) and (min-width: calc(var(--breakpoint-mobile) + 1px)) {
+
+  .infoPanel.open .labelEn,
+  .infoPanel.open .labelKr {
+    position: static;
+    top: auto;
+    left: auto;
+    grid-area: 1 / 1;
+  }
+
+  .infoPanel.open .infoLink:hover .labelEn,
+  .infoPanel.open .infoLink[aria-current="page"] .labelEn,
+  .infoPanel.open .infoLink:focus-visible .labelEn {
+    position: static;
+    opacity: 0;
+  }
+
+  .infoPanel.open .infoLink:hover .labelKr,
+  .infoPanel.open .infoLink[aria-current="page"] .labelKr,
+  .infoPanel.open .infoLink:focus-visible .labelKr {
+    position: static;
+    opacity: 1;
   }
 }
 

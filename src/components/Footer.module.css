@@ -1,10 +1,15 @@
 @import "../app/breakpoints.css";
 
 .footer {
-  padding: 0px 24px 20px;
+  padding: 100px 24px 20px;
   color: var(--black);
   transition: background-color 0.4s ease, color 0.4s ease;
   position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-start;
+  column-gap: 20px;
+  row-gap: 16px;
 }
 
 .footerJournal {
@@ -17,21 +22,13 @@
   color: var(--white);
 }
 
-.footerTop {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: flex-start;
-  column-gap: 20px;
-  row-gap: 16px;
-}
 
 .footerLeft {
   font-size: 14px;
   color: inherit;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+  gap: 16px;
 }
 
 .footerTitle {
@@ -39,9 +36,7 @@
   line-height: 18px;
 }
 
-.footerBottom {
-  margin-top: 16px;
-}
+.footerLeftBottom {}
 
 .footerLogo {
   display: block;
@@ -59,6 +54,7 @@
   -webkit-mask-position: left center;
 }
 
+
 .footerRight {
   color: inherit;
   display: grid;
@@ -67,15 +63,58 @@
   height: 100%;
 }
 
-.footerRightItem {
+.footerRightBottom {
+  display: flex;
+  align-items: flex-start;
+}
+
+.socialLinks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   color: inherit;
 }
 
+.socialIcon {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask-image: var(--icon-url);
+  mask-image: var(--icon-url);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  mask-mode: alpha;
+}
+
+.socialIconInstagram {
+  width: 23.79px;
+  height: 22.79px;
+}
+
+.socialIconYoutube {
+  width: 24.53px;
+  height: 17.11px;
+}
+
+
 @media (max-width: var(--breakpoint-tablet)) {
   .footer {
-    padding: 0px 10px 30px;
+    padding: 100px 10px 20px;
     word-break: keep-all;
     position: relative;
+    grid-template-columns: 2fr 1fr;
   }
 
   .footerJournal {
@@ -83,8 +122,14 @@
     padding-right: 10px;
   }
 
-  .footerTop {
-    grid-template-columns: 2fr 1fr;
+  .footerLeft {
+    height: unset;
+    justify-content: unset;
+    gap: 24px;
+  }
+
+  .footerLeftBottom {
+    margin-top: 0;
   }
 
   .footerLogo {
@@ -92,20 +137,27 @@
   }
 
   .footerRight {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
   }
 
-  .footerBottom {
-    width: 100%;
-    margin-top: 12px;
+  .footerRightBottom {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .socialLinks {
+    margin-left: 0;
   }
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
 
-  .footerTop {
+  .footer {
     grid-template-columns: 1fr;
+    gap: 24px;
+    padding-bottom: 16px;
   }
 
   .footerLogo {
@@ -123,11 +175,16 @@
     word-break: keep-all;
   }
 
-  .footerBottom {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    justify-content: space-between;
+  .footerLeftBottom {}
+
+  .footerRight {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .footerRightCompany {
+    order: 2;
   }
 
   /* 
