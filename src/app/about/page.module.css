@@ -10,36 +10,61 @@
   max-width: 800px;
   display: flex;
   flex-direction: column;
+  padding: 60px 0 80px;
   margin: 0 auto;
 }
 
-.contents {
-  margin-bottom: 60px;
+.contentContainer {
+  display: flex;
+  gap: 36px;
+  padding-top: 12px;
+  border-top: 1px solid var(--black);
 }
 
-.contentsBeforeManifesto {
-  margin-bottom: 28px;
+.aside {
+  width: 260px;
+  flex-shrink: 0;
 }
 
-.manifesto {
+.asideList {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-}
-
-.manifestoLast {
-  margin-bottom: 60px;
-}
-
-.manifestoTitle {
+  gap: 4px;
   margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: 2%;
   font-weight: 600;
-  font-size: 26px;
-  line-height: 36px;
 }
 
-.manifestoMark {
-  color: var(--crit-orange);
+.asideLink {
+  color: var(--black);
+  text-decoration: none;
+}
+
+.contentArticle {
+  flex-grow: 1;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  scroll-margin-top: 96px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 52px;
+  line-height: 52px;
+  letter-spacing: 1%;
+  font-weight: 600;
 }
 
 .empty {
@@ -52,7 +77,7 @@
   gap: 32px;
   margin-bottom: 60px;
   padding-top: 24px;
-  border-top: 1px solid var(--black);
+  scroll-margin-top: 96px;
 }
 
 .editorsFirst {
@@ -95,7 +120,7 @@
   gap: 24px;
   margin-bottom: 60px;
   padding-top: 24px;
-  border-top: 1px solid var(--black);
+  scroll-margin-top: 96px;
 }
 
 .authorsFirst {

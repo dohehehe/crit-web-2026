@@ -47,69 +47,103 @@ export default async function AboutPage() {
             <EditorContent contents={infoText} />
           </section>
         ) : null}
-
-        {manifestoText ? (
-          <section
-            className={`${styles.manifesto}${visibleEditors.length === 0 && !hasAuthors ? ` ${styles.manifestoLast}` : ""}`}
-            aria-labelledby="about-manifesto-heading"
-          >
-            <h2 id="about-manifesto-heading" className={styles.manifestoTitle}>
-              <span className={styles.manifestoMark}>Crit.</span>Manifesto
-            </h2>
-            <EditorContent contents={manifestoText} />
-          </section>
-        ) : null}
-
-        {visibleEditors.length > 0 ? (
-          <section
-            className={`${styles.editors}${hasIntro ? "" : ` ${styles.editorsFirst}`}`}
-            aria-labelledby="about-editors-heading"
-          >
-            <h2 id="about-editors-heading" className={`menu-en ${styles.editorsTitle}`}>
-              Editors
-            </h2>
-            <ul className={styles.editorList}>
-              {visibleEditors.map((editor) => (
-                <li key={editor.id} className={styles.editor}>
-                  <h3 className={`p-bold ${styles.editorName}`}>{editorHeading(editor)}</h3>
-                  {editor.name && editor.nameEn ? (
-                    <p className={`p ${styles.editorNameEn}`}>{editor.nameEn}</p>
-                  ) : null}
-                  {editor.description ? (
-                    <EditorContent contents={editor.description} />
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        {hasAuthors ? (
-          <section
-            className={`${styles.authors}${hasIntro || visibleEditors.length > 0 ? "" : ` ${styles.authorsFirst}`}`}
-            aria-labelledby="about-authors-heading"
-          >
-            <h2 id="about-authors-heading" className={`menu-en ${styles.authorsTitle}`}>
-              Authors
-            </h2>
-            <ul className={styles.authorList}>
-              {authors.map((author) => (
-                <li key={author.id}>
-                  <Link href={getAuthorPath(author)} className={`tag-keyword ${styles.authorLink}`}>
-                    {author.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        {!hasIntro && visibleEditors.length === 0 && !hasAuthors ? (
-          <p className={`${styles.empty} caption gray-65`}>
-            표시할 소개가 없습니다.
-          </p>
-        ) : null}
       </article>
+
+      <div className={styles.contentContainer}>
+        <aside className={styles.aside}>
+          <ul className={styles.asideList}>
+            {manifestoText ? (
+              <li className={styles.asideItem}>
+                <a href="#about-manifesto" className={styles.asideLink}>
+                  Crit.Manifesto
+                </a>
+              </li>
+            ) : null}
+            {visibleEditors.length > 0 ? (
+              <li className={styles.asideItem}>
+                <a href="#about-editors" className={styles.asideLink}>
+                  Editors
+                </a>
+              </li>
+            ) : null}
+            {hasAuthors ? (
+              <li className={styles.asideItem}>
+                <a href="#about-authors" className={styles.asideLink}>
+                  Contributors
+                </a>
+              </li>
+            ) : null}
+          </ul>
+        </aside>
+
+        <article className={styles.contentArticle}>
+          {manifestoText ? (
+            <section
+              id="about-manifesto"
+              className={`${styles.section} ${styles.manifesto}${visibleEditors.length === 0 && !hasAuthors ? ` ${styles.manifestoLast}` : ""}`}
+              aria-labelledby="about-manifesto-heading"
+            >
+              <h2 id="about-manifesto-heading" className={`${styles.sectionTitle} ${styles.manifestoTitle}`}>
+                Crit.Manifesto
+              </h2>
+              <EditorContent contents={manifestoText} />
+            </section>
+          ) : null}
+
+          {visibleEditors.length > 0 ? (
+            <section
+              id="about-editors"
+              className={`${styles.section} ${styles.editors}${hasIntro ? "" : ` ${styles.editorsFirst}`}`}
+              aria-labelledby="about-editors-heading"
+            >
+              <h2 id="about-editors-heading" className={`${styles.sectionTitle} ${styles.editorsTitle}`}>
+                Editors
+              </h2>
+              <ul className={styles.editorList}>
+                {visibleEditors.map((editor) => (
+                  <li key={editor.id} className={styles.editor}>
+                    <h3 className={`p-bold ${styles.editorName}`}>{editorHeading(editor)}</h3>
+                    {editor.name && editor.nameEn ? (
+                      <p className={`p ${styles.editorNameEn}`}>{editor.nameEn}</p>
+                    ) : null}
+                    {editor.description ? (
+                      <EditorContent contents={editor.description} />
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {hasAuthors ? (
+            <section
+              id="about-authors"
+              className={`${styles.section} ${styles.authors}${hasIntro || visibleEditors.length > 0 ? "" : ` ${styles.authorsFirst}`}`}
+              aria-labelledby="about-authors-heading"
+            >
+              <h2 id="about-authors-heading" className={`${styles.sectionTitle} ${styles.authorsTitle}`}>
+                Authors
+              </h2>
+              <ul className={styles.authorList}>
+                {authors.map((author) => (
+                  <li key={author.id}>
+                    <Link href={getAuthorPath(author)} className={`tag-keyword ${styles.authorLink}`}>
+                      {author.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+        </article>
+      </div>
+
+      {!hasIntro && visibleEditors.length === 0 && !hasAuthors ? (
+        <p className={`${styles.empty} caption gray-65`}>
+          표시할 소개가 없습니다.
+        </p>
+      ) : null}
+
     </main>
   );
 }
