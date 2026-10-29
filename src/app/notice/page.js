@@ -36,9 +36,6 @@ export default async function NoticePage({ searchParams }) {
 
   return (
     <main className={styles.main}>
-      <header className={styles.header}>
-        <h1 className={`menu-kr ${styles.title}`}>공지사항</h1>
-      </header>
 
       <NoticeList notices={result.items} />
       {result.total > 0 ? (

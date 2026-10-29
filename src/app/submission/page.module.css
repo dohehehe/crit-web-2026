@@ -1,0 +1,35 @@
+@import "../breakpoints.css";
+
+.main {
+  padding: 0 24px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.article {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  gap: 16px;
+}
+
+.contents {
+  margin-bottom: 60px;
+}
+
+.empty {
+  margin: 0;
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .main {
+    padding: 0 10px;
+  }
+}

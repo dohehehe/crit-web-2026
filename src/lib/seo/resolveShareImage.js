@@ -47,7 +47,3 @@ export function resolveIssueShareImage(issue) {
     extractContentImageUrl(issue?.contents ?? issue?.description)
   );
 }
-
-export function resolveNoticeShareImage(notice) {
-  return extractContentImageUrl(notice?.content);
-}

@@ -9,7 +9,7 @@ import { AdminCategoryTabs } from "@/components/admin/shared/admin-category-tabs
 import styles from "@/components/admin/info/info-form.module.css";
 
 const INFO_SELECT =
-  "id,email,insta,youtube,info_text,subscription_text,submission_text";
+  "id,email,insta,youtube,info_text,manifesto_text,subscription_text,submission_text";
 
 const CONTACT_FIELDS = [
   { id: "email", label: "Email", type: "email" },
@@ -23,6 +23,11 @@ const INFO_GROUPS = [
     id: "info",
     name: "소개",
     fields: [{ id: "info_text", label: "소개", editor: true }],
+  },
+  {
+    id: "manifesto",
+    name: "매니페스토",
+    fields: [{ id: "manifesto_text", label: "매니페스토", editor: true }],
   },
   {
     id: "subscription",

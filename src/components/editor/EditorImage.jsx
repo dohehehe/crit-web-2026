@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { isPortraitSize } from "@/lib/editorjs/imageOrientation";
-import proseStyles from "@/components/editor/editorProse.module.css";
+import defaultProseStyles from "@/components/editor/editorProse.module.css";
 
 export function EditorImage({
   src,
@@ -12,6 +12,7 @@ export function EditorImage({
   stretched = false,
   width,
   height,
+  proseStyles = defaultProseStyles,
 }) {
   const [measuredPortrait, setMeasuredPortrait] = useState(() =>
     isPortraitSize(width, height),

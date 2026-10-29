@@ -5,7 +5,7 @@
   flex-direction: column;
   padding: 10px 24px;
   padding-bottom: 0px;
-  width: 100vw;
+  /* width: 100vw; */
   position: sticky;
   top: -145px;
   z-index: 100;
@@ -149,9 +149,9 @@
   .navContainer.open {
     flex-direction: column-reverse;
     align-items: stretch;
-    gap: 20px;
+    gap: 26px;
     padding-bottom: 20px;
-    padding-top: 4px;
+    padding-top: 10px;
   }
 
   .navContainer.open .navActions {
@@ -212,7 +212,7 @@
     top: var(--header-sticky-top, -75px);
     margin-left: 0;
     background: white;
-    padding-top: 12px;
+    padding-top: 14px;
     /* flex-direction: row; */
     /* padding-bottom: 10px; */
   }
@@ -247,7 +247,7 @@
     top: 0;
     right: 0;
     z-index: 100;
-    padding: 10px;
+    padding: 5px 10px;
     background: none;
   }
 
