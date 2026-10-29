@@ -34,6 +34,12 @@ export function NoticeList({ notices }) {
       {notices.map((notice) => (
         <li key={notice.id} className={styles.item}>
           <Link href={`/notice/${notice.id}`} className={styles.link}>
+            <time
+              className={`caption ${styles.date}`}
+              dateTime={notice.date ?? undefined}
+            >
+              {formatNoticeDate(notice.date)}
+            </time>
             <div className={styles.meta}>
               {notice.isPrimary ? (
                 <span className={`caption ${styles.badge}`}>고정</span>
@@ -42,12 +48,7 @@ export function NoticeList({ notices }) {
                 {notice.title ?? "제목 없음"}
               </p>
             </div>
-            <time
-              className={`caption ${styles.date}`}
-              dateTime={notice.date ?? undefined}
-            >
-              {formatNoticeDate(notice.date)}
-            </time>
+
           </Link>
         </li>
       ))}
