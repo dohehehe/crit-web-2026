@@ -1,7 +1,29 @@
 import { getSectionMode } from "@/lib/admin/section-mode";
 import { getSectionHref, sectionPathSlug } from "@/lib/sections/getSectionHref";
-import { getJournalCritIssuePath, getJournalCritPostPath } from "@/lib/routes/journalCrit";
+import {
+  getJournalCritIssuePath,
+  getJournalCritPostPath,
+  isJournalCritPostPath,
+} from "@/lib/routes/journalCrit";
 import { toPostPathSegment } from "@/lib/routes/slugPath";
+
+const SECTION_POST_DETAIL_PREFIXES = ["/channel", "/workshop", "/current"];
+
+export function isPostDetailPath(pathname) {
+  if (isJournalCritPostPath(pathname)) {
+    return true;
+  }
+
+  return SECTION_POST_DETAIL_PREFIXES.some((prefix) => {
+    if (!pathname.startsWith(`${prefix}/`)) {
+      return false;
+    }
+
+    const segments = pathname.slice(prefix.length).split("/").filter(Boolean);
+
+    return segments.length === 1;
+  });
+}
 
 export function getPostSegment(post) {
   return post?.slug || post?.id || "";

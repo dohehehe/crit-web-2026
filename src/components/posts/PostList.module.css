@@ -1,9 +1,58 @@
+.frame {
+  container-type: inline-size;
+  width: 100%;
+}
+
 .list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   column-gap: 13px;
   row-gap: 62px;
+  width: 100%;
   list-style: none;
+}
+
+/* A track is kept at or under 500px by adding a column before it would pass that width. */
+@container (min-width: 501px) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 1014px) {
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 1527px) {
+  .list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 2040px) {
+  .list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 2553px) {
+  .list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 3066px) {
+  .list {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 3579px) {
+  .list {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
 }
 
 .list > li {
@@ -20,7 +69,6 @@
 
 @media (max-width: 479px) {
   .list {
-    grid-template-columns: 1fr;
     row-gap: 40px;
   }
 }

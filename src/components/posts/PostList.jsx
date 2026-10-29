@@ -18,21 +18,23 @@ export function PostList({
   const listPosts = showChannelFeatured ? posts.slice(1) : posts;
 
   return (
-    <ul className={styles.list}>
-      {featuredPost ? (
-        <li className={styles.featured}>
-          <ChannelFeaturedCard post={featuredPost} />
-        </li>
-      ) : null}
-      {listPosts.map((post) => (
-        <li key={post.id}>
-          <PostCard
-            post={post}
-            showSectionLabel={showSectionLabel}
-            showWorkshopDate={showWorkshopDate}
-          />
-        </li>
-      ))}
-    </ul>
+    <div className={styles.frame}>
+      <ul className={styles.list}>
+        {featuredPost ? (
+          <li className={styles.featured}>
+            <ChannelFeaturedCard post={featuredPost} />
+          </li>
+        ) : null}
+        {listPosts.map((post) => (
+          <li key={post.id}>
+            <PostCard
+              post={post}
+              showSectionLabel={showSectionLabel}
+              showWorkshopDate={showWorkshopDate}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

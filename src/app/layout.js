@@ -1,3 +1,4 @@
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { Navigation } from "@/components/navigation/Navigation";
 import Footer from "@/components/Footter";
 import {
@@ -31,13 +32,14 @@ const EDITOR_FONT_STYLESHEET =
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko-KR">
+    <html lang="ko-KR" data-scroll-behavior="smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={EDITOR_FONT_STYLESHEET} />
       </head>
       <body>
+        <ScrollToTop />
         <Navigation />
         {children}
         <Footer />

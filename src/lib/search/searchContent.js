@@ -3,7 +3,7 @@ import "server-only";
 import { unstable_noStore as noStore } from "next/cache";
 import { searchAuthors } from "@/lib/authors/searchAuthors";
 import { getPostsBySearchTag, searchPosts } from "@/lib/posts/searchPosts";
-import { buildTextSearchEntries, postToSearchEntry } from "@/lib/search/searchResultEntries";
+import { authorToSearchEntry } from "@/lib/search/searchResultEntries";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 function isUuid(value) {
@@ -13,13 +13,14 @@ function isUuid(value) {
 export async function searchByQuery(query) {
   const [posts, authors] = await Promise.all([searchPosts(query), searchAuthors(query)]);
 
-  return buildTextSearchEntries({ posts, authors });
+  return {
+    posts,
+    authors: authors.map(authorToSearchEntry),
+  };
 }
 
 export async function searchByTag(tag) {
-  const posts = await getPostsBySearchTag(tag);
-
-  return posts.map(postToSearchEntry);
+  return getPostsBySearchTag(tag);
 }
 
 export async function getSearchTagLabel(tag) {
