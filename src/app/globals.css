@@ -126,8 +126,6 @@ body {
   letter-spacing: var(--p-letter-spacing);
   color: var(--black);
   background-color: var(--white);
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 
   /* padding: 0 24px; */
 }
@@ -168,6 +166,12 @@ body:has([data-channel-section]) .black {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 a {
