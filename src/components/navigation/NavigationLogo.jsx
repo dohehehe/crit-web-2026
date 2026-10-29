@@ -5,17 +5,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CHANNEL_PATH_PREFIX, isChannelPath } from "@/lib/routes/channel";
 import { JOURNAL_CRIT_PATH_PREFIX, isJournalCritPath } from "@/lib/routes/journalCrit";
+import { isPostDetailPath } from "@/lib/routes/posts";
 import styles from "@/components/navigation/Navigation.module.css";
 
 export function NavigationLogo() {
   const pathname = usePathname();
   const isJournalCrit = isJournalCritPath(pathname);
   const isChannel = isChannelPath(pathname);
+  const hideLogo = isPostDetailPath(pathname);
 
   return (
     <Link
       href={isJournalCrit ? JOURNAL_CRIT_PATH_PREFIX : isChannel ? CHANNEL_PATH_PREFIX : "/"}
-      className={`${styles.logoLink}${isJournalCrit ? ` ${styles.logoLinkJournal}` : ""}`}
+      className={`${styles.logoLink}${isJournalCrit ? ` ${styles.logoLinkJournal}` : ""}${hideLogo ? ` ${styles.logoLinkDetailHidden}` : ""}`}
       aria-label={isJournalCrit ? "Journal Crit" : isChannel ? "Channel" : "CRIT 홈"}
     >
       <span className={styles.logoStack}>

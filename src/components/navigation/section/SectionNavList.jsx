@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNavigationMenu } from "@/components/navigation/NavigationMenuContext";
 import { useScrolled } from "@/hooks/useScrolled";
+import { isPostDetailPath } from "@/lib/routes/posts";
 import { getSectionHref, isSectionHrefActive } from "@/lib/sections/getSectionHref";
 import styles from "@/components/navigation/section/SectionNav.module.css";
 
@@ -23,7 +24,9 @@ export function SectionNavList({ sections }) {
   const { isOpen } = useNavigationMenu();
   const isScrolled = useScrolled(HEADER_SCROLL_THRESHOLD);
   const isHomeActive = pathname === HOME_HREF;
-  const showHome = isScrolled || isOpen;
+  const isDetail = isPostDetailPath(pathname);
+  const showHome = isScrolled || isOpen || isDetail;
+  const homeDetailOnly = isDetail && !isScrolled && !isOpen;
 
   return (
     <div
@@ -32,7 +35,7 @@ export function SectionNavList({ sections }) {
     >
       <ul className={styles.list}>
         {showHome ? (
-          <li className={styles.item}>
+          <li className={`${styles.item}${homeDetailOnly ? ` ${styles.homeDetailOnly}` : ""}`}>
             <Link
               href={HOME_HREF}
               className={styles.sectionLink}

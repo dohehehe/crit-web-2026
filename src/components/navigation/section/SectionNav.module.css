@@ -141,4 +141,8 @@
   }
 }
 
-@media (max-width: var(--breakpoint-mobile)) {}
+@media (max-width: var(--breakpoint-mobile)) {
+  .homeDetailOnly {
+    display: none;
+  }
+}
