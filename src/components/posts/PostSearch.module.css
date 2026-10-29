@@ -4,10 +4,6 @@
   padding: 0;
 }
 
-.empty {
-  padding: 48px 0;
-}
-
 .itemLink {
   display: block;
   color: inherit;
@@ -27,52 +23,13 @@
   flex-shrink: 0;
   align-self: stretch;
   width: 160px;
-  /* min-height: 100px; */
   overflow: hidden;
-}
-
-.thumbnailJournal {
-  /* journal accent available for future tweaks */
-}
-
-.thumbnailPlaceholder {
-  background: var(--gray-65);
-  opacity: 0.2;
 }
 
 .thumbnailImage {
   object-fit: cover;
   object-position: center;
 }
-
-.sections {
-  position: absolute;
-  top: -1px;
-  right: 0;
-}
-
-.sectionTag {
-  display: inline-block;
-  padding: 3px 7px;
-  background: var(--black);
-}
-
-.sectionJournal {
-  background: var(--crit-orange);
-}
-
-.sectionName {
-  display: none;
-}
-
-.itemLink:hover .sectionSlug {
-  display: none;
-}
-
-.itemLink:hover .sectionName {
-  display: inline;
-}
-
 
 .body {
   flex: 1;
@@ -87,49 +44,12 @@
   margin: 0;
 }
 
-.metaRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  margin-bottom: 10px;
-  margin-top: 0px;
-  margin-left: 2px;
-}
-
-.date {
-  margin: 0;
-}
-
-.author {
-  margin: 0;
-  text-decoration: none;
-  color: inherit;
-}
-
-.author:hover {
-  text-decoration: underline;
-}
-
 .excerpt {
   margin: 0 0 10px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-}
-
-.keywords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.category {
-  list-style: none;
 }
 
 @media (max-width: 479px) {
@@ -141,11 +61,9 @@
   .thumbnail {
     width: 100%;
     height: 100%;
-    /* height: 150px; */
     align-self: unset;
     object-fit: cover;
     object-position: center;
-    /* max-width: 280px; */
   }
 
   .thumbnailImage {
@@ -155,10 +73,4 @@
   .body {
     padding: 0;
   }
-
-  /* .title {
-    font-size: 40px;
-    line-height: 48px;
-    letter-spacing: 0.01em;
-  } */
 }
