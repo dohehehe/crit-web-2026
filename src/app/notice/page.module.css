@@ -1,32 +1,13 @@
 @import "../breakpoints.css";
 
 .main {
-  max-width: 800px;
-  width: 100%;
   margin: 0 auto;
-  padding: 60px 24px 80px;
+  padding: 60px 24px 0px;
 }
 
-.header {
-  margin-bottom: 40px;
-}
-
-.title {
-  margin: 0;
-}
-
-@media (max-width: var(--breakpoint-tablet)) {
-  .main {
-    padding: 48px 10px 64px;
-  }
-}
 
 @media (max-width: var(--breakpoint-mobile)) {
   .main {
-    padding-top: 40px;
-  }
-
-  .header {
-    margin-bottom: 28px;
+    padding: 24px 10px 0;
   }
 }

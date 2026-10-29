@@ -5,9 +5,9 @@ import { getGallerySlides } from "@/lib/editorjs/gallery";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import { blockAlignProps } from "@/lib/editorjs/textAlign";
 import styles from "@/components/editor/EditorContent.module.css";
-import proseStyles from "@/components/editor/editorProse.module.css";
+import defaultProseStyles from "@/components/editor/editorProse.module.css";
 
-function DocumentFootnotes({ footnotes }) {
+function DocumentFootnotes({ footnotes, proseStyles }) {
   if (!footnotes?.length) {
     return null;
   }
@@ -31,7 +31,7 @@ function DocumentFootnotes({ footnotes }) {
   );
 }
 
-function renderListItems(items, ordered, applyFootnotesToHtml) {
+function renderListItems(items, ordered, applyFootnotesToHtml, proseStyles) {
   if (!items?.length) {
     return null;
   }
@@ -50,7 +50,12 @@ function renderListItems(items, ordered, applyFootnotesToHtml) {
               <span dangerouslySetInnerHTML={{ __html: processedContent }} />
             ) : null}
             {item?.items?.length
-              ? renderListItems(item.items, ordered, applyFootnotesToHtml)
+              ? renderListItems(
+                item.items,
+                ordered,
+                applyFootnotesToHtml,
+                proseStyles,
+              )
               : null}
           </li>
         );
@@ -59,7 +64,7 @@ function renderListItems(items, ordered, applyFootnotesToHtml) {
   );
 }
 
-function renderBlock(block, index, applyFootnotesToHtml) {
+function renderBlock(block, index, applyFootnotesToHtml, proseStyles) {
   const { type, data } = block;
 
   switch (type) {
@@ -83,7 +88,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
       return (
         <p
           key={index}
-          className={`p ${proseStyles.paragraph}`}
+          className={proseStyles.paragraph}
           {...blockAlignProps(data?.alignment)}
           dangerouslySetInnerHTML={{
             __html: applyFootnotesToHtml(data?.text ?? ""),
@@ -102,6 +107,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
             data?.items,
             data?.style === "ordered",
             applyFootnotesToHtml,
+            proseStyles,
           )}
         </div>
       );
@@ -145,6 +151,7 @@ function renderBlock(block, index, applyFootnotesToHtml) {
           stretched={stretched}
           width={data?.file?.width}
           height={data?.file?.height}
+          proseStyles={proseStyles}
         />
       );
     }
@@ -211,7 +218,11 @@ function renderBlock(block, index, applyFootnotesToHtml) {
   }
 }
 
-export function EditorContent({ contents, compact = false }) {
+export function EditorContent({
+  contents,
+  compact = false,
+  proseStyles = defaultProseStyles,
+}) {
   const blocks = normalizeBlocks(contents);
 
   if (blocks.length === 0) {
@@ -226,9 +237,12 @@ export function EditorContent({ contents, compact = false }) {
   return (
     <div className={rootClassName}>
       {blocks.map((block, index) =>
-        renderBlock(block, index, footnoteContext.applyToHtml),
+        renderBlock(block, index, footnoteContext.applyToHtml, proseStyles),
       )}
-      <DocumentFootnotes footnotes={footnoteContext.entries} />
+      <DocumentFootnotes
+        footnotes={footnoteContext.entries}
+        proseStyles={proseStyles}
+      />
     </div>
   );
 }
