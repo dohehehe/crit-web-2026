@@ -4,6 +4,7 @@ import { EditorContent } from "@/components/editor/EditorContent";
 import { PreparingMessage } from "@/components/status/StatusMessage";
 import { formatAuthorNames } from "@/lib/posts/formatAuthorNames";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
+import { IssuePdfLink } from "@/components/issues/IssuePdfLink";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./JournalCritView.module.css";
 
@@ -16,8 +17,14 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
     <>
       <article className={styles.article}>
         <header className={styles.header}>
-          {issue.issueNumber ? <span className={`${styles.issueNumber} menu-EN`}>Issue {issue.issueNumber}</span> : null}
-          {issue.title ? <h1 className={`title-1 ${styles.title}`}>{issue.title}</h1> : null}
+          {issue.issueNumber ? (
+            <span className={`${styles.issueNumber} menu-EN`}>
+              Issue {issue.issueNumber}
+            </span>
+          ) : null}
+          {issue.title ? (
+            <h1 className={`title-1 ${styles.title}`}>{issue.title}</h1>
+          ) : null}
         </header>
 
         <section className={styles.media}>
@@ -37,13 +44,12 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
           ) : null}
           {issue.fileUrl ? (
             <div className={styles.download}>
-              <a href={issue.fileUrl} target="_blank" rel="noopener noreferrer" className={`tag-keyword`}>
+              <IssuePdfLink fileUrl={issue.fileUrl} className="tag-keyword">
                 PDF 다운로드
-              </a>
+              </IssuePdfLink>
             </div>
           ) : null}
         </section>
-
 
         {issue.contents ? (
           <section className={styles.contents}>
@@ -62,10 +68,14 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
                     className={`${styles.postLink}`}
                   >
                     {/* <hr className={styles.postSeparator} /> */}
-                    <span className={`${styles.title} thumb-title`}>{post.title}</span>
+                    <span className={`${styles.title} thumb-title`}>
+                      {post.title}
+                    </span>
                     {/* <hr className={styles.postSeparator} /> */}
                     {formatAuthorNames(post) ? (
-                      <span className={`${styles.author} p`}>{formatAuthorNames(post)}</span>
+                      <span className={`${styles.author} p`}>
+                        {formatAuthorNames(post)}
+                      </span>
                     ) : null}
                   </Link>
                 </li>
@@ -81,12 +91,19 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
           <ol className={styles.asideList}>
             {otherIssues.map((otherIssue) => (
               <li key={otherIssue.id} className={styles.asideItem}>
-                <Link href={getJournalCritIssuePath(otherIssue.issueNumber)} className={styles.asideLink}>
+                <Link
+                  href={getJournalCritIssuePath(otherIssue.issueNumber)}
+                  className={styles.asideLink}
+                >
                   {otherIssue.issueNumber ? (
-                    <span className={`${styles.asideIssueNumber} tag-keyword`}>Issue {otherIssue.issueNumber}</span>
+                    <span className={`${styles.asideIssueNumber} tag-keyword`}>
+                      Issue {otherIssue.issueNumber}
+                    </span>
                   ) : null}
                   {otherIssue.title ? (
-                    <span className={`${styles.asideIssueTitle} thumb-title`}>{otherIssue.title}</span>
+                    <span className={`${styles.asideIssueTitle} thumb-title`}>
+                      {otherIssue.title}
+                    </span>
                   ) : null}
                 </Link>
               </li>

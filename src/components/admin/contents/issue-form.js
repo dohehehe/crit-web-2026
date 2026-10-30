@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { useIssueFileUpload } from "@/hooks/useIssueFileUpload";
+import { IssuePdfLink } from "@/components/issues/IssuePdfLink";
+import { issueFileName } from "@/lib/issueUpload/fileRef";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import { fetchIssuePreviewRelated } from "@/lib/admin/fetchIssuePreviewRelated";
 import {
@@ -64,18 +67,28 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
   const router = useRouter();
   const editorRef = useRef(null);
   const coverInputRef = useRef(null);
+  const fileInputRef = useRef(null);
   const isEdit = mode === "edit";
 
-  const { mutate: createIssue, isLoading: isCreating, error: createError } =
-    useApiMutation("POST");
-  const { mutate: updateIssue, isLoading: isUpdating, error: updateError } =
-    useApiMutation("PATCH");
+  const {
+    mutate: createIssue,
+    isLoading: isCreating,
+    error: createError,
+  } = useApiMutation("POST");
+  const {
+    mutate: updateIssue,
+    isLoading: isUpdating,
+    error: updateError,
+  } = useApiMutation("PATCH");
   const { uploadImageToServer } = useImageUpload();
+  const { uploadIssueFileToServer } = useIssueFileUpload();
 
   const [form, setForm] = useState(initialValues);
   const [editorError, setEditorError] = useState(null);
   const [coverError, setCoverError] = useState(null);
+  const [fileError, setFileError] = useState(null);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
 
   function updateField(name, value) {
@@ -105,6 +118,33 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
       setCoverError(error.message ?? "커버 이미지 업로드에 실패했습니다.");
     } finally {
       setIsUploadingCover(false);
+      event.target.value = "";
+    }
+  }
+
+  async function handleFileUpload(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setFileError(null);
+    setIsUploadingFile(true);
+
+    try {
+      const result = await uploadIssueFileToServer(file);
+
+      if (result.success && result.file?.url) {
+        updateField("file_url", result.file.url);
+        return;
+      }
+
+      setFileError(result.error ?? "PDF 업로드에 실패했습니다.");
+    } catch (error) {
+      setFileError(error.message ?? "PDF 업로드에 실패했습니다.");
+    } finally {
+      setIsUploadingFile(false);
       event.target.value = "";
     }
   }
@@ -183,7 +223,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
   }
 
   const isSaving = isCreating || isUpdating;
-  const isBusy = isSaving || isPreviewing;
+  const isBusy = isSaving || isPreviewing || isUploadingFile;
   const submitError = createError ?? updateError;
 
   return (
@@ -197,7 +237,9 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
             className={styles.input}
             type="text"
             value={form.issue_number}
-            onChange={(event) => updateField("issue_number", event.target.value)}
+            onChange={(event) =>
+              updateField("issue_number", event.target.value)
+            }
             placeholder="예: 12"
           />
         </label>
@@ -215,7 +257,9 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
 
         <label className={styles.field}>
           <span className="caption">영문 제목</span>
-          <span className="caption gray-65">(영문 제목은 주소창의 URL에 사용됩니다.)</span>
+          <span className="caption gray-65">
+            (영문 제목은 주소창의 URL에 사용됩니다.)
+          </span>
           <input
             className={styles.input}
             type="text"
@@ -271,16 +315,52 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
           )}
         </div>
 
-        <label className={styles.field}>
-          <span className="caption">파일 링크</span>
+        <div className={styles.field}>
+          <span className="caption">PDF 파일</span>
+          <span className="caption gray-65">
+            PDF만 업로드할 수 있으며, 50MB를 넘을 수 없습니다.
+          </span>
           <input
-            className={styles.input}
-            type="url"
-            value={form.file_url}
-            onChange={(event) => updateField("file_url", event.target.value)}
-            placeholder="파일 링크"
+            ref={fileInputRef}
+            className={styles.hiddenFileInput}
+            type="file"
+            accept="application/pdf,.pdf"
+            onChange={handleFileUpload}
           />
-        </label>
+          <button
+            type="button"
+            className={`${styles.coverButton} caption`}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploadingFile || isBusy}
+          >
+            {isUploadingFile
+              ? "업로드 중…"
+              : form.file_url
+                ? "PDF 변경"
+                : "PDF 추가"}
+          </button>
+          {form.file_url ? (
+            <div className={styles.fileRow}>
+              <IssuePdfLink
+                fileUrl={form.file_url}
+                className={`${styles.fileLink} caption`}
+              >
+                {issueFileName(form.file_url)}
+              </IssuePdfLink>
+              <button
+                type="button"
+                className={`${styles.fileRemove} caption`}
+                onClick={() => updateField("file_url", "")}
+                disabled={isBusy}
+              >
+                제거
+              </button>
+            </div>
+          ) : null}
+          {fileError && (
+            <p className={`${styles.error} caption`}>{fileError}</p>
+          )}
+        </div>
 
         <div className={styles.field}>
           <span className="caption">소개</span>
@@ -298,7 +378,11 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
       )}
 
       <div className={styles.actions}>
-        <button type="submit" className={`${styles.submitButton} caption`} disabled={isBusy}>
+        <button
+          type="submit"
+          className={`${styles.submitButton} caption`}
+          disabled={isBusy}
+        >
           {isSaving ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
         </button>
         <button
@@ -309,7 +393,10 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         >
           {isPreviewing ? "미리보기 여는 중…" : "미리보기"}
         </button>
-        <Link href="/admin/contents" className={`${styles.cancelButton} caption`}>
+        <Link
+          href="/admin/contents"
+          className={`${styles.cancelButton} caption`}
+        >
           취소
         </Link>
       </div>
@@ -330,7 +417,9 @@ export function IssueForm({ mode, issueId }) {
   });
 
   if (isEdit && issueLoading) {
-    return <p className={`${styles.status} caption gray-65`}>이슈 불러오는 중…</p>;
+    return (
+      <p className={`${styles.status} caption gray-65`}>이슈 불러오는 중…</p>
+    );
   }
 
   if (isEdit && issueError) {
@@ -346,7 +435,9 @@ export function IssueForm({ mode, issueId }) {
   }
 
   const initialValues = isEdit ? issueToForm(issueData) : emptyForm();
-  const initialDescription = isEdit ? parseDescription(issueData.description) : null;
+  const initialDescription = isEdit
+    ? parseDescription(issueData.description)
+    : null;
   const formKey = isEdit ? issueId : "new";
 
   return (

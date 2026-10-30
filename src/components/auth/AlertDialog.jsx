@@ -9,6 +9,7 @@ export function AlertDialog({
   message,
   confirmLabel = "확인",
   cancelLabel = null,
+  centerActions = false,
   onConfirm,
   onCancel = null,
 }) {
@@ -48,7 +49,9 @@ export function AlertDialog({
           {title}
         </h2>
         <p className={`p ${styles.message}`}>{message}</p>
-        <div className={styles.actions}>
+        <div
+          className={`${styles.actions}${centerActions ? ` ${styles.actionsCenter}` : ""}`}
+        >
           {cancelLabel && onCancel ? (
             <button
               type="button"
