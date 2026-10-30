@@ -9,7 +9,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={styles.submit} disabled={pending}>
+    <button type="submit" className={`tag-keyword ${styles.submit}`} disabled={pending}>
       {pending ? "전송 중…" : "재설정 링크 보내기"}
     </button>
   );
@@ -21,7 +21,7 @@ export function ForgotPasswordForm({ onBack }) {
   return (
     <div className={styles.forgotPanel}>
       <header className={styles.header}>
-        <h2 className="title-1">비밀번호 찾기</h2>
+        <h2 className="menu-kr">비밀번호 찾기</h2>
         <p className="p gray-65">
           가입한 이메일로 비밀번호 재설정 링크를 보내 드립니다.
         </p>
@@ -53,7 +53,7 @@ export function ForgotPasswordForm({ onBack }) {
 
         <div className={styles.actions}>
           <SubmitButton />
-          <button type="button" className={styles.textButton} onClick={onBack}>
+          <button type="button" className={`tag-keyword ${styles.textButton}`} onClick={onBack}>
             로그인으로 돌아가기
           </button>
         </div>

@@ -11,7 +11,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={styles.submit} disabled={pending}>
+    <button type="submit" className={`tag-keyword ${styles.submit}`} disabled={pending}>
       {pending ? "변경 중…" : "비밀번호 변경"}
     </button>
   );
@@ -23,7 +23,7 @@ export function ResetPasswordForm() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className="title-1">새 비밀번호</h1>
+        <h1 className="menu-kr">새 비밀번호</h1>
         <p className="p gray-65">새 비밀번호를 입력해 주세요.</p>
       </header>
 
@@ -60,7 +60,7 @@ export function ResetPasswordForm() {
 
         <div className={styles.actions}>
           <SubmitButton />
-          <p className={`caption ${styles.footerLink}`}>
+          <p className={`tag-keyword ${styles.footerLink}`}>
             <Link href="/login">로그인</Link>
           </p>
         </div>

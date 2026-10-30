@@ -110,6 +110,7 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 12px;
+  align-items: flex-start;
 }
 
 .submit {
@@ -140,7 +141,6 @@
   border: none;
   background: none;
   color: var(--gray-65);
-  font: inherit;
   cursor: pointer;
 }
 
@@ -155,18 +155,6 @@
   gap: 12px;
 }
 
-.inlineLink {
-  padding: 0;
-  border: none;
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-size: var(--caption-size, 14px);
-  line-height: var(--caption-line-height, 20px);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
 
 .inlineLink:hover {
   color: var(--crit-orange);
@@ -176,16 +164,8 @@
   padding: 0;
   border: none;
   background: none;
-  color: inherit;
-  font: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
   cursor: pointer;
   text-align: center;
-}
-
-.textButton:hover {
-  color: var(--crit-orange);
 }
 
 .forgotPanel {
