@@ -5,6 +5,13 @@
   padding: 60px 24px 0px;
 }
 
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
 
 @media (max-width: var(--breakpoint-mobile)) {
   .main {

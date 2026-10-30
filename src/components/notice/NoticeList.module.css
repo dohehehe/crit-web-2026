@@ -12,8 +12,9 @@
 
 .trigger {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  gap: 24px;
+  gap: 6px;
   width: 100%;
   padding: 6px 0px;
   color: inherit;
@@ -24,34 +25,22 @@
   cursor: pointer;
 }
 
-.content {
+.heading {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   gap: 24px;
-  flex: 1;
-  min-width: 0;
-  flex: 1;
-  min-width: 0;
-  max-width: 800px;
-}
-
-.trigger:hover .title,
-.triggerOpen .title {
-  color: var(--crit-orange);
-  white-space: normal;
 }
 
 .date {
   flex-shrink: 0;
   color: var(--black);
   width: 272px;
-  margin-top: 7px;
 }
-
 
 .meta {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
   min-width: 0;
   flex: 1;
@@ -80,7 +69,6 @@
 
 .panel {
   display: none;
-  padding: 12px 0 36px;
 }
 
 .panelOpen {
@@ -89,6 +77,10 @@
 
 .body {
   padding: 0;
+  margin-left: 296px;
+  padding-top: 12px;
+  padding-bottom: 36px;
+  max-width: 800px;
 }
 
 .emptyBody {
@@ -137,23 +129,42 @@
   pointer-events: none;
 }
 
+@media (max-width: var(--breakpoint-tablet)) {
+  .main {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
 @media (max-width: var(--breakpoint-mobile)) {
+
   .trigger {
-    align-items: flex-start;
-    padding: 16px 2px;
+    padding: 10px 0 14px;
+    gap: 14px;
   }
 
   .heading {
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: flex-start;
     gap: 8px;
   }
 
-  .chevron {
-    margin-top: 6px;
-  }
-
   .title {
     white-space: normal;
+    font-family: Pretendard;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 22px;
+    leading-trim: NONE;
+    line-height: 29px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+  }
+
+  .body {
+    margin-left: 0;
+    max-width: unset;
+    padding-top: 12px;
+    padding-bottom: 22px;
   }
 }
