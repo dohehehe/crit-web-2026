@@ -3,6 +3,12 @@ export const ADMIN_ROLE_NAME = "admin";
 
 export const MIN_PASSWORD_LENGTH = 8;
 
+export const SUBSCRIBER_ONLY_ALERT = {
+  title: "알림",
+  message: "구독자만 열람 가능합니다.",
+  confirmLabel: "회원가입",
+};
+
 export const EMAIL_CONFIRMED_ALERT = {
   title: "인증 완료",
   message: "인증이 완료되었습니다. 로그인해 주세요.",

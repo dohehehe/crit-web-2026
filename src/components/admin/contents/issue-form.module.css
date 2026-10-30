@@ -140,3 +140,25 @@
   border: 1px solid var(--gray-65);
   background: var(--white);
 }
+
+.fileRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.fileLink {
+  color: var(--black);
+  word-break: break-all;
+}
+
+.fileRemove {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--gray-65);
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+}
