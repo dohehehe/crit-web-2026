@@ -7,6 +7,7 @@ import { getSubscriberRoleId } from "@/lib/auth/getSubscriberRoleId";
 import { isAdminUser } from "@/lib/auth/isAdminUser";
 import { getSafeRedirectPath } from "@/lib/auth/safeRedirect";
 import { addStibeeSubscriber } from "@/lib/stibee/addSubscriber";
+import { deleteStibeeSubscriber } from "@/lib/stibee/deleteSubscriber";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -170,6 +171,19 @@ export async function deleteAccountAction() {
 
   if (!user) {
     return { error: "로그인이 필요합니다." };
+  }
+
+  const email = normalizeEmail(user.email);
+
+  if (!email) {
+    return { error: "회원 이메일을 확인하지 못했습니다. 다시 시도해 주세요." };
+  }
+
+  try {
+    await deleteStibeeSubscriber({ email });
+  } catch (stibeeError) {
+    console.error(stibeeError);
+    return { error: "구독 취소에 실패했습니다. 다시 시도해 주세요." };
   }
 
   const admin = createAdminClient();
