@@ -32,22 +32,24 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 12px;
   flex-shrink: 0;
   padding: 8px 10px;
   border-bottom: 1px solid var(--gray-65);
 }
 
-.closeButton {
+.headerButton {
   border: 0;
   background: transparent;
   padding: 4px 6px;
   color: var(--black);
   font: inherit;
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.closeButton:hover {
+.headerButton:hover {
   color: var(--crit-orange);
 }
 
