@@ -1,0 +1,24 @@
+.roleSelect {
+  padding: 6px 8px;
+  border: 1px solid var(--gray-65);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+  cursor: pointer;
+}
+
+.roleSelect:focus {
+  outline: 2px solid var(--crit-orange);
+  outline-offset: 0;
+  border-color: var(--crit-orange);
+}
+
+.roleSelect:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.error {
+  margin: 0 0 12px;
+  color: var(--crit-orange);
+}
