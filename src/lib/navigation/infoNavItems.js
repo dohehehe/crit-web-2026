@@ -42,6 +42,17 @@ export function getInfoNavItems(isLoggedIn) {
   });
 }
 
+const NAVIGATION_SUB_HREFS = new Set(["/about", "/notice"]);
+
+export function getNavigationSubTitle(pathname) {
+  const item = INFO_NAV_ITEMS.find(
+    (entry) =>
+      NAVIGATION_SUB_HREFS.has(entry.href) && isInfoNavActive(pathname, entry.href),
+  );
+
+  return item?.activeLabel ?? null;
+}
+
 export function isInfoNavActive(pathname, href) {
   if (pathname === href) {
     return true;

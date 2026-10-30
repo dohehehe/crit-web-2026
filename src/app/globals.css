@@ -84,6 +84,12 @@
   --caption-line-height: 20px;
   --caption-letter-spacing: 0;
 
+  --caption-new-weight: 400;
+  --caption-new-style: regular;
+  --caption-new-size: 14px;
+  --caption-new-line-height: 20px;
+  --caption-new-letter-spacing: 0;
+
   --mobile-title-1-weight: 600;
   --mobile-title-1-style: semi-bold;
   --mobile-title-1-size: 40px;
