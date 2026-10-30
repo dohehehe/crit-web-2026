@@ -110,19 +110,19 @@ export function AdminInfoPanel({ initialTab = "info" }) {
               </Link>
             </div>
 
-            {editorsLoading && (
+            {editorsLoading && !editorsData && (
               <p className={`${styles.status} caption gray-65`}>
                 목록 불러오는 중…
               </p>
             )}
 
-            {editorsError && (
+            {editorsError && !editorsData && (
               <p className={`${styles.status} caption`}>
                 목록을 불러오지 못했습니다: {editorsError.message}
               </p>
             )}
 
-            {!editorsLoading && !editorsError && (
+            {editorsData && !editorsError && (
               <AdminEditorsTable editors={editors} onChanged={refetchEditors} />
             )}
           </>
