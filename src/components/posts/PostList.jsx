@@ -1,5 +1,6 @@
 import { ChannelFeaturedCard } from "@/components/posts/ChannelFeaturedCard";
 import { PostCard } from "@/components/posts/PostCard";
+import { PreparingMessage } from "@/components/status/StatusMessage";
 import styles from "./PostList.module.css";
 
 export function PostList({
@@ -9,9 +10,7 @@ export function PostList({
   showChannelFeatured = false,
 }) {
   if (!posts?.length) {
-    return (
-      <p className={`${styles.empty} caption gray-65`}>게시물이 없습니다.</p>
-    );
+    return <PreparingMessage />;
   }
 
   const featuredPost = showChannelFeatured ? posts[0] : null;

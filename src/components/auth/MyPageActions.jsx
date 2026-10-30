@@ -11,7 +11,7 @@ function LogoutSubmit() {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={styles.logout} disabled={pending}>
+    <button type="submit" className={`tag-keyword ${styles.actionButton}`} disabled={pending}>
       {pending ? "로그아웃 중…" : "로그아웃"}
     </button>
   );
@@ -38,12 +38,12 @@ export function MyPageActions() {
   return (
     <div className={styles.accountActions}>
       <div className={styles.actionRow}>
-        <form action={signOutAction}>
+        <form className={styles.actionForm} action={signOutAction}>
           <LogoutSubmit />
         </form>
         <button
           type="button"
-          className={`caption gray-65 ${styles.unsubscribe}`}
+          className={`tag-keyword ${styles.actionButton} ${styles.unsubscribe}`}
           onClick={() => setShowUnsubscribeConfirm(true)}
           disabled={pending}
         >

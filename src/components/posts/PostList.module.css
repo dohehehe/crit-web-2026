@@ -63,10 +63,6 @@
   grid-column: 1 / -1;
 }
 
-.empty {
-  padding: 48px 0;
-}
-
 @media (max-width: 479px) {
   .list {
     row-gap: 40px;

@@ -1,26 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "@/components/notice/NoticePopup.module.css";
 
-const SESSION_KEY = "crit-notice-popup-dismissed";
+const HOME_PATH = "/";
 const CASCADE_OFFSET = 28;
+const HIDE_TODAY_KEY = "crit-notice-popup-hide-today";
 
-function readDismissedIds() {
+function readHideTodayMap() {
   try {
-    const raw = window.sessionStorage.getItem(SESSION_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return new Set(Array.isArray(parsed) ? parsed : []);
+    const raw = window.localStorage.getItem(HIDE_TODAY_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return {};
+    }
+    return parsed;
   } catch {
-    return new Set();
+    return {};
   }
 }
 
-function markDismissed(id) {
+function isHiddenToday(id) {
+  const until = readHideTodayMap()[String(id)];
+  return typeof until === "number" && until > Date.now();
+}
+
+function hideForToday(id) {
   try {
-    const dismissed = readDismissedIds();
-    dismissed.add(id);
-    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify([...dismissed]));
+    const now = Date.now();
+    const hidden = readHideTodayMap();
+
+    for (const key of Object.keys(hidden)) {
+      if (typeof hidden[key] !== "number" || hidden[key] <= now) {
+        delete hidden[key];
+      }
+    }
+
+    const endOfToday = new Date();
+    endOfToday.setHours(24, 0, 0, 0);
+    hidden[String(id)] = endOfToday.getTime();
+    window.localStorage.setItem(HIDE_TODAY_KEY, JSON.stringify(hidden));
   } catch {
     // Ignore storage failures.
   }
@@ -33,15 +53,22 @@ export function NoticePopupFrame({
   linkUrl = null,
   children = null,
 }) {
-  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const [dismissed, setDismissed] = useState(false);
+  const [hiddenToday, setHiddenToday] = useState(false);
+  const open = pathname === HOME_PATH && !dismissed && !hiddenToday;
 
-  useEffect(() => {
-    setOpen(!readDismissedIds().has(id));
+  useLayoutEffect(() => {
+    setHiddenToday(isHiddenToday(id));
   }, [id]);
 
   function handleClose() {
-    markDismissed(id);
-    setOpen(false);
+    setDismissed(true);
+  }
+
+  function handleHideToday() {
+    hideForToday(id);
+    setHiddenToday(true);
   }
 
   if (!open) {
@@ -68,7 +95,14 @@ export function NoticePopupFrame({
       <div className={styles.header}>
         <button
           type="button"
-          className={`caption ${styles.closeButton}`}
+          className={`caption ${styles.headerButton}`}
+          onClick={handleHideToday}
+        >
+          오늘하루 보지 않기
+        </button>
+        <button
+          type="button"
+          className={`caption ${styles.headerButton}`}
           onClick={handleClose}
         >
           닫기

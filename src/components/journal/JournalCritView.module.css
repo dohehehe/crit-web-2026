@@ -6,7 +6,7 @@
 
 .mainOrange {
   position: relative;
-  min-height: 100vh;
+  min-height: unset;
   background-color: var(--crit-orange);
 }
 
@@ -149,10 +149,6 @@
   /* margin: auto 0; */
   text-align: left;
   /* margin-left: auto; */
-}
-
-.empty {
-  margin: 0;
 }
 
 .aside {

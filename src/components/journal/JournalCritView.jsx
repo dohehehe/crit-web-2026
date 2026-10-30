@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { EditorContent } from "@/components/editor/EditorContent";
+import { PreparingMessage } from "@/components/status/StatusMessage";
 import { formatAuthorNames } from "@/lib/posts/formatAuthorNames";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
 import { getPostPath } from "@/lib/routes/posts";
@@ -8,7 +9,7 @@ import styles from "./JournalCritView.module.css";
 
 export function JournalCritView({ issue, posts, otherIssues = [] }) {
   if (!issue) {
-    return <p className={`${styles.empty} caption gray-65`}>표시할 이슈가 없습니다.</p>;
+    return <PreparingMessage />;
   }
 
   return (

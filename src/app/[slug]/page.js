@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { PostList } from "@/components/posts/PostList";
+import { PreparingMessage } from "@/components/status/StatusMessage";
 import {
   getSectionMode,
   sectionUsesIssuePostSortOrder,
@@ -49,6 +50,10 @@ export default async function SectionPage({ params }) {
   const posts = await getPostsBySection(section.id, {
     orderBy: sectionUsesIssuePostSortOrder(sectionMode) ? "sort_order" : "date",
   });
+
+  if (posts.length === 0) {
+    return <PreparingMessage />;
+  }
 
   return (
     <main
