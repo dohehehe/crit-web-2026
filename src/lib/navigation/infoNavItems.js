@@ -42,12 +42,15 @@ export function getInfoNavItems(isLoggedIn) {
   });
 }
 
-const NAVIGATION_SUB_HREFS = new Set(["/about", "/notice"]);
+const NAVIGATION_SUB_ITEMS = [
+  INFO_NAV_ITEMS.find((item) => item.href === "/about"),
+  INFO_NAV_ITEMS.find((item) => item.href === "/notice"),
+  MYPAGE_NAV_ITEM,
+];
 
 export function getNavigationSubTitle(pathname) {
-  const item = INFO_NAV_ITEMS.find(
-    (entry) =>
-      NAVIGATION_SUB_HREFS.has(entry.href) && isInfoNavActive(pathname, entry.href),
+  const item = NAVIGATION_SUB_ITEMS.find(
+    (entry) => entry && isInfoNavActive(pathname, entry.href),
   );
 
   return item?.activeLabel ?? null;

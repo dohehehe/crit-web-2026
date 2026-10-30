@@ -19,12 +19,15 @@ function formatSubscriptionDate(value) {
     return null;
   }
 
-  return new Intl.DateTimeFormat("ko-KR", {
+  const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Seoul",
     year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const part = (type) => parts.find((item) => item.type === type)?.value;
+
+  return `${part("year")}-${part("month")}-${part("day")}`;
 }
 
 async function getSubscriptionStartedAt(user) {
@@ -63,11 +66,22 @@ export default async function MyPage() {
 
   return (
     <main className={styles.main}>
-      <h1 className="title-1">내 정보</h1>
-      {name ? <p className="p">이름: {name}</p> : null}
-      <p className="p">이메일: {user.email}</p>
-      <p className="p">구독 시작 일자: {startedAt ?? "—"}</p>
-      <MyPageActions />
+      <div className={styles.infoContainer}>
+        <h1 className={`menu-kr ${styles.h1}`}>내 정보</h1>
+        {/* {name ? <p className="p">이름: {name}</p> : null} */}
+
+        <div className={styles.infoList}>
+          <div className={styles.infoItem}>
+            <span className={`tag-keyword ${styles.infoLabel}`}>이메일</span>
+            <p className={styles.infoValue}>{user.email}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={`tag-keyword ${styles.infoLabel}`}>구독 시작 일자</span>
+            <p className={styles.infoValue}>{startedAt ?? "—"}</p>
+          </div>
+        </div>
+        <MyPageActions />
+      </div>
     </main>
   );
 }
