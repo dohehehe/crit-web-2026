@@ -56,6 +56,7 @@ export function AdminInfoPanel({ initialTab = "info" }) {
     data: usersData,
     isLoading: usersLoading,
     error: usersError,
+    refetch: refetchUsers,
   } = useAdminQuery("users", {
     params: userParams,
     enabled: selectedTab === "users",
@@ -101,13 +102,18 @@ export function AdminInfoPanel({ initialTab = "info" }) {
         {selectedTab === "editors" && (
           <>
             <div className={styles.toolbar}>
-              <Link href="/admin/info/editors/new" className={`${styles.createButton} caption`}>
+              <Link
+                href="/admin/info/editors/new"
+                className={`${styles.createButton} caption`}
+              >
                 + 새 에디터
               </Link>
             </div>
 
             {editorsLoading && (
-              <p className={`${styles.status} caption gray-65`}>목록 불러오는 중…</p>
+              <p className={`${styles.status} caption gray-65`}>
+                목록 불러오는 중…
+              </p>
             )}
 
             {editorsError && (
@@ -131,19 +137,25 @@ export function AdminInfoPanel({ initialTab = "info" }) {
               ariaLabel="역할"
             />
 
-            {isLoading && (
+            {isLoading && !usersData && (
               <p className={`${styles.status} caption gray-65`}>
                 목록 불러오는 중…
               </p>
             )}
 
-            {error && (
+            {error && !usersData && (
               <p className={`${styles.status} caption`}>
                 목록을 불러오지 못했습니다: {error.message}
               </p>
             )}
 
-            {!isLoading && !error && <AdminUsersTable users={users} />}
+            {usersData && !error && (
+              <AdminUsersTable
+                users={users}
+                roles={roles}
+                onChanged={refetchUsers}
+              />
+            )}
           </>
         )}
       </div>
