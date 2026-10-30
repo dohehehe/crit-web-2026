@@ -19,5 +19,9 @@ export async function GET(request) {
 
   const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
 
+  if (safeNext === "/auth/confirmed") {
+    await supabase.auth.signOut();
+  }
+
   return NextResponse.redirect(`${origin}${safeNext}`);
 }

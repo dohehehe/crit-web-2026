@@ -85,10 +85,13 @@ export async function signUpAction(_prevState, formData) {
   }
 
   const supabase = await createClient();
+  const origin = await getSiteOrigin();
+  const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent("/auth/confirmed")}`;
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      emailRedirectTo,
       data: {
         name,
         privacy_consent: privacyConsent,
