@@ -7,11 +7,14 @@
 }
 
 .article {
-  max-width: 800px;
   display: flex;
-  flex-direction: column;
+  gap: 36px;
   padding: 60px 0 80px;
-  margin: 0 auto;
+}
+
+.contents {
+  flex-grow: 1;
+  max-width: 800px;
 }
 
 .contentContainer {
@@ -21,7 +24,8 @@
   border-top: 1px solid var(--black);
 }
 
-.aside {
+.aside,
+.asideSpacer {
   width: 260px;
   flex-shrink: 0;
 }
@@ -57,6 +61,7 @@
   flex-direction: column;
   gap: 32px;
   scroll-margin-top: 96px;
+  padding-bottom: 14px;
 }
 
 .sectionTitle {
@@ -75,24 +80,14 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-bottom: 60px;
-  padding-top: 24px;
   scroll-margin-top: 96px;
 }
 
-.editorsFirst {
-  padding-top: 0;
-  border-top: none;
-}
-
-.editorsTitle {
-  margin: 0;
-}
 
 .editorList {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 28px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -107,6 +102,15 @@
 .editorName {
   margin: 0;
   word-break: keep-all;
+  font-family: Pretendard;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 26px;
+  leading-trim: NONE;
+  line-height: 26px;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+
 }
 
 .editorNameEn {
@@ -118,41 +122,132 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  margin-bottom: 60px;
-  padding-top: 24px;
   scroll-margin-top: 96px;
-}
-
-.authorsFirst {
-  padding-top: 0;
-  border-top: none;
-}
-
-.authorsTitle {
-  margin: 0;
 }
 
 .authorList {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px 6px;
+  gap: 8px 20px;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.authorLink {
+  font-family: Pretendard;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 26px;
+  leading-trim: NONE;
+  line-height: 36px;
+  letter-spacing: 0%;
+  text-transform: capitalize;
 }
 
 .authorLink:hover {
   color: var(--crit-orange);
 }
 
-@media (max-width: var(--breakpoint-tablet)) {
-  .main {
-    padding: 0px 10px;
-  }
-}
-
 @media (max-width: var(--breakpoint-mobile)) {
   .main {
-    padding: 80px 10px;
+    padding: 40px 10px 0;
   }
+
+  .article {
+    flex-direction: column;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .contents {
+    max-width: 100%;
+  }
+
+  .contentContainer {
+    gap: unset;
+    border: unset;
+    flex-direction: column;
+    padding-top: 0;
+  }
+
+  .asideSpacer {
+    display: none;
+  }
+
+  .aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100vw - 20px);
+    background-color: var(--white);
+    z-index: 90;
+    padding: 6px 0px;
+    margin: 0 10px;
+    border-top: 1px solid var(--black);
+  }
+
+  .asideList {
+    flex-direction: row;
+    gap: 10px;
+    font-family: Pretendard;
+    font-weight: 600;
+    font-style: SemiBold;
+    font-size: 17.5px;
+    leading-trim: NONE;
+    line-height: 17.5px;
+    letter-spacing: 2%;
+
+  }
+
+  .contentArticle {
+    gap: 40px;
+  }
+
+  .section {
+    gap: 28px;
+  }
+
+  .sectionTitle {
+    font-weight: var(--thumb-title-weight);
+    font-style: var(--thumb-title-style);
+    font-size: var(--thumb-title-size);
+    line-height: var(--thumb-title-line-height);
+    letter-spacing: var(--thumb-title-letter-spacing);
+  }
+
+  .editorList {
+    gap: 28px;
+  }
+
+  .editor {
+    gap: 14px;
+  }
+
+  .editorName {
+    font-family: Pretendard;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 26px;
+    leading-trim: NONE;
+    line-height: 26px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+  }
+
+  .authorList {
+    gap: 12px;
+  }
+
+  .authorLink {
+    font-family: Pretendard;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 22px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+  }
+
 }

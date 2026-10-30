@@ -70,14 +70,23 @@ function normalizeExternalUrl(value) {
   return `https://${trimmed.replace(/^\/\//, "")}`;
 }
 
+function isInstagramUrl(value) {
+  return (
+    /^https?:\/\//i.test(value) ||
+    /^\/\//.test(value) ||
+    /^www\./i.test(value) ||
+    /(^|\.)instagram\.com(\/|$)/i.test(value)
+  );
+}
+
 export function normalizeInstagramHref(value) {
   const trimmed = value?.trim();
   if (!trimmed) {
     return null;
   }
 
-  if (/^https?:\/\//i.test(trimmed)) {
-    return trimmed;
+  if (isInstagramUrl(trimmed)) {
+    return normalizeExternalUrl(trimmed);
   }
 
   const handle = trimmed.replace(/^@/, "");

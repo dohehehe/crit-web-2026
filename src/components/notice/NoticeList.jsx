@@ -54,13 +54,14 @@ export function NoticeList({ notices }) {
               aria-controls={panelId}
               onClick={() => toggleNotice(notice.id)}
             >
-              <time
-                className={`tag-keyword ${styles.date}`}
-                dateTime={notice.date ?? undefined}
-              >
-                {formatNoticeDate(notice.date)}
-              </time>
-              <div className={styles.content}>
+              <div className={styles.heading}>
+                <time
+                  className={`tag-keyword ${styles.date}`}
+                  dateTime={notice.date ?? undefined}
+                >
+                  {formatNoticeDate(notice.date)}
+                </time>
+
                 <span className={styles.meta}>
                   {notice.isPrimary ? (
                     <span className={styles.badge}>공지</span>
@@ -69,28 +70,29 @@ export function NoticeList({ notices }) {
                     {notice.title ?? "제목 없음"}
                   </span>
                 </span>
-
-                <div
-                  id={panelId}
-                  className={`${styles.panel} ${isOpen ? styles.panelOpen : ""}`}
-                  aria-hidden={!isOpen}
-                  inert={!isOpen ? true : undefined}
-                >
-                  <div className={styles.body}>
-                    {notice.content ? (
-                      <EditorContent
-                        contents={notice.content}
-                        proseStyles={noticeProseStyles}
-                      />
-                    ) : (
-                      <p className={`caption gray-65 ${styles.emptyBody}`}>
-                        등록된 내용이 없습니다.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
               </div>
+
+              <div
+                id={panelId}
+                className={`${styles.panel} ${isOpen ? styles.panelOpen : ""}`}
+                aria-hidden={!isOpen}
+                inert={!isOpen ? true : undefined}
+              >
+                <div className={styles.body}>
+                  {notice.content ? (
+                    <EditorContent
+                      contents={notice.content}
+                      proseStyles={noticeProseStyles}
+                    />
+                  ) : (
+                    <p className={`caption gray-65 ${styles.emptyBody}`}>
+                      등록된 내용이 없습니다.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+
             </button>
 
 
