@@ -1,6 +1,30 @@
-import { ISSUE_FILE_BUCKET } from "./constants";
+import { ISSUE_FILE_BUCKET, ISSUE_FILE_FOLDER } from "./constants";
 
-const ISSUE_STORAGE_PATH = /^issue\/[A-Za-z0-9._-]+\.pdf$/;
+function isSafePdfFileName(name) {
+  if (!name || name === "." || name === "..") {
+    return false;
+  }
+
+  if (/[\\/\u0000-\u001f\u007f]/.test(name)) {
+    return false;
+  }
+
+  return name.toLowerCase().endsWith(".pdf");
+}
+
+export function toIssueStoragePath(originalName) {
+  if (!originalName || typeof originalName !== "string") {
+    return null;
+  }
+
+  const base = originalName.split(/[/\\]/).pop()?.trim().normalize("NFC") ?? "";
+
+  if (!isSafePdfFileName(base)) {
+    return null;
+  }
+
+  return `${ISSUE_FILE_FOLDER}/${base}`;
+}
 
 function storagePathFromUrl(value) {
   const markers = [
@@ -35,15 +59,21 @@ export function parseIssueStoragePath(value) {
   }
 
   const trimmed = value.trim();
-  const path = ISSUE_STORAGE_PATH.test(trimmed)
+  const path = trimmed.startsWith(`${ISSUE_FILE_FOLDER}/`)
     ? trimmed
     : storagePathFromUrl(trimmed);
 
-  if (!path || !ISSUE_STORAGE_PATH.test(path)) {
+  if (!path?.startsWith(`${ISSUE_FILE_FOLDER}/`)) {
     return null;
   }
 
-  return path;
+  const name = path.slice(ISSUE_FILE_FOLDER.length + 1);
+
+  if (name.includes("/") || !isSafePdfFileName(name)) {
+    return null;
+  }
+
+  return `${ISSUE_FILE_FOLDER}/${name}`;
 }
 
 export function issueFileName(value) {

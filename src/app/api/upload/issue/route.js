@@ -48,7 +48,12 @@ export async function POST(request) {
       return jsonError("PDF 파일만 업로드할 수 있습니다.", 400);
     }
 
-    const storagePath = buildIssueStoragePath();
+    const storagePath = buildIssueStoragePath(file.name);
+
+    if (!storagePath) {
+      return jsonError("PDF 파일 이름이 올바르지 않습니다.", 400);
+    }
+
     const supabase = createAdminClient();
     const { error } = await supabase.storage
       .from(ISSUE_FILE_BUCKET)
@@ -58,7 +63,11 @@ export async function POST(request) {
       });
 
     if (error) {
-      return jsonError(error.message, 400);
+      const duplicate = /already exists|duplicate/i.test(error.message ?? "");
+      return jsonError(
+        duplicate ? "같은 이름의 PDF가 이미 있습니다." : error.message,
+        400
+      );
     }
 
     return jsonOk({

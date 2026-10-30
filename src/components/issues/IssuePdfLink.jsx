@@ -8,7 +8,7 @@ import {
   ISSUE_FILE_BUCKET,
   ISSUE_FILE_MIME,
 } from "@/lib/issueUpload/constants";
-import { parseIssueStoragePath } from "@/lib/issueUpload/fileRef";
+import { issueFileName, parseIssueStoragePath } from "@/lib/issueUpload/fileRef";
 import { createClient } from "@/lib/supabase/browser";
 import styles from "./IssuePdfLink.module.css";
 
@@ -19,8 +19,17 @@ async function readLoggedIn() {
 }
 
 function openPdfTab(url) {
-  const features = url.startsWith("blob:") ? undefined : "noopener,noreferrer";
-  window.open(url, "_blank", features);
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+function savePdfFile(url, filename) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.rel = "noopener";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 }
 
 export function IssuePdfLink({ fileUrl, className, children }) {
@@ -62,9 +71,13 @@ export function IssuePdfLink({ fileUrl, className, children }) {
     };
   }, [storagePath]);
 
+  function saveStoredPdf(url) {
+    savePdfFile(url, issueFileName(storagePath));
+  }
+
   async function openStoredPdf() {
     if (blobUrlRef.current) {
-      openPdfTab(blobUrlRef.current);
+      saveStoredPdf(blobUrlRef.current);
       return;
     }
 
@@ -89,7 +102,6 @@ export function IssuePdfLink({ fileUrl, className, children }) {
       return;
     }
 
-    const preview = window.open("", "_blank");
     loadingRef.current = true;
     setIsLoading(true);
     setLoadError("");
@@ -104,10 +116,8 @@ export function IssuePdfLink({ fileUrl, className, children }) {
         throw new Error(error?.message || "PDF를 열 수 없습니다.");
       }
 
-      const file =
-        data.type === ISSUE_FILE_MIME
-          ? data
-          : new Blob([data], { type: ISSUE_FILE_MIME });
+      const filename = issueFileName(storagePath);
+      const file = new File([data], filename, { type: ISSUE_FILE_MIME });
       const blobUrl = URL.createObjectURL(file);
 
       if (blobUrlRef.current) {
@@ -115,15 +125,8 @@ export function IssuePdfLink({ fileUrl, className, children }) {
       }
 
       blobUrlRef.current = blobUrl;
-
-      if (preview) {
-        preview.location.href = blobUrl;
-        return;
-      }
-
-      openPdfTab(blobUrl);
+      savePdfFile(blobUrl, filename);
     } catch {
-      preview?.close();
       setLoadError("PDF를 열 수 없습니다.");
     } finally {
       loadingRef.current = false;
