@@ -6,6 +6,8 @@ import { getSiteOrigin } from "@/lib/auth/getSiteOrigin";
 import { getSubscriberRoleId } from "@/lib/auth/getSubscriberRoleId";
 import { isAdminUser } from "@/lib/auth/isAdminUser";
 import { getSafeRedirectPath } from "@/lib/auth/safeRedirect";
+import { addStibeeSubscriber } from "@/lib/stibee/addSubscriber";
+import { deleteStibeeSubscriber } from "@/lib/stibee/deleteSubscriber";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -83,10 +85,13 @@ export async function signUpAction(_prevState, formData) {
   }
 
   const supabase = await createClient();
+  const origin = await getSiteOrigin();
+  const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent("/auth/confirmed")}`;
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      emailRedirectTo,
       data: {
         name,
         privacy_consent: privacyConsent,
@@ -108,11 +113,13 @@ export async function signUpAction(_prevState, formData) {
     };
   }
 
+  const admin = createAdminClient();
   let roleId;
 
   try {
     roleId = await getSubscriberRoleId();
   } catch (roleError) {
+    await admin.auth.admin.deleteUser(authUser.id);
     return {
       error:
         roleError instanceof Error
@@ -121,7 +128,6 @@ export async function signUpAction(_prevState, formData) {
     };
   }
 
-  const admin = createAdminClient();
   const { error: insertError } = await admin.from("users").insert({
     id: authUser.id,
     name,
@@ -132,6 +138,19 @@ export async function signUpAction(_prevState, formData) {
   if (insertError) {
     await admin.auth.admin.deleteUser(authUser.id);
     return { error: insertError.message };
+  }
+
+  try {
+    await addStibeeSubscriber({
+      email,
+      name,
+      marketingAllowed: newsletterConsent,
+    });
+  } catch (stibeeError) {
+    console.error(stibeeError);
+    await admin.from("users").delete().eq("id", authUser.id);
+    await admin.auth.admin.deleteUser(authUser.id);
+    return { error: "회원가입에 실패했습니다. 다시 시도해 주세요." };
   }
 
   if (data.session) {
@@ -155,6 +174,19 @@ export async function deleteAccountAction() {
 
   if (!user) {
     return { error: "로그인이 필요합니다." };
+  }
+
+  const email = normalizeEmail(user.email);
+
+  if (!email) {
+    return { error: "회원 이메일을 확인하지 못했습니다. 다시 시도해 주세요." };
+  }
+
+  try {
+    await deleteStibeeSubscriber({ email });
+  } catch (stibeeError) {
+    console.error(stibeeError);
+    return { error: "구독 취소에 실패했습니다. 다시 시도해 주세요." };
   }
 
   const admin = createAdminClient();

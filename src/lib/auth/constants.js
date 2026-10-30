@@ -3,6 +3,11 @@ export const ADMIN_ROLE_NAME = "admin";
 
 export const MIN_PASSWORD_LENGTH = 8;
 
+export const EMAIL_CONFIRMED_ALERT = {
+  title: "인증 완료",
+  message: "인증이 완료되었습니다. 로그인해 주세요.",
+};
+
 export const SIGNUP_VERIFICATION_ALERT = {
   title: "이메일 인증 안내",
   message:
