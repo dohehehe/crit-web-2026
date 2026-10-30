@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
-import { JournalCritView } from "@/components/journal/JournalCritView";
+import { PreparingMessage } from "@/components/status/StatusMessage";
 import { getLatestIssue } from "@/lib/issues/getIssues";
-import styles from "@/app/journal-crit/page.module.css";
 
 export const revalidate = 60;
 
@@ -16,7 +15,5 @@ export default async function JournalCritIndexPage() {
     redirect(`/journal-crit/${issue.issueNumber}`);
   }
 
-  return (
-    <></>
-  );
+  return <PreparingMessage />;
 }
