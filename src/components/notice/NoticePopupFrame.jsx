@@ -1,47 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "@/components/notice/NoticePopup.module.css";
 
-const SESSION_KEY = "crit-notice-popup-dismissed";
+const HOME_PATH = "/";
 const CASCADE_OFFSET = 28;
 
-function readDismissedIds() {
-  try {
-    const raw = window.sessionStorage.getItem(SESSION_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return new Set(Array.isArray(parsed) ? parsed : []);
-  } catch {
-    return new Set();
-  }
-}
-
-function markDismissed(id) {
-  try {
-    const dismissed = readDismissedIds();
-    dismissed.add(id);
-    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify([...dismissed]));
-  } catch {
-    // Ignore storage failures.
-  }
-}
-
 export function NoticePopupFrame({
-  id,
   index = 0,
   thumbnailImg = null,
   linkUrl = null,
   children = null,
 }) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(!readDismissedIds().has(id));
-  }, [id]);
+  const pathname = usePathname();
+  const [dismissed, setDismissed] = useState(false);
+  const open = pathname === HOME_PATH && !dismissed;
 
   function handleClose() {
-    markDismissed(id);
-    setOpen(false);
+    setDismissed(true);
   }
 
   if (!open) {
