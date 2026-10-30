@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AboutSectionNav } from "@/app/about/AboutSectionNav";
 import { EditorContent } from "@/components/editor/EditorContent";
 import { getAuthorsByName } from "@/lib/authors/getAuthors";
 import { getEditors } from "@/lib/editors/getEditors";
@@ -7,6 +8,9 @@ import { getInfoText, getManifestoText } from "@/lib/info/getSiteInfo";
 import { getAuthorPath } from "@/lib/routes/authors";
 import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
 import { truncatePlainText } from "@/lib/text/truncatePlainText";
+import aboutProseStyles from "./aboutEditorProse.module.css";
+import editorsProseStyles from "./editorsEditorProse.module.css";
+import manifestoProseStyles from "./manifestoEditorProse.module.css";
 import styles from "./page.module.css";
 
 export const revalidate = 60;
@@ -40,17 +44,18 @@ export default async function AboutPage() {
   return (
     <main className={styles.main}>
       <article className={styles.article}>
+        <div className={styles.asideSpacer} />
         {infoText ? (
           <section
             className={`${styles.contents}${manifestoText ? ` ${styles.contentsBeforeManifesto}` : ""}`}
           >
-            <EditorContent contents={infoText} />
+            <EditorContent contents={infoText} proseStyles={aboutProseStyles} />
           </section>
         ) : null}
       </article>
 
       <div className={styles.contentContainer}>
-        <aside className={styles.aside}>
+        <AboutSectionNav className={styles.aside}>
           <ul className={styles.asideList}>
             {manifestoText ? (
               <li className={styles.asideItem}>
@@ -74,7 +79,7 @@ export default async function AboutPage() {
               </li>
             ) : null}
           </ul>
-        </aside>
+        </AboutSectionNav>
 
         <article className={styles.contentArticle}>
           {manifestoText ? (
@@ -86,7 +91,7 @@ export default async function AboutPage() {
               <h2 id="about-manifesto-heading" className={`${styles.sectionTitle} ${styles.manifestoTitle}`}>
                 Crit.Manifesto
               </h2>
-              <EditorContent contents={manifestoText} />
+              <EditorContent contents={manifestoText} proseStyles={manifestoProseStyles} />
             </section>
           ) : null}
 
@@ -102,12 +107,12 @@ export default async function AboutPage() {
               <ul className={styles.editorList}>
                 {visibleEditors.map((editor) => (
                   <li key={editor.id} className={styles.editor}>
-                    <h3 className={`p-bold ${styles.editorName}`}>{editorHeading(editor)}</h3>
+                    <h3 className={styles.editorName}>{editorHeading(editor)}</h3>
                     {editor.name && editor.nameEn ? (
-                      <p className={`p ${styles.editorNameEn}`}>{editor.nameEn}</p>
+                      <p className={styles.editorNameEn}>{editor.nameEn}</p>
                     ) : null}
                     {editor.description ? (
-                      <EditorContent contents={editor.description} />
+                      <EditorContent contents={editor.description} proseStyles={editorsProseStyles} />
                     ) : null}
                   </li>
                 ))}
@@ -127,7 +132,7 @@ export default async function AboutPage() {
               <ul className={styles.authorList}>
                 {authors.map((author) => (
                   <li key={author.id}>
-                    <Link href={getAuthorPath(author)} className={`tag-keyword ${styles.authorLink}`}>
+                    <Link href={getAuthorPath(author)} className={styles.authorLink}>
                       {author.name}
                     </Link>
                   </li>
