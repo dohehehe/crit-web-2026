@@ -13,6 +13,7 @@ import {
   getPostAuthors,
 } from "@/lib/posts/formatAuthorNames";
 import { getAuthorPath } from "@/lib/routes/authors";
+import { IssuePdfLink } from "@/components/issues/IssuePdfLink";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostView.module.css";
 
@@ -26,7 +27,8 @@ function PostAuthorNames({ post, className }) {
     <p className={className}>
       {authors.map((author, index) => (
         <span key={author.id ?? `${author.name}-${index}`}>
-          {index > 0 ? ", " : null}{author.id ? (
+          {index > 0 ? ", " : null}
+          {author.id ? (
             <Link href={getAuthorPath(author)} className={styles.authorLink}>
               {author.name}
             </Link>
@@ -86,7 +88,10 @@ function AuthorAside({ authors }) {
                 className={styles.authorCardItem}
               >
                 {author.id ? (
-                  <Link href={getAuthorPath(author)} className={styles.authorCardLink}>
+                  <Link
+                    href={getAuthorPath(author)}
+                    className={styles.authorCardLink}
+                  >
                     {card}
                   </Link>
                 ) : (
@@ -154,15 +159,17 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
   const keywords = post.keywords ?? [];
   const hasTags = category || keywords.length > 0;
   const otherIssuePosts = issuePosts.filter(
-    (issuePost) => issuePost.id !== post.id,
+    (issuePost) => issuePost.id !== post.id
   );
   const hasEnglishContent = normalizeBlocks(post.contentEn).length > 0;
   const activeLocale = hasEnglishContent && locale === "en" ? "en" : "ko";
   const subtitle = activeLocale === "en" ? post.subtitleEn : post.subtitle;
   const content = activeLocale === "en" ? post.contentEn : post.content;
-  const thumbnailCaption = (
-    activeLocale === "en" ? post.thumbnailCaptionEn : post.thumbnailCaptionKr
-  )?.trim() ?? "";
+  const thumbnailCaption =
+    (activeLocale === "en"
+      ? post.thumbnailCaptionEn
+      : post.thumbnailCaptionKr
+    )?.trim() ?? "";
 
   return (
     <>
@@ -174,7 +181,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
             <figure className={styles.thumbnail}>
               <Image
                 src={post.thumbnailImg}
-                alt={thumbnailCaption ? "" : post.title ?? ""}
+                alt={thumbnailCaption ? "" : (post.title ?? "")}
                 width={0}
                 height={0}
                 sizes="100vw"
@@ -184,7 +191,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
               {thumbnailCaption ? (
                 <figcaption
                   className={`caption ${styles.thumbnailCaption}${
-                    hasEnglishContent ? ` ${styles.thumbnailCaptionWithSwitch}` : ""
+                    hasEnglishContent
+                      ? ` ${styles.thumbnailCaptionWithSwitch}`
+                      : ""
                   }`}
                 >
                   {thumbnailCaption}
@@ -200,7 +209,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
               <button
                 type="button"
                 className={`${styles.langueSwitchButton}${
-                  activeLocale === "ko" ? ` ${styles.langueSwitchButtonActive}` : ""
+                  activeLocale === "ko"
+                    ? ` ${styles.langueSwitchButtonActive}`
+                    : ""
                 }`}
                 aria-pressed={activeLocale === "ko"}
                 onClick={() => setLocale("ko")}
@@ -210,7 +221,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
               <button
                 type="button"
                 className={`${styles.langueSwitchButton}${
-                  activeLocale === "en" ? ` ${styles.langueSwitchButtonActive}` : ""
+                  activeLocale === "en"
+                    ? ` ${styles.langueSwitchButtonActive}`
+                    : ""
                 }`}
                 aria-pressed={activeLocale === "en"}
                 onClick={() => setLocale("en")}
@@ -223,9 +236,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
             <h1 className={`title-1 ${styles.title}`}>{post.title}</h1>
           ) : null}
           {subtitle ? (
-            <h2 className={`thumb-title ${styles.subtitle}`}>
-              {subtitle}
-            </h2>
+            <h2 className={`thumb-title ${styles.subtitle}`}>{subtitle}</h2>
           ) : null}
           <div className={styles.infoContainer}>
             <PostAuthorNames
@@ -249,14 +260,12 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
       <aside className={styles.aside}>
         {isJournal && issue?.fileUrl ? (
           <div className={`${styles.asideItem} menu-en`}>
-            <a
-              href={issue.fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <IssuePdfLink
+              fileUrl={issue.fileUrl}
               className={`${styles.asideButton} menu-en`}
             >
               PDF Download
-            </a>
+            </IssuePdfLink>
           </div>
         ) : null}
 
@@ -309,7 +318,9 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                       })}
                       className={`${styles.issuePostItem} p-bold`}
                     >
-                      <span className={`${styles.issuePostTitle} thumb-title`}>{issuePost.title}</span>
+                      <span className={`${styles.issuePostTitle} thumb-title`}>
+                        {issuePost.title}
+                      </span>
                       {formatAuthorNames(issuePost) ? (
                         <span className={`${styles.issuePostAuthor} p`}>
                           {formatAuthorNames(issuePost)}

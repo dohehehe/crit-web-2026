@@ -36,6 +36,12 @@
   padding-top: 4px;
 }
 
+.actionsCenter {
+  width: fit-content;
+  margin: 0 auto;
+  justify-content: center;
+}
+
 .button,
 .cancelButton {
   padding: 10px 16px;
