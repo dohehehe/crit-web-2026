@@ -12,6 +12,7 @@ export function HomeNoticePopups({ popups }) {
       {popups.map((popup, index) => (
         <NoticePopupFrame
           key={popup.id}
+          id={popup.id}
           index={index}
           thumbnailImg={popup.thumbnailImg}
           linkUrl={popup.linkUrl}

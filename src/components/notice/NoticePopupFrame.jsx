@@ -1,13 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import styles from "@/components/notice/NoticePopup.module.css";
 
 const HOME_PATH = "/";
 const CASCADE_OFFSET = 28;
+const HIDE_TODAY_KEY = "crit-notice-popup-hide-today";
+
+function readHideTodayMap() {
+  try {
+    const raw = window.localStorage.getItem(HIDE_TODAY_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return {};
+    }
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
+function isHiddenToday(id) {
+  const until = readHideTodayMap()[String(id)];
+  return typeof until === "number" && until > Date.now();
+}
+
+function hideForToday(id) {
+  try {
+    const now = Date.now();
+    const hidden = readHideTodayMap();
+
+    for (const key of Object.keys(hidden)) {
+      if (typeof hidden[key] !== "number" || hidden[key] <= now) {
+        delete hidden[key];
+      }
+    }
+
+    const endOfToday = new Date();
+    endOfToday.setHours(24, 0, 0, 0);
+    hidden[String(id)] = endOfToday.getTime();
+    window.localStorage.setItem(HIDE_TODAY_KEY, JSON.stringify(hidden));
+  } catch {
+    // Ignore storage failures.
+  }
+}
 
 export function NoticePopupFrame({
+  id,
   index = 0,
   thumbnailImg = null,
   linkUrl = null,
@@ -15,10 +55,20 @@ export function NoticePopupFrame({
 }) {
   const pathname = usePathname();
   const [dismissed, setDismissed] = useState(false);
-  const open = pathname === HOME_PATH && !dismissed;
+  const [hiddenToday, setHiddenToday] = useState(false);
+  const open = pathname === HOME_PATH && !dismissed && !hiddenToday;
+
+  useLayoutEffect(() => {
+    setHiddenToday(isHiddenToday(id));
+  }, [id]);
 
   function handleClose() {
     setDismissed(true);
+  }
+
+  function handleHideToday() {
+    hideForToday(id);
+    setHiddenToday(true);
   }
 
   if (!open) {
@@ -45,7 +95,14 @@ export function NoticePopupFrame({
       <div className={styles.header}>
         <button
           type="button"
-          className={`caption ${styles.closeButton}`}
+          className={`caption ${styles.headerButton}`}
+          onClick={handleHideToday}
+        >
+          오늘하루 보지 않기
+        </button>
+        <button
+          type="button"
+          className={`caption ${styles.headerButton}`}
           onClick={handleClose}
         >
           닫기
