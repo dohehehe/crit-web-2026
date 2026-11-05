@@ -54,8 +54,14 @@
 .wrapper :global(.ce-popover-item-html),
 .wrapper :global(.ce-popover__container),
 .wrapper :global(.ce-popover__items) {
+  overflow: visible;
+}
+
+
+.ce-popover--opened :global(.ce-popover__container) {
   overflow: scroll;
 }
+
 
 .wrapper :global(.ce-inline-toolbar) {
   overflow: visible;
@@ -76,6 +82,7 @@
   border: 1px solid rgba(0, 0, 0, 0.28);
   border-radius: 2px;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .wrapper :global(.critColorPickerPanel) {

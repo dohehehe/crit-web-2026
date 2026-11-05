@@ -167,6 +167,7 @@ function createColorTool(Tool) {
 
       button.addEventListener("click", (event) => {
         if (event.target.closest(".critColorPickerPanel")) {
+          event.stopPropagation();
           return;
         }
 
@@ -194,25 +195,24 @@ function createColorTool(Tool) {
     }
 
     checkState() {
-      const active = super.checkState();
+      const colored = this.selectionColorTag();
+      const active = Boolean(colored?.style.color);
 
-      if (this.panel?.classList.contains("isOpen")) {
+      if (this.button && this.iconClasses?.active) {
+        this.button.classList.toggle(this.iconClasses.active, active);
+      }
+
+      if (!active || this.panel?.classList.contains("isOpen")) {
         return active;
       }
 
-      const color = this.selectionTextColor();
-
-      if (!color) {
-        return active;
-      }
-
-      this.color = color;
+      this.color = colored.style.color;
 
       if (this.dot) {
-        this.dot.style.backgroundColor = color;
+        this.dot.style.backgroundColor = this.color;
       }
 
-      const nextInputValue = toColorInputValue(color);
+      const nextInputValue = toColorInputValue(this.color);
 
       if (this.colorInput && /^#[0-9a-f]{6}$/i.test(nextInputValue)) {
         this.colorInput.value = nextInputValue;
@@ -221,22 +221,20 @@ function createColorTool(Tool) {
       return active;
     }
 
-    selectionTextColor() {
-      const colored =
-        this.api.selection.findParentTag(this.parentTag) ||
-        this.api.selection.findParentTag("SPAN");
+    selectionColorTag() {
+      const font = this.api.selection.findParentTag(this.parentTag);
 
-      if (colored?.style.color) {
-        return colored.style.color;
+      if (font?.style.color) {
+        return font;
       }
 
-      const node = window.getSelection()?.anchorNode;
-      const element = node instanceof Element ? node : node?.parentElement;
-      const block = element?.closest(
-        ".ce-paragraph, .ce-header, .cdx-quote__text, .cdx-list__item",
-      );
+      const span = this.api.selection.findParentTag("SPAN");
 
-      return block ? getComputedStyle(block).color : "";
+      if (span?.style.color) {
+        return span;
+      }
+
+      return null;
     }
 
     rememberColor(color) {
