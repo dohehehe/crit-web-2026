@@ -12,7 +12,7 @@ export default async function EditBannerPage({ params }) {
   return (
     <main className={styles.main}>
       <header className={styles.header}>
-        <Link href="/admin/notice" className={`${styles.backLink} caption`}>
+        <Link href="/admin/notice/banner" className={`${styles.backLink} caption`}>
           ← 목록
         </Link>
         <h1 className="title-1">배너 수정</h1>

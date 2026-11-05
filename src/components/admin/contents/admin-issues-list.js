@@ -90,7 +90,7 @@ export function AdminIssuesList({ issues, posts, sectionId, onPostsChanged }) {
                 </span>
               </button>
               <Link
-                href={buildIssueEditHref(issue.id)}
+                href={buildIssueEditHref(issue.id, sectionId)}
                 className={`${styles.editButton} caption`}
               >
                 수정

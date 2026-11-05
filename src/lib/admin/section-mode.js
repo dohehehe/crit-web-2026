@@ -59,10 +59,13 @@ export function buildPostCreateHref(sectionId, { categoryId, issueId } = {}) {
   return `/admin/contents/posts/new?${params.toString()}`;
 }
 
-export function buildIssueCreateHref() {
-  return "/admin/contents/issues/new";
+export function buildIssueCreateHref(sectionId) {
+  if (!sectionId) return "/admin/contents/issues/new";
+  return `/admin/contents/issues/new?sectionId=${encodeURIComponent(sectionId)}`;
 }
 
-export function buildIssueEditHref(issueId) {
-  return `/admin/contents/issues/${issueId}`;
+export function buildIssueEditHref(issueId, sectionId) {
+  const path = `/admin/contents/issues/${issueId}`;
+  if (!sectionId) return path;
+  return `${path}?sectionId=${encodeURIComponent(sectionId)}`;
 }

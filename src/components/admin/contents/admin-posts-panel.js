@@ -13,6 +13,7 @@ import {
   sectionUsesWorkshopStatusTabs,
 } from "@/lib/admin/section-mode";
 import { filterPostsByWorkshopStatus } from "@/lib/admin/workshop-status";
+import { contentsSectionHref } from "@/lib/admin/admin-routes";
 import { AUTHORS_TAB, isAuthorsTabSelected } from "@/lib/admin/authors-tab";
 import { isContentsUtilityTabSelected } from "@/lib/admin/contents-utility-tabs";
 import { isKeywordsTabSelected, KEYWORDS_TAB } from "@/lib/admin/keywords-tab";
@@ -26,8 +27,7 @@ import { AdminIssuesList } from "@/components/admin/contents/admin-issues-list";
 import { AdminPostsTable } from "@/components/admin/contents/admin-posts-table";
 import styles from "@/components/admin/shared/admin-posts-panel.module.css";
 
-export function AdminPostsPanel() {
-  const [selectedSectionId, setSelectedSectionId] = useState(null);
+export function AdminPostsPanel({ sectionId = null }) {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedWorkshopStatus, setSelectedWorkshopStatus] = useState(null);
 
@@ -43,9 +43,13 @@ export function AdminPostsPanel() {
   });
 
   const sections = sectionsData?.items ?? [];
-  const isKeywordsView = isKeywordsTabSelected(selectedSectionId);
-  const isAuthorsView = isAuthorsTabSelected(selectedSectionId);
-  const isUtilityView = isContentsUtilityTabSelected(selectedSectionId);
+  const isKeywordsView = isKeywordsTabSelected(sectionId);
+  const isAuthorsView = isAuthorsTabSelected(sectionId);
+  const isUtilityView = isContentsUtilityTabSelected(sectionId);
+  const selectedSectionId =
+    isUtilityView || sections.some((section) => section.id === sectionId)
+      ? sectionId
+      : null;
   const selectedSection =
     sections.find((section) => section.id === selectedSectionId) ?? null;
   const sectionMode = getSectionMode(selectedSection);
@@ -161,12 +165,6 @@ export function AdminPostsPanel() {
     return filterPostsByWorkshopStatus(posts, selectedWorkshopStatus);
   }, [posts, sectionMode, selectedWorkshopStatus]);
 
-  function handleSectionSelect(sectionId) {
-    setSelectedSectionId(sectionId);
-    setSelectedCategoryId(null);
-    setSelectedWorkshopStatus(null);
-  }
-
   if (sectionsLoading) {
     return <p className={`${styles.status} caption gray-65`}>섹션 불러오는 중…</p>;
   }
@@ -215,7 +213,7 @@ export function AdminPostsPanel() {
       <AdminSectionTabs
         sections={sections}
         selectedId={selectedSectionId}
-        onSelect={handleSectionSelect}
+        hrefFor={contentsSectionHref}
         trailingTabs={[KEYWORDS_TAB, AUTHORS_TAB]}
       />
 
@@ -310,7 +308,7 @@ export function AdminPostsPanel() {
         {selectedSectionId && !isUtilityView && !isListLoading && !listError && (
           <div className={styles.toolbar}>
             {sectionMode === "journal" ? (
-              <Link href={buildIssueCreateHref()} className={`${styles.createButton} caption`}>
+              <Link href={buildIssueCreateHref(selectedSectionId)} className={`${styles.createButton} caption`}>
                 + 새 이슈
               </Link>
             ) : (

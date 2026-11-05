@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import { AdminInfoPanel } from "@/components/admin/info/admin-info-panel";
+import { infoListHref } from "@/lib/admin/admin-routes";
 import styles from "@/app/admin/contents/page.module.css";
 
 export const metadata = {
@@ -7,14 +9,18 @@ export const metadata = {
 
 export default async function AdminInfoPage({ searchParams }) {
   const params = await searchParams;
-  const initialTab = typeof params.tab === "string" ? params.tab : "info";
+  const tab = typeof params.tab === "string" ? params.tab : "";
+
+  if (tab === "editors" || tab === "users") {
+    redirect(infoListHref(tab));
+  }
 
   return (
     <main className={styles.main}>
       <header className={styles.header}>
         <h1 className="title-1">정보 관리</h1>
       </header>
-      <AdminInfoPanel initialTab={initialTab} />
+      <AdminInfoPanel tab="info" />
     </main>
   );
 }

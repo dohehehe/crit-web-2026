@@ -12,7 +12,7 @@ export default async function EditEditorPage({ params }) {
   return (
     <main className={styles.main}>
       <header className={styles.header}>
-        <Link href="/admin/info?tab=editors" className={`${styles.backLink} caption`}>
+        <Link href="/admin/info/editors" className={`${styles.backLink} caption`}>
           ← 목록
         </Link>
         <h1 className="title-1">에디터 수정</h1>

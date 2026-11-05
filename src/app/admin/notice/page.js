@@ -11,7 +11,7 @@ export default function AdminNoticePage() {
       <header className={styles.header}>
         <h1 className="title-1">공지 관리</h1>
       </header>
-      <AdminNoticePanel />
+      <AdminNoticePanel tab="notice" />
     </main>
   );
 }

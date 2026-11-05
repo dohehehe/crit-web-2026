@@ -3,13 +3,13 @@
 .shell {
   position: relative;
   z-index: 101;
-  margin-top: -180px;
+  margin-top: -73px;
   min-height: 100vh;
   background: var(--white);
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
   .shell {
-    margin-top: -52px;
+    margin-top: -75px;
   }
 }

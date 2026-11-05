@@ -5,12 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { infoListHref } from "@/lib/admin/admin-routes";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const EDITOR_SELECT = "id,name,name_en,description,order";
-const LIST_HREF = "/admin/info?tab=editors";
+const LIST_HREF = infoListHref("editors");
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);

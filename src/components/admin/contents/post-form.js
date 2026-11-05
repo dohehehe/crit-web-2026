@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { contentsSectionHref } from "@/lib/admin/admin-routes";
 import {
   getSectionMode,
   sectionHasCategories,
@@ -335,7 +336,7 @@ function PostFormFields({
         return;
       }
 
-      router.push("/admin/contents");
+      router.push(contentsSectionHref(form.section_id));
     } catch {
       // mutation error state handles display
     }
@@ -404,7 +405,7 @@ function PostFormFields({
 
     try {
       await deletePost(`posts/${postId}`);
-      router.push("/admin/contents");
+      router.push(contentsSectionHref(form.section_id));
     } catch {
       // mutation error state handles display
     }
@@ -759,7 +760,7 @@ function PostFormFields({
             {isPreviewing ? "미리보기 여는 중…" : "미리보기"}
           </button>
           <Link
-            href="/admin/contents"
+            href={contentsSectionHref(form.section_id)}
             className={`${styles.cancelButton} caption`}
           >
             취소
@@ -777,6 +778,19 @@ function PostFormFields({
         )}
       </div>
     </form>
+  );
+}
+
+export function ContentsPostBackLink({ postId, className, children }) {
+  const { data } = useAdminQuery(`posts/${postId}`, {
+    params: { select: "section_id" },
+    enabled: Boolean(postId),
+  });
+
+  return (
+    <Link href={contentsSectionHref(data?.section_id)} className={className}>
+      {children}
+    </Link>
   );
 }
 
