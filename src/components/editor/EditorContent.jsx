@@ -1,3 +1,4 @@
+import { ChecklistList } from "@/components/editor/ChecklistList";
 import { EditorImage } from "@/components/editor/EditorImage";
 import { GallerySlider } from "@/components/editor/GallerySlider";
 import { createFootnoteContext } from "@/lib/editorjs/footnotes";
@@ -31,12 +32,30 @@ function DocumentFootnotes({ footnotes, proseStyles }) {
   );
 }
 
-function renderListItems(items, ordered, applyFootnotesToHtml, proseStyles) {
+function toChecklistItems(items, applyFootnotesToHtml) {
+  if (!items?.length) {
+    return [];
+  }
+
+  return items.map((item) => {
+    const content = typeof item === "string" ? item : (item.content ?? "");
+
+    return {
+      html: content ? applyFootnotesToHtml(content) : "",
+      checked: item?.meta?.checked === true,
+      items: item?.items?.length
+        ? toChecklistItems(item.items, applyFootnotesToHtml)
+        : [],
+    };
+  });
+}
+
+function renderListItems(items, style, applyFootnotesToHtml, proseStyles) {
   if (!items?.length) {
     return null;
   }
 
-  const ListTag = ordered ? "ol" : "ul";
+  const ListTag = style === "ordered" ? "ol" : "ul";
 
   return (
     <ListTag className={proseStyles.list}>
@@ -51,11 +70,11 @@ function renderListItems(items, ordered, applyFootnotesToHtml, proseStyles) {
             ) : null}
             {item?.items?.length
               ? renderListItems(
-                item.items,
-                ordered,
-                applyFootnotesToHtml,
-                proseStyles,
-              )
+                  item.items,
+                  style,
+                  applyFootnotesToHtml,
+                  proseStyles,
+                )
               : null}
           </li>
         );
@@ -103,11 +122,18 @@ function renderBlock(block, index, applyFootnotesToHtml, proseStyles) {
           className={proseStyles.listBlock}
           {...blockAlignProps(data?.alignment)}
         >
-          {renderListItems(
-            data?.items,
-            data?.style === "ordered",
-            applyFootnotesToHtml,
-            proseStyles,
+          {data?.style === "checklist" ? (
+            <ChecklistList
+              items={toChecklistItems(data?.items, applyFootnotesToHtml)}
+              proseStyles={proseStyles}
+            />
+          ) : (
+            renderListItems(
+              data?.items,
+              data?.style,
+              applyFootnotesToHtml,
+              proseStyles,
+            )
           )}
         </div>
       );
@@ -126,7 +152,12 @@ function renderBlock(block, index, applyFootnotesToHtml, proseStyles) {
             }}
           />
           {data?.caption ? (
-            <cite className={`p ${proseStyles.quoteCaption}`}>— {data.caption}</cite>
+            <cite
+              className={`p ${proseStyles.quoteCaption}`}
+              dangerouslySetInnerHTML={{
+                __html: `— ${applyFootnotesToHtml(data.caption)}`,
+              }}
+            />
           ) : null}
         </blockquote>
       );
