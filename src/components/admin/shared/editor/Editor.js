@@ -145,6 +145,33 @@ function usableRange(range) {
   return range;
 }
 
+function unwrapElement(element) {
+  const parent = element.parentNode;
+
+  if (!parent) {
+    return;
+  }
+
+  while (element.firstChild) {
+    parent.insertBefore(element.firstChild, element);
+  }
+
+  element.remove();
+}
+
+function stripNestedTextColor(fragment) {
+  [...fragment.querySelectorAll("font")].reverse().forEach(unwrapElement);
+
+  fragment.querySelectorAll("span, mark").forEach((element) => {
+    element.style.removeProperty("color");
+    element.removeAttribute("color");
+
+    if (!element.getAttribute("style")?.trim()) {
+      element.removeAttribute("style");
+    }
+  });
+}
+
 function createColorTool(Tool) {
   return class extends Tool {
     render() {
@@ -308,6 +335,7 @@ function createColorTool(Tool) {
 
     wrapRange(range) {
       const contents = range.extractContents();
+      stripNestedTextColor(contents);
 
       if (!contents.textContent && !contents.querySelector("br, img")) {
         range.insertNode(contents);
