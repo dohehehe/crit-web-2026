@@ -31,31 +31,51 @@ function DocumentFootnotes({ footnotes, proseStyles }) {
   );
 }
 
-function renderListItems(items, ordered, applyFootnotesToHtml, proseStyles) {
+function renderListItems(items, style, applyFootnotesToHtml, proseStyles) {
   if (!items?.length) {
     return null;
   }
 
-  const ListTag = ordered ? "ol" : "ul";
+  const isChecklist = style === "checklist";
+  const ListTag = style === "ordered" ? "ol" : "ul";
+  const listClassName = isChecklist
+    ? `${proseStyles.list} ${proseStyles.checklist}`
+    : proseStyles.list;
 
   return (
-    <ListTag className={proseStyles.list}>
+    <ListTag className={listClassName}>
       {items.map((item, index) => {
         const content = typeof item === "string" ? item : item.content;
         const processedContent = content ? applyFootnotesToHtml(content) : "";
+        const checked = item?.meta?.checked === true;
 
         return (
-          <li key={index}>
+          <li
+            key={index}
+            className={isChecklist ? proseStyles.checklistItem : undefined}
+          >
+            {isChecklist ? (
+              <span
+                className={
+                  checked
+                    ? `${proseStyles.checklistBox} ${proseStyles.checklistBoxChecked}`
+                    : proseStyles.checklistBox
+                }
+                role="checkbox"
+                aria-checked={checked}
+                aria-disabled="true"
+              />
+            ) : null}
             {processedContent ? (
               <span dangerouslySetInnerHTML={{ __html: processedContent }} />
             ) : null}
             {item?.items?.length
               ? renderListItems(
-                item.items,
-                ordered,
-                applyFootnotesToHtml,
-                proseStyles,
-              )
+                  item.items,
+                  style,
+                  applyFootnotesToHtml,
+                  proseStyles,
+                )
               : null}
           </li>
         );
@@ -105,7 +125,7 @@ function renderBlock(block, index, applyFootnotesToHtml, proseStyles) {
         >
           {renderListItems(
             data?.items,
-            data?.style === "ordered",
+            data?.style,
             applyFootnotesToHtml,
             proseStyles,
           )}
