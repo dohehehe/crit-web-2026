@@ -145,9 +145,19 @@
   width: 16px;
   height: 16px;
   margin-top: calc((var(--p-line-height) - 16px) / 2);
+  padding: 0;
   border: 1px solid currentColor;
   border-radius: 3px;
   background: transparent;
+  color: inherit;
+  font: inherit;
+  appearance: none;
+  cursor: pointer;
+}
+
+.checklistBox:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
 }
 
 .checklistBoxChecked {

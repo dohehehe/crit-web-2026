@@ -1,3 +1,4 @@
+import { ChecklistList } from "@/components/editor/ChecklistList";
 import { EditorImage } from "@/components/editor/EditorImage";
 import { GallerySlider } from "@/components/editor/GallerySlider";
 import { createFootnoteContext } from "@/lib/editorjs/footnotes";
@@ -31,41 +32,39 @@ function DocumentFootnotes({ footnotes, proseStyles }) {
   );
 }
 
+function toChecklistItems(items, applyFootnotesToHtml) {
+  if (!items?.length) {
+    return [];
+  }
+
+  return items.map((item) => {
+    const content = typeof item === "string" ? item : (item.content ?? "");
+
+    return {
+      html: content ? applyFootnotesToHtml(content) : "",
+      checked: item?.meta?.checked === true,
+      items: item?.items?.length
+        ? toChecklistItems(item.items, applyFootnotesToHtml)
+        : [],
+    };
+  });
+}
+
 function renderListItems(items, style, applyFootnotesToHtml, proseStyles) {
   if (!items?.length) {
     return null;
   }
 
-  const isChecklist = style === "checklist";
   const ListTag = style === "ordered" ? "ol" : "ul";
-  const listClassName = isChecklist
-    ? `${proseStyles.list} ${proseStyles.checklist}`
-    : proseStyles.list;
 
   return (
-    <ListTag className={listClassName}>
+    <ListTag className={proseStyles.list}>
       {items.map((item, index) => {
         const content = typeof item === "string" ? item : item.content;
         const processedContent = content ? applyFootnotesToHtml(content) : "";
-        const checked = item?.meta?.checked === true;
 
         return (
-          <li
-            key={index}
-            className={isChecklist ? proseStyles.checklistItem : undefined}
-          >
-            {isChecklist ? (
-              <span
-                className={
-                  checked
-                    ? `${proseStyles.checklistBox} ${proseStyles.checklistBoxChecked}`
-                    : proseStyles.checklistBox
-                }
-                role="checkbox"
-                aria-checked={checked}
-                aria-disabled="true"
-              />
-            ) : null}
+          <li key={index}>
             {processedContent ? (
               <span dangerouslySetInnerHTML={{ __html: processedContent }} />
             ) : null}
@@ -123,11 +122,18 @@ function renderBlock(block, index, applyFootnotesToHtml, proseStyles) {
           className={proseStyles.listBlock}
           {...blockAlignProps(data?.alignment)}
         >
-          {renderListItems(
-            data?.items,
-            data?.style,
-            applyFootnotesToHtml,
-            proseStyles,
+          {data?.style === "checklist" ? (
+            <ChecklistList
+              items={toChecklistItems(data?.items, applyFootnotesToHtml)}
+              proseStyles={proseStyles}
+            />
+          ) : (
+            renderListItems(
+              data?.items,
+              data?.style,
+              applyFootnotesToHtml,
+              proseStyles,
+            )
           )}
         </div>
       );
