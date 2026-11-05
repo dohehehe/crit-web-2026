@@ -152,10 +152,12 @@ function createColorTool(Tool) {
       this.savedRange = null;
 
       button.addEventListener("mousedown", (event) => {
-        const selection = window.getSelection();
+        if (!event.target.closest(".critColorPickerPanel")) {
+          const selection = window.getSelection();
 
-        if (selection?.rangeCount && !selection.isCollapsed) {
-          this.savedRange = selection.getRangeAt(0).cloneRange();
+          if (selection?.rangeCount && !selection.isCollapsed) {
+            this.savedRange = selection.getRangeAt(0).cloneRange();
+          }
         }
 
         if (event.target instanceof HTMLInputElement) {
@@ -290,19 +292,39 @@ function createColorTool(Tool) {
       }
 
       this.closePanel();
-      this.applying = true;
       this.clickedOnLeft = false;
 
       const selection = window.getSelection();
       const range =
-        usableRange(selection?.rangeCount ? selection.getRangeAt(0) : null) ??
-        usableRange(this.savedRange);
+        usableRange(this.savedRange) ??
+        usableRange(selection?.rangeCount ? selection.getRangeAt(0) : null);
 
-      if (range) {
-        this.surround(range);
-      } else {
-        this.applying = false;
+      if (!range) {
+        return;
       }
+
+      this.wrapRange(range);
+    }
+
+    wrapRange(range) {
+      const contents = range.extractContents();
+
+      if (!contents.textContent && !contents.querySelector("br, img")) {
+        range.insertNode(contents);
+        return;
+      }
+
+      const font = document.createElement(this.parentTag);
+      font.style.color = this.color;
+      font.appendChild(contents);
+      range.insertNode(font);
+
+      const selection = window.getSelection();
+      const next = document.createRange();
+      next.selectNodeContents(font);
+      selection?.removeAllRanges();
+      selection?.addRange(next);
+      this.savedRange = next.cloneRange();
     }
 
     createRightButton() {
@@ -382,34 +404,8 @@ function createColorTool(Tool) {
       super.clear();
     }
 
-    surround(range) {
-      if (!this.applying) {
-        this.clickedOnLeft = false;
-        return;
-      }
-
-      this.applying = false;
+    surround() {
       this.clickedOnLeft = false;
-
-      if (!range) {
-        return;
-      }
-
-      if (!this.api.selection.findParentTag(this.parentTag)) {
-        const root =
-          range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
-            ? range.commonAncestorContainer
-            : range.commonAncestorContainer.parentElement;
-        const inner = root?.querySelector(this.parentTag.toLowerCase());
-
-        if (inner && range.intersectsNode(inner)) {
-          this.api.selection.expandToTag(inner);
-          super.surround(window.getSelection().getRangeAt(0));
-          return;
-        }
-      }
-
-      super.surround(range);
     }
   };
 }
