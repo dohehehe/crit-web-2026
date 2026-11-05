@@ -164,6 +164,8 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
   const hasEnglishContent = normalizeBlocks(post.contentEn).length > 0;
   const activeLocale = hasEnglishContent && locale === "en" ? "en" : "ko";
   const subtitle = activeLocale === "en" ? post.subtitleEn : post.subtitle;
+  const title =
+    activeLocale === "en" && post.slug?.trim() ? post.slug.trim() : post.title;
   const content = activeLocale === "en" ? post.contentEn : post.content;
   const thumbnailCaption =
     (activeLocale === "en"
@@ -175,13 +177,13 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
     <>
       <article className={styles.article}>
         {showVideo ? (
-          <PostVideoEmbed videoUrl={post.videoUrl} title={post.title} />
+          <PostVideoEmbed videoUrl={post.videoUrl} title={title} />
         ) : post.thumbnailImg ? (
           <section className={styles.thumbnailSection}>
             <figure className={styles.thumbnail}>
               <Image
                 src={post.thumbnailImg}
-                alt={thumbnailCaption ? "" : (post.title ?? "")}
+                alt={thumbnailCaption ? "" : (title ?? "")}
                 width={0}
                 height={0}
                 sizes="100vw"
@@ -232,8 +234,8 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
               </button>
             </div>
           ) : null}
-          {post.title ? (
-            <h1 className={`title-1 ${styles.title}`}>{post.title}</h1>
+          {title ? (
+            <h1 className={`title-1 ${styles.title}`}>{title}</h1>
           ) : null}
           {subtitle ? (
             <h2 className={`thumb-title ${styles.subtitle}`}>{subtitle}</h2>
