@@ -7,6 +7,7 @@ export const SUBSCRIBER_ONLY_ALERT = {
   title: "알림",
   message: "구독자만 열람 가능합니다.",
   confirmLabel: "회원가입",
+  loginLabel: "로그인",
 };
 
 export const EMAIL_CONFIRMED_ALERT = {

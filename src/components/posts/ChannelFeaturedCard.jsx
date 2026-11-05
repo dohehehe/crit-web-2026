@@ -62,8 +62,15 @@ export function ChannelFeaturedCard({ post }) {
                 </li>
               ) : null}
               {keywords.map((keyword) => (
-                <li key={keyword.id} className="tag-keyword">
-                  {keyword.name}
+                <li
+                  key={keyword.id ?? keyword.name}
+                  className={`tag-keyword ${styles.keyword}`}
+                >
+                  {keyword.id ? (
+                    <Link href={`/search?tag=${keyword.id}`}>{keyword.name}</Link>
+                  ) : (
+                    keyword.name
+                  )}
                 </li>
               ))}
             </ul>
