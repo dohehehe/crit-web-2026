@@ -1,0 +1,46 @@
+.track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.bar {
+  height: 100%;
+  width: 0;
+  background: var(--black);
+  transition: width 8s cubic-bezier(0.05, 0.8, 0.1, 1);
+}
+
+.grow {
+  width: 90%;
+}
+
+.done {
+  width: 100%;
+  opacity: 0;
+  transition:
+    width 0.18s ease-out,
+    opacity 0.2s ease 0.12s;
+}
+
+:global(html.channelBackground) .bar,
+:global(body.channelBackground) .bar {
+  background: var(--white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .grow,
+  .done {
+    transition: opacity 0.2s linear;
+  }
+
+  .grow,
+  .done {
+    width: 100%;
+  }
+}

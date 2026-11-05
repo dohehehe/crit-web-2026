@@ -133,3 +133,14 @@
   color: var(--white);
   text-decoration: none;
 }
+
+.keyword a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.keyword a:hover {
+  text-decoration-line: underline;
+  text-underline-offset: 35%;
+  text-decoration-thickness: 1.8px;
+}

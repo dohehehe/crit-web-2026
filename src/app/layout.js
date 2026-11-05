@@ -1,4 +1,5 @@
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { TopLoadingBar } from "@/components/TopLoadingBar";
 import { Navigation } from "@/components/navigation/Navigation";
 import Footer from "@/components/Footter";
 import {
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href={EDITOR_FONT_STYLESHEET} />
       </head>
       <body>
+        <TopLoadingBar />
         <ScrollToTop />
         <Navigation />
         {children}
