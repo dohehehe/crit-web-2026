@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { contentsSectionHref } from "@/lib/admin/admin-routes";
 import { useIssueFileUpload } from "@/hooks/useIssueFileUpload";
 import { IssuePdfLink } from "@/components/issues/IssuePdfLink";
 import { issueFileName } from "@/lib/issueUpload/fileRef";
@@ -63,7 +64,7 @@ function issueToForm(issue) {
   };
 }
 
-function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
+function IssueFormFields({ mode, issueId, initialValues, initialDescription, listHref }) {
   const router = useRouter();
   const editorRef = useRef(null);
   const coverInputRef = useRef(null);
@@ -216,7 +217,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
         await createIssue("issues", payload);
       }
 
-      router.push("/admin/contents");
+      router.push(listHref);
     } catch {
       // mutation error state handles display
     }
@@ -394,7 +395,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
           {isPreviewing ? "미리보기 여는 중…" : "미리보기"}
         </button>
         <Link
-          href="/admin/contents"
+          href={listHref}
           className={`${styles.cancelButton} caption`}
         >
           취소
@@ -404,7 +405,7 @@ function IssueFormFields({ mode, issueId, initialValues, initialDescription }) {
   );
 }
 
-export function IssueForm({ mode, issueId }) {
+export function IssueForm({ mode, issueId, sectionId }) {
   const isEdit = mode === "edit";
 
   const {
@@ -447,6 +448,7 @@ export function IssueForm({ mode, issueId }) {
       issueId={issueId}
       initialValues={initialValues}
       initialDescription={initialDescription}
+      listHref={contentsSectionHref(sectionId)}
     />
   );
 }

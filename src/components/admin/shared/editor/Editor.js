@@ -145,6 +145,33 @@ function usableRange(range) {
   return range;
 }
 
+function unwrapElement(element) {
+  const parent = element.parentNode;
+
+  if (!parent) {
+    return;
+  }
+
+  while (element.firstChild) {
+    parent.insertBefore(element.firstChild, element);
+  }
+
+  element.remove();
+}
+
+function stripNestedTextColor(fragment) {
+  [...fragment.querySelectorAll("font")].reverse().forEach(unwrapElement);
+
+  fragment.querySelectorAll("span, mark").forEach((element) => {
+    element.style.removeProperty("color");
+    element.removeAttribute("color");
+
+    if (!element.getAttribute("style")?.trim()) {
+      element.removeAttribute("style");
+    }
+  });
+}
+
 function createColorTool(Tool) {
   return class extends Tool {
     render() {
@@ -152,10 +179,12 @@ function createColorTool(Tool) {
       this.savedRange = null;
 
       button.addEventListener("mousedown", (event) => {
-        const selection = window.getSelection();
+        if (!event.target.closest(".critColorPickerPanel")) {
+          const selection = window.getSelection();
 
-        if (selection?.rangeCount && !selection.isCollapsed) {
-          this.savedRange = selection.getRangeAt(0).cloneRange();
+          if (selection?.rangeCount && !selection.isCollapsed) {
+            this.savedRange = selection.getRangeAt(0).cloneRange();
+          }
         }
 
         if (event.target instanceof HTMLInputElement) {
@@ -167,6 +196,7 @@ function createColorTool(Tool) {
 
       button.addEventListener("click", (event) => {
         if (event.target.closest(".critColorPickerPanel")) {
+          event.stopPropagation();
           return;
         }
 
@@ -194,25 +224,24 @@ function createColorTool(Tool) {
     }
 
     checkState() {
-      const active = super.checkState();
+      const colored = this.selectionColorTag();
+      const active = Boolean(colored?.style.color);
 
-      if (this.panel?.classList.contains("isOpen")) {
+      if (this.button && this.iconClasses?.active) {
+        this.button.classList.toggle(this.iconClasses.active, active);
+      }
+
+      if (!active || this.panel?.classList.contains("isOpen")) {
         return active;
       }
 
-      const color = this.selectionTextColor();
-
-      if (!color) {
-        return active;
-      }
-
-      this.color = color;
+      this.color = colored.style.color;
 
       if (this.dot) {
-        this.dot.style.backgroundColor = color;
+        this.dot.style.backgroundColor = this.color;
       }
 
-      const nextInputValue = toColorInputValue(color);
+      const nextInputValue = toColorInputValue(this.color);
 
       if (this.colorInput && /^#[0-9a-f]{6}$/i.test(nextInputValue)) {
         this.colorInput.value = nextInputValue;
@@ -221,22 +250,20 @@ function createColorTool(Tool) {
       return active;
     }
 
-    selectionTextColor() {
-      const colored =
-        this.api.selection.findParentTag(this.parentTag) ||
-        this.api.selection.findParentTag("SPAN");
+    selectionColorTag() {
+      const font = this.api.selection.findParentTag(this.parentTag);
 
-      if (colored?.style.color) {
-        return colored.style.color;
+      if (font?.style.color) {
+        return font;
       }
 
-      const node = window.getSelection()?.anchorNode;
-      const element = node instanceof Element ? node : node?.parentElement;
-      const block = element?.closest(
-        ".ce-paragraph, .ce-header, .cdx-quote__text, .cdx-list__item",
-      );
+      const span = this.api.selection.findParentTag("SPAN");
 
-      return block ? getComputedStyle(block).color : "";
+      if (span?.style.color) {
+        return span;
+      }
+
+      return null;
     }
 
     rememberColor(color) {
@@ -292,19 +319,40 @@ function createColorTool(Tool) {
       }
 
       this.closePanel();
-      this.applying = true;
       this.clickedOnLeft = false;
 
       const selection = window.getSelection();
       const range =
-        usableRange(selection?.rangeCount ? selection.getRangeAt(0) : null) ??
-        usableRange(this.savedRange);
+        usableRange(this.savedRange) ??
+        usableRange(selection?.rangeCount ? selection.getRangeAt(0) : null);
 
-      if (range) {
-        this.surround(range);
-      } else {
-        this.applying = false;
+      if (!range) {
+        return;
       }
+
+      this.wrapRange(range);
+    }
+
+    wrapRange(range) {
+      const contents = range.extractContents();
+      stripNestedTextColor(contents);
+
+      if (!contents.textContent && !contents.querySelector("br, img")) {
+        range.insertNode(contents);
+        return;
+      }
+
+      const font = document.createElement(this.parentTag);
+      font.style.color = this.color;
+      font.appendChild(contents);
+      range.insertNode(font);
+
+      const selection = window.getSelection();
+      const next = document.createRange();
+      next.selectNodeContents(font);
+      selection?.removeAllRanges();
+      selection?.addRange(next);
+      this.savedRange = next.cloneRange();
     }
 
     createRightButton() {
@@ -384,34 +432,8 @@ function createColorTool(Tool) {
       super.clear();
     }
 
-    surround(range) {
-      if (!this.applying) {
-        this.clickedOnLeft = false;
-        return;
-      }
-
-      this.applying = false;
+    surround() {
       this.clickedOnLeft = false;
-
-      if (!range) {
-        return;
-      }
-
-      if (!this.api.selection.findParentTag(this.parentTag)) {
-        const root =
-          range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
-            ? range.commonAncestorContainer
-            : range.commonAncestorContainer.parentElement;
-        const inner = root?.querySelector(this.parentTag.toLowerCase());
-
-        if (inner && range.intersectsNode(inner)) {
-          this.api.selection.expandToTag(inner);
-          super.surround(window.getSelection().getRangeAt(0));
-          return;
-        }
-      }
-
-      super.surround(range);
     }
   };
 }

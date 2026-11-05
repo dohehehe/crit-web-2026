@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { noticeListHref } from "@/lib/admin/admin-routes";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const POPUP_SELECT = "id,content,link_url,thumbnail_img,is_active";
+const LIST_HREF = noticeListHref("popup");
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);
@@ -130,7 +132,7 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
         await createPopup("notice_popup", payload);
       }
 
-      router.push("/admin/notice");
+      router.push(LIST_HREF);
     } catch {
       // mutation error state handles display
     }
@@ -147,7 +149,7 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
 
     try {
       await deletePopup(`notice_popup/${popupId}`);
-      router.push("/admin/notice");
+      router.push(LIST_HREF);
     } catch {
       // mutation error state handles display
     }
@@ -236,7 +238,7 @@ function NoticePopupFormFields({ mode, popupId, initialValues, initialContent })
           <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
             {isSaving && !isDeleting ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
           </button>
-          <Link href="/admin/notice" className={`${styles.cancelButton} caption`}>
+          <Link href={LIST_HREF} className={`${styles.cancelButton} caption`}>
             취소
           </Link>
         </div>

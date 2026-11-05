@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
+import { noticeListHref } from "@/lib/admin/admin-routes";
 import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
 import { AdminNoticeTable } from "@/components/admin/notice/admin-notice-table";
 import { AdminNoticePopupTable } from "@/components/admin/notice/admin-notice-popup-table";
@@ -15,8 +15,8 @@ const NOTICE_TABS = [
   { id: "banner", label: "배너" },
 ];
 
-export function AdminNoticePanel() {
-  const [selectedTab, setSelectedTab] = useState("notice");
+export function AdminNoticePanel({ tab = "notice" }) {
+  const selectedTab = NOTICE_TABS.some((item) => item.id === tab) ? tab : "notice";
 
   const {
     data: noticesData,
@@ -94,7 +94,7 @@ export function AdminNoticePanel() {
       <AdminSectionTabs
         sections={NOTICE_TABS.map((tab) => ({ id: tab.id, name: tab.label }))}
         selectedId={selectedTab}
-        onSelect={setSelectedTab}
+        hrefFor={noticeListHref}
       />
 
       <div className={styles.content} role="tabpanel">

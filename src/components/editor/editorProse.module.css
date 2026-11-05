@@ -398,7 +398,7 @@
 }
 
 .root :global(.image-gallery__caption) {
-  color: var(--black) !important;
+  color: var(--black);
 }
 
 .root :global(.image-gallery__item:first-child .image-gallery__item-caption) {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useAdminQuery } from "@/hooks/use-admin-query";
+import { infoListHref } from "@/lib/admin/admin-routes";
 import { getRoleLabel } from "@/lib/auth/roleLabels";
 import { AdminSectionTabs } from "@/components/admin/shared/admin-section-tabs";
 import { AdminCategoryTabs } from "@/components/admin/shared/admin-category-tabs";
@@ -19,10 +20,8 @@ const INFO_TABS = [
 
 const INFO_TAB_IDS = new Set(INFO_TABS.map((tab) => tab.id));
 
-export function AdminInfoPanel({ initialTab = "info" }) {
-  const [selectedTab, setSelectedTab] = useState(
-    INFO_TAB_IDS.has(initialTab) ? initialTab : "info"
-  );
+export function AdminInfoPanel({ tab = "info" }) {
+  const selectedTab = INFO_TAB_IDS.has(tab) ? tab : "info";
   const [selectedRoleId, setSelectedRoleId] = useState(null);
 
   const {
@@ -93,7 +92,7 @@ export function AdminInfoPanel({ initialTab = "info" }) {
       <AdminSectionTabs
         sections={INFO_TABS.map((tab) => ({ id: tab.id, name: tab.label }))}
         selectedId={selectedTab}
-        onSelect={setSelectedTab}
+        hrefFor={infoListHref}
       />
 
       <div className={styles.content} role="tabpanel">

@@ -1,3 +1,5 @@
+@import "@/app/breakpoints.css";
+
 .bar {
   display: flex;
   flex-grow: 1;
@@ -38,4 +40,10 @@
 .actionButton:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .bar {
+    flex-direction: column;
+  }
 }

@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { noticeListHref } from "@/lib/admin/admin-routes";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const BANNER_SELECT = "id,img_url,link_url,is_active";
+const LIST_HREF = noticeListHref("banner");
 
 function emptyForm() {
   return {
@@ -90,7 +92,7 @@ function BannerFormFields({ mode, bannerId, initialValues }) {
         await createBanner("banner", payload);
       }
 
-      router.push("/admin/notice");
+      router.push(LIST_HREF);
     } catch {
       // mutation error state handles display
     }
@@ -107,7 +109,7 @@ function BannerFormFields({ mode, bannerId, initialValues }) {
 
     try {
       await deleteBanner(`banner/${bannerId}`);
-      router.push("/admin/notice");
+      router.push(LIST_HREF);
     } catch {
       // mutation error state handles display
     }
@@ -187,7 +189,7 @@ function BannerFormFields({ mode, bannerId, initialValues }) {
           <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
             {isSaving && !isDeleting ? "저장 중…" : isEdit ? "수정 저장" : "생성"}
           </button>
-          <Link href="/admin/notice" className={`${styles.cancelButton} caption`}>
+          <Link href={LIST_HREF} className={`${styles.cancelButton} caption`}>
             취소
           </Link>
         </div>

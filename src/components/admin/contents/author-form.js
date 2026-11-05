@@ -6,13 +6,15 @@ import { useRouter } from "next/navigation";
 import { useAdminQuery } from "@/hooks/use-admin-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useImageUpload } from "@/hooks/useImageUpload";
-import { getAuthorPostCount } from "@/lib/admin/authors-tab";
+import { contentsSectionHref } from "@/lib/admin/admin-routes";
+import { AUTHORS_TAB_ID, getAuthorPostCount } from "@/lib/admin/authors-tab";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
 import { slugifyKeyword } from "@/lib/keywords/slugify";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const AUTHOR_SELECT = "id,name,slug,email,img_url,content,post_author(count)";
+const LIST_HREF = contentsSectionHref(AUTHORS_TAB_ID);
 
 function parseContent(content) {
   const blocks = normalizeBlocks(content);
@@ -127,7 +129,7 @@ function AuthorFormFields({ authorId, initialValues, initialContent, postCount }
 
     try {
       await updateAuthor(`authors/${authorId}`, payload);
-      router.push("/admin/contents");
+      router.push(LIST_HREF);
     } catch {
       // mutation error state handles display
     }
@@ -146,7 +148,7 @@ function AuthorFormFields({ authorId, initialValues, initialContent, postCount }
 
     try {
       await deleteAuthor(`authors/${authorId}`);
-      router.push("/admin/contents");
+      router.push(LIST_HREF);
     } catch {
       // mutation error state handles display
     }
@@ -250,7 +252,7 @@ function AuthorFormFields({ authorId, initialValues, initialContent, postCount }
           <button type="submit" className={`${styles.submitButton} caption`} disabled={isSaving}>
             {isUpdating ? "저장 중…" : "수정 저장"}
           </button>
-          <Link href="/admin/contents" className={`${styles.cancelButton} caption`}>
+          <Link href={LIST_HREF} className={`${styles.cancelButton} caption`}>
             취소
           </Link>
         </div>

@@ -10,7 +10,7 @@ export default function NewBannerPage() {
   return (
     <main className={styles.main}>
       <header className={styles.header}>
-        <Link href="/admin/notice" className={`${styles.backLink} caption`}>
+        <Link href="/admin/notice/banner" className={`${styles.backLink} caption`}>
           ← 목록
         </Link>
         <h1 className="title-1">새 배너</h1>
