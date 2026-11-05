@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AlertDialog } from "@/components/auth/AlertDialog";
 import { SUBSCRIBER_ONLY_ALERT } from "@/lib/auth/constants";
 import {
@@ -34,6 +34,7 @@ function savePdfFile(url, filename) {
 
 export function IssuePdfLink({ fileUrl, className, children }) {
   const router = useRouter();
+  const pathname = usePathname();
   const storagePath = parseIssueStoragePath(fileUrl);
   const blobUrlRef = useRef(null);
   const loadingRef = useRef(false);
@@ -177,6 +178,7 @@ export function IssuePdfLink({ fileUrl, className, children }) {
         title={SUBSCRIBER_ONLY_ALERT.title}
         message={loadError || SUBSCRIBER_ONLY_ALERT.message}
         confirmLabel={loadError ? "닫기" : SUBSCRIBER_ONLY_ALERT.confirmLabel}
+        secondaryLabel={loadError ? null : SUBSCRIBER_ONLY_ALERT.loginLabel}
         centerActions
         cancelLabel={loadError ? null : "닫기"}
         onConfirm={() => {
@@ -186,6 +188,10 @@ export function IssuePdfLink({ fileUrl, className, children }) {
           }
 
           router.push("/subscription");
+        }}
+        onSecondary={() => {
+          const next = pathname ? `?next=${encodeURIComponent(pathname)}` : "";
+          router.push(`/login${next}`);
         }}
         onCancel={() => {
           setAlertOpen(false);

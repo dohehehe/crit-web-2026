@@ -9,9 +9,11 @@ export function AlertDialog({
   message,
   confirmLabel = "확인",
   cancelLabel = null,
+  secondaryLabel = null,
   centerActions = false,
   onConfirm,
   onCancel = null,
+  onSecondary = null,
 }) {
   const titleId = useId();
   const confirmRef = useRef(null);
@@ -59,6 +61,15 @@ export function AlertDialog({
               onClick={onCancel}
             >
               {cancelLabel}
+            </button>
+          ) : null}
+          {secondaryLabel && onSecondary ? (
+            <button
+              type="button"
+              className={`tag-keyword ${styles.button}`}
+              onClick={onSecondary}
+            >
+              {secondaryLabel}
             </button>
           ) : null}
           <button
