@@ -397,6 +397,10 @@
   letter-spacing: var(--caption-letter-spacing);
 }
 
+.root :global(.image-gallery__caption) {
+  color: var(--black) !important;
+}
+
 .root :global(.image-gallery__item:first-child .image-gallery__item-caption) {
   padding-left: 4px;
 }
