@@ -126,7 +126,12 @@ function renderBlock(block, index, applyFootnotesToHtml, proseStyles) {
             }}
           />
           {data?.caption ? (
-            <cite className={`p ${proseStyles.quoteCaption}`}>— {data.caption}</cite>
+            <cite
+              className={`p ${proseStyles.quoteCaption}`}
+              dangerouslySetInnerHTML={{
+                __html: `— ${applyFootnotesToHtml(data.caption)}`,
+              }}
+            />
           ) : null}
         </blockquote>
       );
