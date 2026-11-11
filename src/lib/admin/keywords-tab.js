@@ -2,7 +2,7 @@ export const KEYWORDS_TAB_ID = "keywords";
 
 export const KEYWORDS_TAB = {
   id: KEYWORDS_TAB_ID,
-  name: "Keywords",
+  name: "키워드",
 };
 
 export function isKeywordsTabSelected(selectedId) {

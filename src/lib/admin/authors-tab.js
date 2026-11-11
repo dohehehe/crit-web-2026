@@ -2,7 +2,7 @@ export const AUTHORS_TAB_ID = "authors";
 
 export const AUTHORS_TAB = {
   id: AUTHORS_TAB_ID,
-  name: "Authors",
+  name: "저자",
 };
 
 export function isAuthorsTabSelected(selectedId) {
