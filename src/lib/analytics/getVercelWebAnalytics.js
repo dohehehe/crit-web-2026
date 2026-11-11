@@ -1,6 +1,7 @@
 import "server-only";
 
 import { rankViewedPosts } from "@/lib/analytics/rankViewedPosts";
+import { isAdminRoute, PUBLIC_PAGEVIEW_FILTER } from "@/lib/analytics/publicPageviews";
 
 const VERCEL_API_BASE = "https://api.vercel.com";
 const SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000;
@@ -27,6 +28,12 @@ function rangeWindow(days) {
   const until = seoulToday();
   const since = addDays(until, -(days - 1));
   return { since, until };
+}
+
+function breakdownUntil(isoDate) {
+  // A date-only until ends at that morning, so today's visits drop out of path breakdowns.
+  // 23:00Z is shifted to the next UTC midnight and matches the count query.
+  return `${isoDate}T23:00:00.000Z`;
 }
 
 async function vercelGet(token, path, params) {
@@ -113,6 +120,11 @@ export async function getVercelWebAnalytics(rangeDays) {
       teamId: project.teamId,
       since: window.since,
       until: window.until,
+      filter: PUBLIC_PAGEVIEW_FILTER,
+    };
+    const breakdownQuery = {
+      ...query,
+      until: breakdownUntil(window.until),
     };
     const [totals, daily, paths, referrers] = await Promise.all([
       vercelGet(token, "/v1/query/web-analytics/visits/count", query),
@@ -122,19 +134,19 @@ export async function getVercelWebAnalytics(rangeDays) {
         limit: range.days,
       }),
       vercelGet(token, "/v1/query/web-analytics/visits/aggregate", {
-        ...query,
+        ...breakdownQuery,
         by: "requestPath",
         limit: 100,
       }),
       vercelGet(token, "/v1/query/web-analytics/visits/aggregate", {
-        ...query,
+        ...breakdownQuery,
         by: "referrerHostname",
         limit: 10,
       }),
     ]);
 
     const pathRows = metricRows(paths?.data, "requestPath", "/")
-      .filter((row) => row.label !== "Others")
+      .filter((row) => row.label !== "Others" && !isAdminRoute(row.label))
       .sort((a, b) => b.pageviews - a.pageviews || b.visitors - a.visitors);
     const posts = await rankViewedPosts(pathRows);
 
@@ -152,7 +164,6 @@ export async function getVercelWebAnalytics(rangeDays) {
         }))
         .sort((a, b) => a.label.localeCompare(b.label)),
       posts,
-      paths: pathRows.slice(0, 10),
       referrers: metricRows(referrers?.data, "referrerHostname", "직접 방문"),
     };
   } catch (error) {
