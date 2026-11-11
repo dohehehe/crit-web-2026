@@ -9,6 +9,7 @@ import {
 } from "@/lib/seo/constants";
 import { getMetadataBaseUrl } from "@/lib/seo/buildPageMetadata";
 import { SiteAnalytics } from "@/components/analytics/SiteAnalytics";
+import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 
 export const metadata = {
@@ -32,6 +33,8 @@ export const metadata = {
 const EDITOR_FONT_STYLESHEET =
   "https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;500;600;700&display=swap";
 
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="ko-KR" data-scroll-behavior="smooth">
@@ -47,6 +50,7 @@ export default function RootLayout({ children }) {
         {children}
         <Footer />
         <SiteAnalytics />
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
