@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T10:18:04.120Z",
+  "generatedAt": "2026-11-11T04:07:38.451Z",
   "projectUrl": null,
   "tables": [
     {
@@ -697,6 +697,13 @@
         },
         {
           "name": "subtitle_en",
+          "type": "text",
+          "required": false,
+          "default": null,
+          "notes": []
+        },
+        {
+          "name": "thumbnail_img_hover",
           "type": "text",
           "required": false,
           "default": null,
