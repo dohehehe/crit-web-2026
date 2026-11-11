@@ -8,7 +8,9 @@ export function ChannelFeaturedCard({ post }) {
     return null;
   }
 
-  const { title, description, thumbnailImg, category, keywords = [] } = post;
+  const { title, description, thumbnailImg, thumbnailImgHover = "", category, keywords = [] } = post;
+  const hoverThumbnailImg =
+    typeof thumbnailImgHover === "string" ? thumbnailImgHover.trim() : "";
   const trimmedDescription =
     typeof description === "string" ? description.trim() : "";
 
@@ -17,15 +19,27 @@ export function ChannelFeaturedCard({ post }) {
       <div className={styles.cardLink}>
         {thumbnailImg ? (
           <div className={styles.thumbnail}>
-            <Image
-              src={thumbnailImg}
-              alt=""
-              width={0}
-              height={0}
-              sizes="100vw"
-              className={styles.thumbnailImage}
-              priority
-            />
+            <div className={styles.thumbnailFrame}>
+              <Image
+                src={thumbnailImg}
+                alt=""
+                width={0}
+                height={0}
+                sizes="100vw"
+                className={styles.thumbnailImage}
+                priority
+              />
+              {hoverThumbnailImg ? (
+                <Image
+                  src={hoverThumbnailImg}
+                  alt=""
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className={styles.thumbnailHoverImage}
+                />
+              ) : null}
+            </div>
           </div>
         ) : (
           <div

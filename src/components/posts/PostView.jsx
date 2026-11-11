@@ -10,6 +10,7 @@ import { getSectionMode } from "@/lib/admin/section-mode";
 import { getJournalCritIssuePath } from "@/lib/routes/journalCrit";
 import {
   formatAuthorNames,
+  getAuthorDisplayName,
   getPostAuthors,
 } from "@/lib/posts/formatAuthorNames";
 import { getAuthorPath } from "@/lib/routes/authors";
@@ -17,7 +18,7 @@ import { IssuePdfLink } from "@/components/issues/IssuePdfLink";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostView.module.css";
 
-function PostAuthorNames({ post, className }) {
+function PostAuthorNames({ post, locale, className }) {
   const authors = getPostAuthors(post);
   if (authors.length === 0) {
     return null;
@@ -25,23 +26,27 @@ function PostAuthorNames({ post, className }) {
 
   return (
     <p className={className}>
-      {authors.map((author, index) => (
-        <span key={author.id ?? `${author.name}-${index}`}>
-          {index > 0 ? ", " : null}
-          {author.id ? (
-            <Link href={getAuthorPath(author)} className={styles.authorLink}>
-              {author.name}
-            </Link>
-          ) : (
-            author.name
-          )}
-        </span>
-      ))}
+      {authors.map((author, index) => {
+        const label = getAuthorDisplayName(author, locale);
+
+        return (
+          <span key={author.id ?? `${author.name}-${index}`}>
+            {index > 0 ? ", " : null}
+            {author.id ? (
+              <Link href={getAuthorPath(author)} className={styles.authorLink}>
+                {label}
+              </Link>
+            ) : (
+              label
+            )}
+          </span>
+        );
+      })}
     </p>
   );
 }
 
-function AuthorAside({ authors }) {
+function AuthorAside({ authors, locale }) {
   const cards = authors.filter((author) => author.imgUrl || author.description);
 
   return (
@@ -53,9 +58,11 @@ function AuthorAside({ authors }) {
             className={styles.authorNameItem}
           >
             {author.id ? (
-              <Link href={getAuthorPath(author)}>{author.name}</Link>
+              <Link href={getAuthorPath(author)}>
+                {getAuthorDisplayName(author, locale)}
+              </Link>
             ) : (
-              author.name
+              getAuthorDisplayName(author, locale)
             )}
           </li>
         ))}
@@ -243,6 +250,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           <div className={styles.infoContainer}>
             <PostAuthorNames
               post={post}
+              locale={activeLocale}
               className={`tag-keyword black ${styles.author}`}
             />
             {post.date ? (
@@ -297,7 +305,10 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
         {getPostAuthors(post).length > 0 ? (
           <div className={styles.asideItem}>
             <div className={`${styles.asideTitle} menu-en`}>Author</div>
-            <AuthorAside authors={getPostAuthors(post)} />
+            <AuthorAside
+              authors={getPostAuthors(post)}
+              locale={activeLocale}
+            />
           </div>
         ) : null}
 

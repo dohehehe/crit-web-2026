@@ -4,6 +4,7 @@ export const POST_LIST_SELECT = `
   slug,
   description,
   thumnail_img,
+  thumbnail_img_hover,
   date,
   sort_order,
   start_at,
@@ -20,6 +21,7 @@ export const POST_SEARCH_SELECT = `
   title,
   slug,
   thumnail_img,
+  thumbnail_img_hover,
   date,
   categories ( id, name, slug ),
   sections ( id, name, slug ),
@@ -45,7 +47,7 @@ export const POST_DETAIL_SELECT = `
   categories ( id, name, slug ),
   sections ( id, name, slug ),
   issues ( issue_number ),
-  post_author ( authors ( id, name, img_url, content ) ),
+  post_author ( authors ( id, name, slug, img_url, content ) ),
   post_keywords ( keywords ( id, name, slug ) )
 `;
 

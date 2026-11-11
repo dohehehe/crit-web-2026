@@ -34,7 +34,7 @@ import { KeywordInput } from "@/components/admin/shared/keyword/KeywordInput";
 import styles from "@/components/admin/shared/post-form.module.css";
 
 const POST_SELECT =
-  "id,title,subtitle,subtitle_en,slug,description,content,content_en,section_id,category_id,issue_id,date,thumnail_img,video_url,workshop_url,start_at,end_at";
+  "id,title,subtitle,subtitle_en,slug,description,content,content_en,section_id,category_id,issue_id,date,thumnail_img,thumbnail_img_hover,video_url,workshop_url,start_at,end_at";
 
 const CONTENT_LOCALES = [
   { id: "ko", label: "한글" },
@@ -90,6 +90,7 @@ function emptyForm(defaults = {}) {
     thumnail_img: "",
     thumbnail_caption_kr: "",
     thumbnail_caption_en: "",
+    thumbnail_img_hover: "",
     video_url: "",
     workshop_url: "",
     start_at: "",
@@ -145,6 +146,7 @@ function postToForm(post) {
     thumnail_img: thumbnail.url,
     thumbnail_caption_kr: thumbnail.captionKr,
     thumbnail_caption_en: thumbnail.captionEn,
+    thumbnail_img_hover: post.thumbnail_img_hover ?? "",
     video_url: post.video_url ?? "",
     workshop_url: post.workshop_url ?? "",
     start_at: toDatetimeLocalValue(post.start_at),
@@ -172,8 +174,10 @@ function PostFormFields({
     en: initialContentEn,
   });
   const thumbnailInputRef = useRef(null);
+  const hoverThumbnailInputRef = useRef(null);
   const isEdit = mode === "edit";
   const isWorkshop = sectionMode === "workshop";
+  const isChannel = sectionMode === "channel";
 
   const {
     mutate: createPost,
@@ -203,7 +207,9 @@ function PostFormFields({
   const [keywordError, setKeywordError] = useState(null);
   const [authorError, setAuthorError] = useState(null);
   const [thumbnailError, setThumbnailError] = useState(null);
+  const [hoverThumbnailError, setHoverThumbnailError] = useState(null);
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+  const [isUploadingHoverThumbnail, setIsUploadingHoverThumbnail] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
 
   function updateField(name, value) {
@@ -233,6 +239,33 @@ function PostFormFields({
       setThumbnailError(error.message ?? "썸네일 업로드에 실패했습니다.");
     } finally {
       setIsUploadingThumbnail(false);
+      event.target.value = "";
+    }
+  }
+
+  async function handleHoverThumbnailUpload(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setHoverThumbnailError(null);
+    setIsUploadingHoverThumbnail(true);
+
+    try {
+      const result = await uploadImageToServer(file);
+
+      if (result.success && result.file?.url) {
+        updateField("thumbnail_img_hover", result.file.url);
+        return;
+      }
+
+      setHoverThumbnailError(result.error ?? "호버 이미지 업로드에 실패했습니다.");
+    } catch (error) {
+      setHoverThumbnailError(error.message ?? "호버 이미지 업로드에 실패했습니다.");
+    } finally {
+      setIsUploadingHoverThumbnail(false);
       event.target.value = "";
     }
   }
@@ -303,6 +336,9 @@ function PostFormFields({
         captionKr: form.thumbnail_caption_kr,
         captionEn: form.thumbnail_caption_en,
       }),
+      ...(isChannel
+        ? { thumbnail_img_hover: form.thumbnail_img_hover.trim() || null }
+        : {}),
       video_url: form.video_url.trim() || null,
       workshop_url: form.workshop_url.trim() || null,
       start_at: fromDatetimeLocalValue(form.start_at),
@@ -644,6 +680,42 @@ function PostFormFields({
             <p className={`${styles.error} caption`}>{thumbnailError}</p>
           )}
         </div>
+
+        {isChannel ? (
+          <div className={styles.field}>
+            <span className="caption">호버 이미지</span>
+            <input
+              ref={hoverThumbnailInputRef}
+              className={styles.hiddenFileInput}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={handleHoverThumbnailUpload}
+            />
+            <button
+              type="button"
+              className={`${styles.thumbnailButton} caption`}
+              onClick={() => hoverThumbnailInputRef.current?.click()}
+              disabled={isUploadingHoverThumbnail || isBusy}
+            >
+              {isUploadingHoverThumbnail
+                ? "업로드 중…"
+                : form.thumbnail_img_hover
+                  ? "이미지 변경"
+                  : "이미지 추가"}
+            </button>
+            {form.thumbnail_img_hover ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={form.thumbnail_img_hover}
+                alt="호버 이미지 미리보기"
+                className={styles.thumbnailPreview}
+              />
+            ) : null}
+            {hoverThumbnailError && (
+              <p className={`${styles.error} caption`}>{hoverThumbnailError}</p>
+            )}
+          </div>
+        ) : null}
       </div>
 
       {sectionHasMediaFields(sectionMode) && (
