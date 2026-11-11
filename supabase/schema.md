@@ -2,7 +2,7 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-10-29T10:18:04.120Z
+- Updated: 2026-11-11T04:07:38.451Z
 - Tables: 15
 
 ## `authors`
@@ -150,6 +150,7 @@
 | `start_at` | timestamp with time zone | no |  |  |
 | `subtitle` | text | no |  |  |
 | `subtitle_en` | text | no |  |  |
+| `thumbnail_img_hover` | text | no |  |  |
 | `thumnail_img` | jsonb | no |  |  |
 | `title` | text | no |  |  |
 | `updated_at` | timestamp with time zone | no |  |  |

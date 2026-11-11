@@ -8,6 +8,7 @@ function normalizeAuthors(post) {
     .map((author) => ({
       id: author.id ?? null,
       name: author.name,
+      slug: author.slug ?? "",
       imgUrl: author.img_url ?? author.imgUrl ?? "",
       description: author.content
         ? getEditorParagraphPlainText(author.content)
@@ -27,6 +28,10 @@ export function normalizePost(post) {
     slug: post.slug ?? "",
     description: post.description ?? "",
     thumbnailImg: getThumbnailUrl(post.thumnail_img) ?? "",
+    thumbnailImgHover:
+      typeof post.thumbnail_img_hover === "string"
+        ? post.thumbnail_img_hover.trim()
+        : "",
     date: post.date ?? null,
     startAt: post.start_at ?? null,
     endAt: post.end_at ?? null,
