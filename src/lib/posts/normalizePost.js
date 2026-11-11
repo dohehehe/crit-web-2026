@@ -8,6 +8,7 @@ function normalizeAuthors(post) {
     .map((author) => ({
       id: author.id ?? null,
       name: author.name,
+      slug: author.slug ?? "",
       imgUrl: author.img_url ?? author.imgUrl ?? "",
       description: author.content
         ? getEditorParagraphPlainText(author.content)
