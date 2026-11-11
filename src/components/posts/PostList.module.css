@@ -10,6 +10,7 @@
   row-gap: 62px;
   width: 100%;
   list-style: none;
+  padding-bottom: 10px;
 }
 
 /* A track is kept at or under 500px by adding a column before it would pass that width. */
@@ -55,7 +56,7 @@
   }
 }
 
-.list > li {
+.list>li {
   min-width: 0;
 }
 
