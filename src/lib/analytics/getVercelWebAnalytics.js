@@ -1,10 +1,12 @@
 import "server-only";
 
+import { rankViewedPosts } from "@/lib/analytics/rankViewedPosts";
+
 const VERCEL_API_BASE = "https://api.vercel.com";
 const SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 export const ANALYTICS_RANGES = [
-  { id: "7", days: 7, label: "7일" },
+  { id: "7", days: 7, label: "일주일" },
   { id: "30", days: 30, label: "한 달" },
 ];
 
@@ -122,7 +124,7 @@ export async function getVercelWebAnalytics(rangeDays) {
       vercelGet(token, "/v1/query/web-analytics/visits/aggregate", {
         ...query,
         by: "requestPath",
-        limit: 10,
+        limit: 100,
       }),
       vercelGet(token, "/v1/query/web-analytics/visits/aggregate", {
         ...query,
@@ -130,6 +132,11 @@ export async function getVercelWebAnalytics(rangeDays) {
         limit: 10,
       }),
     ]);
+
+    const pathRows = metricRows(paths?.data, "requestPath", "/")
+      .filter((row) => row.label !== "Others")
+      .sort((a, b) => b.pageviews - a.pageviews || b.visitors - a.visitors);
+    const posts = await rankViewedPosts(pathRows);
 
     return {
       ok: true,
@@ -144,7 +151,8 @@ export async function getVercelWebAnalytics(rangeDays) {
           label: row.label.slice(0, 10),
         }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-      paths: metricRows(paths?.data, "requestPath", "/"),
+      posts,
+      paths: pathRows.slice(0, 10),
       referrers: metricRows(referrers?.data, "referrerHostname", "직접 방문"),
     };
   } catch (error) {

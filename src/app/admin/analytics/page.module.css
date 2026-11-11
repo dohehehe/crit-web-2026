@@ -126,6 +126,30 @@
   font-variant-numeric: tabular-nums;
 }
 
+.table .rank {
+  width: 4rem;
+  color: var(--gray-65);
+}
+
+.postTitle {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.postTitle:hover {
+  color: var(--crit-orange);
+}
+
+.postMeta {
+  display: block;
+  margin-top: 4px;
+  color: var(--gray-65);
+  font-weight: var(--footer-weight);
+  font-size: var(--footer-size);
+  line-height: var(--footer-line-height);
+}
+
 .empty {
   margin: 0;
   color: var(--gray-65);

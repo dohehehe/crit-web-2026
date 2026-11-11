@@ -45,6 +45,43 @@ function RangeSwitch({ selectedId }) {
   );
 }
 
+function PostRankTable({ posts }) {
+  if (posts.length === 0) {
+    return <p className={`${styles.empty} p`}>이 기간에 글 조회 기록이 없습니다.</p>;
+  }
+
+  return (
+    <div className={styles.tableWrap}>
+      <table className={styles.table}>
+        <caption className={styles.caption}>많이 본 글</caption>
+        <thead>
+          <tr>
+            <th scope="col">순위</th>
+            <th scope="col">글</th>
+            <th scope="col">페이지뷰</th>
+            <th scope="col">방문자</th>
+          </tr>
+        </thead>
+        <tbody>
+          {posts.map((post, index) => (
+            <tr key={`${post.href}-${index}`}>
+              <td className={styles.rank}>{index + 1}</td>
+              <th scope="row">
+                <Link href={post.href} className={styles.postTitle}>
+                  {post.title}
+                </Link>
+                {post.meta ? <span className={styles.postMeta}>{post.meta}</span> : null}
+              </th>
+              <td>{formatCount(post.pageviews)}</td>
+              <td>{formatCount(post.visitors)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function MetricTable({ caption, rows, labelHeading }) {
   if (rows.length === 0) {
     return <p className={`${styles.empty} p`}>이 기간에 기록이 없습니다.</p>;
@@ -87,8 +124,6 @@ export default async function AdminAnalyticsPage({ searchParams }) {
         <h1 className="title-1">통계</h1>
         <p className="p">
           {formatDay(report.since)} – {formatDay(report.until)}
-          {report.projectName ? ` · ${report.projectName}` : ""}
-          {" · 프로덕션"}
         </p>
       </header>
 
@@ -105,6 +140,11 @@ export default async function AdminAnalyticsPage({ searchParams }) {
               <p className={styles.cardLabel}>방문자</p>
               <p className={styles.cardValue}>{formatCount(report.visitors)}</p>
             </article>
+          </section>
+
+          <section className={styles.section}>
+            <h2 className={`${styles.sectionTitle} menu-kr`}>많이 본 글</h2>
+            <PostRankTable posts={report.posts ?? []} />
           </section>
 
           <section className={styles.section}>
