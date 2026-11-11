@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: "/admin/contents", label: "콘텐츠", match: "/admin/contents" },
   { href: "/admin/notice", label: "공지", match: "/admin/notice" },
   { href: "/admin/info", label: "정보", match: "/admin/info" },
+  { href: "/admin/analytics", label: "통계", match: "/admin/analytics" },
 ];
 
 function isActive(pathname, match) {
