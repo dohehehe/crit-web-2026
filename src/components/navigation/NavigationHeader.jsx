@@ -141,6 +141,7 @@ function useJournalMobileHeaderOffset(headerRef, enabled) {
 export function NavigationHeader({ children }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
   const isJournalCrit = isJournalCritPath(pathname);
   const isChannel = isChannelPath(pathname);
   const useIssueBackground = isJournalCritOrangeBackgroundPath(pathname);
@@ -186,7 +187,7 @@ export function NavigationHeader({ children }) {
   return (
     <header
       ref={headerRef}
-      className={`${styles.header}${isHome ? ` ${styles.headerHome}` : ""}${isJournalCrit ? ` ${styles.headerJournal}` : ""}${isJournalCrit ? ` ${styles.headerJournalTone}` : ""}${isChannel ? ` ${styles.headerChannel}` : ""}`}
+      className={`${styles.header}${isHome ? ` ${styles.headerHome}` : ""}${isJournalCrit ? ` ${styles.headerJournal}` : ""}${isJournalCrit ? ` ${styles.headerJournalTone}` : ""}${isChannel ? ` ${styles.headerChannel}` : ""}${isAdmin ? ` ${styles.headerAdmin}` : ""}`}
     >
       {children}
     </header>
