@@ -28,6 +28,10 @@ export function normalizePost(post) {
     slug: post.slug ?? "",
     description: post.description ?? "",
     thumbnailImg: getThumbnailUrl(post.thumnail_img) ?? "",
+    thumbnailImgHover:
+      typeof post.thumbnail_img_hover === "string"
+        ? post.thumbnail_img_hover.trim()
+        : "",
     date: post.date ?? null,
     startAt: post.start_at ?? null,
     endAt: post.end_at ?? null,

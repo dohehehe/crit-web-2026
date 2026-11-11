@@ -10,9 +10,14 @@ export function PostCard({
   showSectionLabel = false,
   showWorkshopDate = false,
 }) {
-  const { title, thumbnailImg, category, section, keywords, date } = post;
+  const { title, thumbnailImg, thumbnailImgHover, category, section, keywords, date } = post;
   const sectionMode = section ? getSectionMode(section) : null;
   const isJournalSection = sectionMode === "journal";
+  const isChannelSection = sectionMode === "channel";
+  const hoverThumbnailImg =
+    isChannelSection && typeof thumbnailImgHover === "string"
+      ? thumbnailImgHover.trim()
+      : "";
   const showClosedLabel = isWorkshopClosed(post);
   const workshopDate = showWorkshopDate && date ? date : null;
 
@@ -32,7 +37,7 @@ export function PostCard({
 
         {thumbnailImg ? (
           <div
-            className={`${styles.thumbnail} ${isJournalSection ? styles.thumbnailJournal : ""}`}
+            className={`${styles.thumbnail} ${isJournalSection ? styles.thumbnailJournal : ""} ${hoverThumbnailImg ? styles.thumbnailHasHover : ""}`}
           >
             <Image
               src={thumbnailImg}
@@ -42,13 +47,27 @@ export function PostCard({
               sizes="(max-width: 520px) 100vw, (max-width: 1040px) 50vw, (max-width: 1560px) 33vw, (max-width: 2080px) 25vw, 20vw"
               className={styles.thumbnailImage}
             />
-            <span className={styles.hoverShape} aria-hidden="true" />
+            {hoverThumbnailImg ? (
+              <Image
+                src={hoverThumbnailImg}
+                alt=""
+                width={0}
+                height={0}
+                sizes="(max-width: 520px) 100vw, (max-width: 1040px) 50vw, (max-width: 1560px) 33vw, (max-width: 2080px) 25vw, 20vw"
+                className={styles.thumbnailHoverImage}
+              />
+            ) : null}
+            {isChannelSection ? null : (
+              <span className={styles.hoverShape} aria-hidden="true" />
+            )}
           </div>
         ) : (
           <div
             className={`${styles.thumbnail} ${styles.thumbnailPlaceholder}`}
           >
-            <span className={styles.hoverShape} aria-hidden="true" />
+            {isChannelSection ? null : (
+              <span className={styles.hoverShape} aria-hidden="true" />
+            )}
           </div>
         )}
 
