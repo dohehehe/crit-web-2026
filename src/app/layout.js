@@ -8,8 +8,8 @@ import {
   SITE_NAME,
 } from "@/lib/seo/constants";
 import { getMetadataBaseUrl } from "@/lib/seo/buildPageMetadata";
+import { SiteAnalytics } from "@/components/analytics/SiteAnalytics";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next"
 
 export const metadata = {
   metadataBase: getMetadataBaseUrl(),
@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
         <Navigation />
         {children}
         <Footer />
-        <Analytics />
+        <SiteAnalytics />
       </body>
     </html>
   );

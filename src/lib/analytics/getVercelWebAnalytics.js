@@ -1,6 +1,7 @@
 import "server-only";
 
 import { rankViewedPosts } from "@/lib/analytics/rankViewedPosts";
+import { isAdminRoute, PUBLIC_PAGEVIEW_FILTER } from "@/lib/analytics/publicPageviews";
 
 const VERCEL_API_BASE = "https://api.vercel.com";
 const SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000;
@@ -119,6 +120,7 @@ export async function getVercelWebAnalytics(rangeDays) {
       teamId: project.teamId,
       since: window.since,
       until: window.until,
+      filter: PUBLIC_PAGEVIEW_FILTER,
     };
     const breakdownQuery = {
       ...query,
@@ -144,7 +146,7 @@ export async function getVercelWebAnalytics(rangeDays) {
     ]);
 
     const pathRows = metricRows(paths?.data, "requestPath", "/")
-      .filter((row) => row.label !== "Others")
+      .filter((row) => row.label !== "Others" && !isAdminRoute(row.label))
       .sort((a, b) => b.pageviews - a.pageviews || b.visitors - a.visitors);
     const posts = await rankViewedPosts(pathRows);
 
@@ -162,7 +164,6 @@ export async function getVercelWebAnalytics(rangeDays) {
         }))
         .sort((a, b) => a.label.localeCompare(b.label)),
       posts,
-      paths: pathRows.slice(0, 10),
       referrers: metricRows(referrers?.data, "referrerHostname", "직접 방문"),
     };
   } catch (error) {

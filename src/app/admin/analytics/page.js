@@ -153,11 +153,6 @@ export default async function AdminAnalyticsPage({ searchParams }) {
           </section>
 
           <section className={styles.section}>
-            <h2 className={`${styles.sectionTitle} menu-kr`}>경로</h2>
-            <MetricTable caption="많이 본 경로" rows={report.paths} labelHeading="경로" />
-          </section>
-
-          <section className={styles.section}>
             <h2 className={`${styles.sectionTitle} menu-kr`}>유입</h2>
             <MetricTable caption="유입 경로" rows={report.referrers} labelHeading="유입" />
           </section>
