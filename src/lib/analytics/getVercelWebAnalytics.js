@@ -29,6 +29,12 @@ function rangeWindow(days) {
   return { since, until };
 }
 
+function breakdownUntil(isoDate) {
+  // A date-only until ends at that morning, so today's visits drop out of path breakdowns.
+  // 23:00Z is shifted to the next UTC midnight and matches the count query.
+  return `${isoDate}T23:00:00.000Z`;
+}
+
 async function vercelGet(token, path, params) {
   const url = new URL(path, VERCEL_API_BASE);
 
@@ -114,6 +120,10 @@ export async function getVercelWebAnalytics(rangeDays) {
       since: window.since,
       until: window.until,
     };
+    const breakdownQuery = {
+      ...query,
+      until: breakdownUntil(window.until),
+    };
     const [totals, daily, paths, referrers] = await Promise.all([
       vercelGet(token, "/v1/query/web-analytics/visits/count", query),
       vercelGet(token, "/v1/query/web-analytics/visits/aggregate", {
@@ -122,12 +132,12 @@ export async function getVercelWebAnalytics(rangeDays) {
         limit: range.days,
       }),
       vercelGet(token, "/v1/query/web-analytics/visits/aggregate", {
-        ...query,
+        ...breakdownQuery,
         by: "requestPath",
         limit: 100,
       }),
       vercelGet(token, "/v1/query/web-analytics/visits/aggregate", {
-        ...query,
+        ...breakdownQuery,
         by: "referrerHostname",
         limit: 10,
       }),
