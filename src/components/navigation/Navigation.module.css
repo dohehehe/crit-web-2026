@@ -29,6 +29,10 @@
   color: var(--white);
 }
 
+.headerAdmin {
+  display: none;
+}
+
 .logoLink {
   display: inline-block;
   line-height: 0;
