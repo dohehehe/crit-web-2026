@@ -72,11 +72,11 @@ export default async function MyPage() {
 
         <div className={styles.infoList}>
           <div className={styles.infoItem}>
-            <span className={`tag-keyword ${styles.infoLabel}`}>이메일</span>
+            <span className={`tag-keyword ${styles.infoLabel}`}>아이디</span>
             <p className={styles.infoValue}>{user.email}</p>
           </div>
           <div className={styles.infoItem}>
-            <span className={`tag-keyword ${styles.infoLabel}`}>구독 시작 일자</span>
+            <span className={`tag-keyword ${styles.infoLabel}`}>구독 시작일</span>
             <p className={styles.infoValue}>{startedAt ?? "—"}</p>
           </div>
         </div>
