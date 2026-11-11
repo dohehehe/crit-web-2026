@@ -44,32 +44,46 @@
 .thumbnail {
   position: relative;
   width: 100%;
+  overflow: hidden;
 }
 
-.thumbnail::after {
-  content: "";
+.hoverShape {
   position: absolute;
-  top: 0;
-  right: 0;
+  inset: 0;
   z-index: 3;
-  height: 100%;
-  width: auto;
-  aspect-ratio: 866 / 1000;
-  clip-path: polygon(100% 0, 100% 100%, 0 50%);
-  background: var(--white);
+  container: thumb / size;
   mix-blend-mode: difference;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
 
-.card:hover .thumbnail::after {
+.hoverShape::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: calc(100cqh * 866 / 1000);
+  max-width: 100%;
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  background: var(--white);
+  pointer-events: none;
+}
+
+/* 866/1000 비율의 가로가 섬네일을 넘으면, 꼭짓점은 왼쪽에서 2/3 지점에 둔다. */
+@container thumb (aspect-ratio < 866 / 1000) {
+  .hoverShape::before {
+    width: calc(100% / 3 * 2);
+  }
+}
+
+.card:hover .hoverShape {
   opacity: 1;
 }
 
-.thumbnailJournal::after {
+.thumbnailJournal .hoverShape::before {
   background: var(--crit-orange);
-  mix-blend-mode: difference;
 }
 
 .thumbnailPlaceholder {
