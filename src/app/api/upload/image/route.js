@@ -1,12 +1,19 @@
 import { jsonError, jsonOk } from "@/lib/api/response";
 import { requireAdminApi } from "@/lib/auth/requireAdminApi";
+import { IMAGE_UPLOAD_BUCKET } from "@/lib/imageUpload/constants";
 import {
-  IMAGE_UPLOAD_BUCKET,
-  IMAGE_UPLOAD_TYPES,
-} from "@/lib/imageUpload/constants";
-import { buildImageStoragePath } from "@/lib/imageUpload/buildStoragePath";
+  buildImageStoragePath,
+  isIncomingImagePath,
+} from "@/lib/imageUpload/buildStoragePath";
 import { prepareStoredImage } from "@/lib/imageUpload/toWebp";
 import { createAdminClient } from "@/lib/supabase/admin";
+
+export const maxDuration = 60;
+
+function positiveNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : null;
+}
 
 export async function POST(request) {
   const authError = await requireAdminApi();
@@ -14,55 +21,67 @@ export async function POST(request) {
     return authError;
   }
 
-  try {
-    const formData = await request.formData();
-    const file = formData.get("file");
+  let incomingPath = null;
+  let supabase = null;
 
-    if (!(file instanceof File)) {
-      return jsonError("파일이 필요합니다.", 400);
+  try {
+    let body;
+
+    try {
+      body = await request.json();
+    } catch {
+      return jsonError("요청 형식이 올바르지 않습니다.", 400);
     }
 
-    const extension = IMAGE_UPLOAD_TYPES[file.type];
+    if (!isIncomingImagePath(body?.path)) {
+      return jsonError("업로드된 이미지를 찾을 수 없습니다.", 400);
+    }
 
-    if (!extension) {
+    supabase = createAdminClient();
+    incomingPath = body.path;
+
+    const { data, error } = await supabase.storage
+      .from(IMAGE_UPLOAD_BUCKET)
+      .download(incomingPath);
+
+    if (error || !data) {
       return jsonError(
-        "JPEG, PNG, WebP, GIF 이미지만 업로드할 수 있습니다.",
+        error?.message ?? "업로드된 이미지를 찾을 수 없습니다.",
         400
       );
     }
 
-    const source = Buffer.from(await file.arrayBuffer());
-    const stored = await prepareStoredImage(source, {
-      sourceType: file.type,
-      sourceBytes: file.size,
-    });
+    const source = Buffer.from(await data.arrayBuffer());
+    const stored = await prepareStoredImage(source);
     const storagePath = buildImageStoragePath("webp");
-    const supabase = createAdminClient();
-
-    const { error } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from(IMAGE_UPLOAD_BUCKET)
       .upload(storagePath, stored.buffer, {
         contentType: "image/webp",
         upsert: false,
       });
 
-    if (error) {
-      return jsonError(error.message, 400);
+    if (uploadError) {
+      return jsonError(uploadError.message, 400);
     }
 
-    const { data } = supabase.storage
+    const { data: publicData } = supabase.storage
       .from(IMAGE_UPLOAD_BUCKET)
       .getPublicUrl(storagePath);
 
-    const width = stored.width || Number(formData.get("width")) || null;
-    const height = stored.height || Number(formData.get("height")) || null;
+    const width = stored.width || positiveNumber(body.width);
+    const height = stored.height || positiveNumber(body.height);
 
     return jsonOk({
-      url: data.publicUrl,
-      width: Number.isFinite(width) ? width : null,
-      height: Number.isFinite(height) ? height : null,
+      url: publicData.publicUrl,
+      width,
+      height,
     });
   } catch (error) {
     return jsonError(error.message, error.status ?? 500);
+  } finally {
+    if (supabase && incomingPath) {
+      await supabase.storage.from(IMAGE_UPLOAD_BUCKET).remove([incomingPath]);
+    }
   }
 }

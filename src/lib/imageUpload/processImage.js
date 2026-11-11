@@ -28,12 +28,21 @@ export async function prepareImageForUpload(file) {
     throw new Error("JPEG, PNG, WebP, GIF 이미지만 업로드할 수 있습니다.");
   }
 
-  const image = await loadImageFromFile(file);
+  let width = null;
+  let height = null;
+
+  try {
+    const image = await loadImageFromFile(file);
+    width = image.naturalWidth || null;
+    height = image.naturalHeight || null;
+  } catch {
+    // 브라우저가 미리보기를 못 열어도 서버의 변환이 치수를 정한다.
+  }
 
   return {
     file,
     fileName: file.name,
-    width: image.naturalWidth,
-    height: image.naturalHeight,
+    width,
+    height,
   };
 }
