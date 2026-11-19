@@ -201,6 +201,7 @@
 .imageBlock {
   margin: 0;
   width: 100%;
+  word-break: break-all;
 }
 
 .imagePortrait {
@@ -237,6 +238,7 @@
   font-size: var(--caption-size);
   line-height: var(--caption-line-height);
   letter-spacing: var(--caption-letter-spacing);
+  word-break: break-all;
 }
 
 .root :global(.image-tool__caption[contenteditable="true"]:empty::before) {
