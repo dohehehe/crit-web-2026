@@ -358,17 +358,27 @@ function PostFormFields({
         savedPostId = created.id;
       }
 
-      try {
-        await syncPostAuthors(savedPostId, authorNames);
-      } catch (error) {
-        setAuthorError(error.message ?? "작가를 저장하지 못했습니다.");
-        return;
+      const [authorResult, keywordResult] = await Promise.allSettled([
+        syncPostAuthors(savedPostId, authorNames),
+        syncPostKeywords(savedPostId, keywordNames),
+      ]);
+
+      if (authorResult.status === "rejected") {
+        setAuthorError(
+          authorResult.reason?.message ?? "작가를 저장하지 못했습니다."
+        );
       }
 
-      try {
-        await syncPostKeywords(savedPostId, keywordNames);
-      } catch (error) {
-        setKeywordError(error.message ?? "키워드를 저장하지 못했습니다.");
+      if (keywordResult.status === "rejected") {
+        setKeywordError(
+          keywordResult.reason?.message ?? "키워드를 저장하지 못했습니다."
+        );
+      }
+
+      if (
+        authorResult.status === "rejected" ||
+        keywordResult.status === "rejected"
+      ) {
         return;
       }
 
