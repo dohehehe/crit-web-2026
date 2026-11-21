@@ -33,7 +33,7 @@ export function InfoNav({ instagramHref, youtubeHref, isLoggedIn = false }) {
               <Link
                 href={item.href}
                 className={`tag-keyword ${styles.infoLink}`}
-                aria-label={isActive ? item.activeLabel : item.label}
+                aria-label={item.label}
                 aria-current={isActive ? "page" : undefined}
                 onClick={closeMenu}
               >

@@ -158,6 +158,7 @@
     grid-template-columns: 1fr;
     gap: 24px;
     padding-bottom: 16px;
+    padding-top: 32px;
   }
 
   .footerLogo {

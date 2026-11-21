@@ -72,9 +72,9 @@
   color: var(--gray-65);
 }
 
-.actionButton:not(:disabled):hover {
+/* .actionButton:not(:disabled):hover {
   color: var(--crit-orange);
-}
+} */
 
 .actionError {
   color: var(--crit-orange);
@@ -85,10 +85,10 @@
   cursor: not-allowed;
 }
 
-.logout:not(:disabled):hover {
+/* .logout:not(:disabled):hover {
   border-color: var(--crit-orange);
   color: var(--crit-orange);
-}
+} */
 
 @media (max-width: var(--breakpoint-mobile)) {
   .h1 {

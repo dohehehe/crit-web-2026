@@ -52,3 +52,4 @@ export const POST_DETAIL_SELECT = `
 `;
 
 export const DEFAULT_POST_LIST_LIMIT = 50;
+export const HOME_POST_PAGE_SIZE = 9;

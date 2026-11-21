@@ -4,7 +4,7 @@
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
-  padding: 60px 24px 80px;
+  padding: 60px 24px 100px;
   display: flex;
   flex-direction: column;
 }
@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 60px;
+  margin-bottom: 28px;
 }
 
 .subscriptionHeader {
@@ -50,17 +50,15 @@
 
 .input:focus {
   outline: none;
-  border-bottom: 1px solid var(--crit-orange);
   outline-offset: 0;
-  border-color: var(--crit-orange);
 }
 
 
 .checkboxFields {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 2px;
+  margin-top: 12px;
   margin-bottom: 12px;
 }
 
@@ -109,7 +107,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 12px;
   align-items: flex-start;
 }
 
@@ -127,9 +124,9 @@
   cursor: not-allowed;
 }
 
-.submit:not(:disabled):hover {
+/* .submit:not(:disabled):hover {
   color: var(--crit-orange);
-}
+} */
 
 .footerLink {
   display: flex;
@@ -144,9 +141,9 @@
   cursor: pointer;
 }
 
-.footerLinkButton:hover {
+/* .footerLinkButton:hover {
   color: var(--crit-orange);
-}
+} */
 
 .fieldLabelRow {
   display: flex;
@@ -156,9 +153,9 @@
 }
 
 
-.inlineLink:hover {
+/* .inlineLink:hover {
   color: var(--crit-orange);
-}
+} */
 
 .textButton {
   padding: 0;
@@ -177,7 +174,7 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 36px;
 }
 
 .paragraph {
@@ -190,7 +187,33 @@
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
+  .subscriptionTitle {
+    display: none;
+  }
+
   .page {
-    padding: 10px 10px 60px;
+    padding: 8px 10px 60px;
+  }
+
+  .header {
+    margin-bottom: 40px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .checkboxFields {
+    margin-bottom: 0px;
+  }
+
+  .actions {
+    padding-top: 12px;
+  }
+
+  .content {
+    gap: 26px;
   }
 }

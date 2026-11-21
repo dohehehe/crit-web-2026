@@ -182,7 +182,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
 
   return (
     <>
-      <article className={styles.article}>
+      <article className={styles.article} data-locale={activeLocale}>
         {showVideo ? (
           <PostVideoEmbed videoUrl={post.videoUrl} title={title} />
         ) : post.thumbnailImg ? (
@@ -199,11 +199,10 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
               />
               {thumbnailCaption ? (
                 <figcaption
-                  className={`caption ${styles.thumbnailCaption}${
-                    hasEnglishContent
-                      ? ` ${styles.thumbnailCaptionWithSwitch}`
-                      : ""
-                  }`}
+                  className={`caption ${styles.thumbnailCaption}${hasEnglishContent
+                    ? ` ${styles.thumbnailCaptionWithSwitch}`
+                    : ""
+                    }`}
                 >
                   {thumbnailCaption}
                 </figcaption>
@@ -217,11 +216,10 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
             <div className={styles.langueSwitch}>
               <button
                 type="button"
-                className={`${styles.langueSwitchButton}${
-                  activeLocale === "ko"
-                    ? ` ${styles.langueSwitchButtonActive}`
-                    : ""
-                }`}
+                className={`${styles.langueSwitchButton}${activeLocale === "ko"
+                  ? ` ${styles.langueSwitchButtonActive}`
+                  : ""
+                  }`}
                 aria-pressed={activeLocale === "ko"}
                 onClick={() => setLocale("ko")}
               >
@@ -229,11 +227,10 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
               </button>
               <button
                 type="button"
-                className={`${styles.langueSwitchButton}${
-                  activeLocale === "en"
-                    ? ` ${styles.langueSwitchButtonActive}`
-                    : ""
-                }`}
+                className={`${styles.langueSwitchButton}${activeLocale === "en"
+                  ? ` ${styles.langueSwitchButtonActive}`
+                  : ""
+                  }`}
                 aria-pressed={activeLocale === "en"}
                 onClick={() => setLocale("en")}
               >
@@ -263,7 +260,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
 
         {content ? (
           <section className={styles.contents}>
-            <EditorContent contents={content} />
+            <EditorContent contents={content} locale={activeLocale} />
           </section>
         ) : null}
       </article>
@@ -313,8 +310,8 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
         ) : null}
 
         {isJournal && issue ? (
-          <div className={styles.asideItem}>
-            <div className={`${styles.asideTitle} menu-en`}>
+          <div className={`${styles.asideItem} ${styles.asideItemIssue}`}>
+            <div className={`${styles.asideTitle} menu-en ${styles.asideIssueTitle}`}>
               {issue.issueNumber ? (
                 <Link href={getJournalCritIssuePath(issue.issueNumber)}>
                   Issue {issue.issueNumber} <br /> From This Issue
@@ -329,7 +326,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                       href={getPostPath(issuePost, {
                         issueNumber: issue.issueNumber,
                       })}
-                      className={`${styles.issuePostItem} p-bold`}
+                      className={`${styles.issuePostItem}`}
                     >
                       <span className={`${styles.issuePostTitle} thumb-title`}>
                         {issuePost.title}

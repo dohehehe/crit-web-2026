@@ -50,7 +50,7 @@
 }
 
 .galleryItem:first-child .galleryItemCaption {
-  padding-left: 4px;
+  padding-left: 10px;
 }
 
 .galleryCaption {
@@ -66,5 +66,6 @@
 
   .galleryImage {
     height: 200px;
+    object-fit: cover;
   }
 }
