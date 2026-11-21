@@ -134,9 +134,25 @@
   margin-bottom: 6px;
 }
 
+.article[data-locale="en"] .title {
+  font-family: Pretendard;
+  font-weight: 600;
+  font-size: 52px;
+  line-height: 60px;
+  letter-spacing: 0%;
+}
+
 .subtitle {
   margin: 0;
+}
 
+.article[data-locale="en"] .subtitle {
+  font-family: Pretendard;
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 34px;
+  letter-spacing: 0%;
+  text-transform: capitalize;
 }
 
 .infoContainer {
@@ -147,6 +163,11 @@
 
 .author {
   margin: 0;
+  font-family: Pretendard;
+  font-weight: 500;
+  font-size: 17.5px;
+  line-height: 16px;
+  letter-spacing: 3%;
 }
 
 .authorLink {
@@ -155,6 +176,14 @@
 
 .authorLink:hover {
   color: var(--crit-orange);
+}
+
+.date {
+  font-family: Pretendard;
+  font-weight: 500;
+  font-size: 17.5px;
+  line-height: 16px;
+  letter-spacing: 3%;
 }
 
 .contents {
@@ -175,11 +204,9 @@
 .asideItem {
   display: flex;
   gap: 5px;
-  padding: 0 24px;
-  padding-bottom: 10px;
+  padding: 12px 24px;
   border-top: 1px solid var(--black);
   align-items: flex-start;
-  padding-top: 8px;
 }
 
 :global(html.channelBackground) .asideItem,
@@ -188,9 +215,12 @@
 }
 
 .asideTitle {
-  padding-top: 3px;
   width: calc((100vw - 48px - 800px) / 2);
-  line-height: 30px !important;
+  line-height: 29px;
+}
+
+.asideIssueTitle {
+  line-height: 36px;
 }
 
 .asideButton {
@@ -415,18 +445,53 @@
     margin-bottom: 4px;
   }
 
+  .article[data-locale="en"] .title {
+    font-family: Pretendard;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 38px;
+    letter-spacing: 1%;
+  }
+
+  .article[data-locale="en"] .subtitle {
+    font-family: Pretendard;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+  }
+
   .bannerLink {
     margin-top: 100px;
   }
 
   .asideItem {
+    padding-top: 11.68px;
+    padding-bottom: 11.32px;
+    gap: 11.32px;
+  }
+
+  .asideItemIssue {
     padding-top: 6px;
-    padding-bottom: 9px;
-    gap: 9px;
+    padding-bottom: 0px;
   }
 
   .tagList {
     margin-top: 0;
+    gap: 12px;
+  }
+
+  .tagItem {
+    font-family: Pretendard;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: 0%;
+  }
+
+  .issuePostList {
+    margin-top: 22px;
   }
 
   .authorContainer {

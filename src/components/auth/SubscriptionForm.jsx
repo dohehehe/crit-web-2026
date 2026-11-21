@@ -46,7 +46,7 @@ export function SubscriptionForm({ intro = null }) {
   return (
     <div className={styles.page}>
       <header className={`${styles.header} ${styles.subscriptionHeader}`}>
-        <h1 className="menu-kr">구독 회원 가입</h1>
+        <h1 className={`menu-kr ${styles.subscriptionTitle}`}>구독 회원 가입</h1>
         {intro}
       </header>
 

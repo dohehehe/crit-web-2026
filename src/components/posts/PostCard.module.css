@@ -160,14 +160,14 @@
   text-decoration-line: underline;
   text-decoration-color: var(--crit-orange);
   text-underline-offset: 35%;
-  text-decoration-thickness: 1.8px;
+  text-decoration-thickness: 1px;
 }
 
-.category a:hover {
+/* .category a:hover {
   background: var(--crit-orange);
   color: var(--white);
   text-decoration: none;
-}
+} */
 
 .keyword a {
   color: inherit;
@@ -177,5 +177,5 @@
 .keyword a:hover {
   text-decoration-line: underline;
   text-underline-offset: 35%;
-  text-decoration-thickness: 1.8px;
+  text-decoration-thickness: 1px;
 }

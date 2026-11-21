@@ -98,7 +98,7 @@ export function NoticePopupFrame({
           className={`caption ${styles.headerButton}`}
           onClick={handleHideToday}
         >
-          오늘하루 보지 않기
+          오늘 하루 보지 않기
         </button>
         <button
           type="button"

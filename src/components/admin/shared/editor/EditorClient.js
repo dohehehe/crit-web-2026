@@ -7,6 +7,7 @@ import proseStyles from "@/components/editor/editorProse.module.css";
 
 const EditorClient = forwardRef(function EditorClient(props, ref) {
   const [mounted, setMounted] = useState(false);
+  const contentLocale = props.contentLocale ?? "ko";
 
   useEffect(() => {
     setMounted(true);
@@ -14,7 +15,10 @@ const EditorClient = forwardRef(function EditorClient(props, ref) {
 
   if (!mounted) {
     return (
-      <div className={`${styles.wrapper} ${proseStyles.root}`}>
+      <div
+        className={`${styles.wrapper} ${proseStyles.root}`}
+        data-locale={contentLocale}
+      >
         <div className={styles.loading}>에디터를 로딩 중...</div>
       </div>
     );

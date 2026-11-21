@@ -5,6 +5,16 @@ import { isWorkshopClosed } from "@/lib/posts/isWorkshopClosed";
 import { getPostPath } from "@/lib/routes/posts";
 import styles from "./PostCard.module.css";
 
+function formatWorkshopDate(value) {
+  const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+  if (!match) {
+    return value;
+  }
+
+  return `${match[1]}.${match[2]}.${match[3]}`;
+}
+
 export function PostCard({
   post,
   showSectionLabel = false,
@@ -19,7 +29,7 @@ export function PostCard({
       ? thumbnailImgHover.trim()
       : "";
   const showClosedLabel = isWorkshopClosed(post);
-  const workshopDate = showWorkshopDate && date ? date : null;
+  const workshopDate = showWorkshopDate && date ? formatWorkshopDate(date) : null;
 
   return (
     <article className={styles.card}>

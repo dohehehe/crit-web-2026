@@ -252,6 +252,7 @@ function renderBlock(block, index, applyFootnotesToHtml, proseStyles) {
 export function EditorContent({
   contents,
   compact = false,
+  locale = "ko",
   proseStyles = defaultProseStyles,
 }) {
   const blocks = normalizeBlocks(contents);
@@ -266,7 +267,7 @@ export function EditorContent({
     : proseStyles.root;
 
   return (
-    <div className={rootClassName}>
+    <div className={rootClassName} data-locale={locale}>
       {blocks.map((block, index) =>
         renderBlock(block, index, footnoteContext.applyToHtml, proseStyles),
       )}
