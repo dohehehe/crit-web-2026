@@ -182,7 +182,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
 
   return (
     <>
-      <article className={styles.article}>
+      <article className={styles.article} data-locale={activeLocale}>
         {showVideo ? (
           <PostVideoEmbed videoUrl={post.videoUrl} title={title} />
         ) : post.thumbnailImg ? (
@@ -263,7 +263,7 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
 
         {content ? (
           <section className={styles.contents}>
-            <EditorContent contents={content} />
+            <EditorContent contents={content} locale={activeLocale} />
           </section>
         ) : null}
       </article>

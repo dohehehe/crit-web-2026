@@ -708,7 +708,10 @@ const Editor = forwardRef(function Editor(
   }, [holderId, contentLocale]);
 
   return (
-    <div className={`${styles.wrapper} ${proseStyles.root}`}>
+    <div
+      className={`${styles.wrapper} ${proseStyles.root}`}
+      data-locale={contentLocale}
+    >
       <div
         id={holderId}
         className={styles.holder}

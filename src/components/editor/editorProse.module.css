@@ -3,7 +3,7 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 36px;
 }
 
 .rootCompact {
@@ -36,12 +36,17 @@
   line-height: 36px;
   letter-spacing: 0%;
   margin-bottom: 0;
+  margin-top: 24px;
+}
+
+.root h2:first-child {
+  margin-top: 0;
 }
 
 .root h3,
 .root :global(h3.ce-header) {
-  margin-bottom: -28px;
-  margin-top: 0;
+  margin-bottom: -35px;
+  margin-top: 0px;
   font-weight: 700;
   font-size: 17.5px;
   line-height: 29px;
@@ -62,30 +67,76 @@
   word-break: keep-all;
 }
 
-.paragraph {
+.root[data-locale="ko"] .paragraph,
+.root[data-locale="ko"] :global(.ce-paragraph),
+.root[data-locale="ko"] :global(.cdx-quote__text),
+.root[data-locale="ko"] :global(blockquote) {
   margin: 0;
   word-break: keep-all;
-  font-weight: var(--p-weight);
-  font-style: var(--p-style);
-  font-size: var(--p-size);
-  line-height: var(--p-line-height);
-  letter-spacing: var(--p-letter-spacing);
+  font-weight: var(--p-new-weight);
+  font-style: var(--p-new-style);
+  font-size: var(--p-new-size);
+  line-height: var(--p-new-line-height);
+  letter-spacing: var(--p-new-letter-spacing);
+
+  &:global(b) {
+    font-weight: var(--p-new-bold-weight);
+    font-style: var(--p-new-bold-style);
+    font-size: var(--p-new-bold-size);
+    line-height: var(--p-new-bold-line-height);
+    letter-spacing: var(--p-new-bold-letter-spacing);
+  }
 }
 
-.root :global(.ce-paragraph),
-.root :global(.cdx-quote__text) {
+.root[data-locale="en"] .paragraph,
+.root[data-locale="en"] :global(.ce-paragraph),
+.root[data-locale="en"] :global(.cdx-quote__text),
+.root[data-locale="en"] :global(blockquote) {
   margin: 0;
-  font-weight: var(--p-weight);
-  font-style: var(--p-style);
-  font-size: var(--p-size);
-  line-height: var(--p-line-height);
-  letter-spacing: var(--p-letter-spacing);
+  word-break: keep-all;
+  font-weight: var(--new-p-en-weight);
+  font-style: var(--new-p-en-style);
+  font-size: var(--new-p-en-size);
+  line-height: var(--new-p-en-line-height);
+  letter-spacing: var(--new-p-en-letter-spacing);
+
+  &:global(b) {
+    font-weight: 700;
+    font-style: bold;
+  }
+
+  &:global(.image-gallery__item-caption),
+  &:global(.image-gallery__caption) {}
 }
 
-.root :global(.ce-paragraph),
+.root[data-locale="en"] :global(figcaption) {
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  line-height: 18px !important;
+  letter-spacing: 0 !important;
+}
+
+.root[data-locale="ko"] :global([style*="Noto Serif KR"]) {
+  font-weight: var(--new-p-kr-weight);
+  font-style: var(--new-p-kr-style);
+  font-size: var(--new-p-kr-size);
+  line-height: var(--new-p-kr-line-height);
+  letter-spacing: var(--new-p-kr-letter-spacing);
+}
+
+.root[data-locale="en"] :global([style*="Libre Caslon Text"]) {
+  font-weight: var(--new-p-en-serif-weight);
+  font-style: var(--new-p-en-serif-style);
+  font-size: var(--new-p-en-serif-size);
+  line-height: var(--new-p-en-serif-line-height);
+  letter-spacing: var(--new-p-en-serif-letter-spacing);
+}
+
+
+
+
 .root :global(.ce-header),
 .root :global(.cdx-quote),
-.root :global(.cdx-quote__text),
 .root :global(.cdx-quote__caption),
 .root :global(.cdx-list__item-content) {
   word-break: keep-all;
@@ -298,6 +349,14 @@
   scroll-margin-top: 80px;
 }
 
+.root[data-locale="en"] .footnoteItem {
+  font-family: Pretendard;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0%;
+}
+
 .footnoteMarker {
   width: 24px;
   flex-shrink: 0;
@@ -332,7 +391,8 @@
 
 .root :global(.footnote-ref a:hover),
 .root :global(sup[data-tune="footnotes"] a:hover) {
-  text-decoration: underline;
+  text-decoration: none;
+  color: var(--crit-orange);
 }
 
 .root :global(.cdx-underline) {
@@ -348,11 +408,7 @@
   background: none;
 }
 
-.root :global(b) {
-  font-weight: 700;
-  font-size: 17.5px;
-  line-height: 29px;
-}
+
 
 .root :global(i),
 .root :global(em) {
@@ -361,7 +417,6 @@
 
 .root :global(a) {
   color: inherit;
-  font-weight: var(--p-bold-weight);
   cursor: pointer;
   text-decoration: none;
 }
@@ -414,15 +469,25 @@
 
 @media (max-width: var(--breakpoint-mobile)) {
 
+  .root {
+    gap: 30px;
+  }
+
   .quote,
   .root :global(.cdx-quote) {
     margin: 0;
-    padding: 0 32px;
+    padding: 0 8px 0 32px;
+  }
+
+  .root h2,
+  .root :global(h2.ce-header) {
+    margin-top: 30px;
   }
 
   .root h3,
   .root :global(h3.ce-header) {
-    margin-top: 28px;
+    margin-top: 0px;
+    margin-bottom: -30px;
     font-weight: 700;
     font-size: 16px;
     line-height: 24px;
@@ -438,4 +503,67 @@
     width: 100%;
     margin: 0;
   }
+
+  .root[data-locale="ko"] .paragraph,
+  .root[data-locale="ko"] :global(.ce-paragraph),
+  .root[data-locale="ko"] :global(.cdx-quote__text),
+  .root[data-locale="ko"] :global(blockquote) {
+    margin: 0;
+    word-break: keep-all;
+    font-weight: var(--p-new-weight);
+    font-style: var(--p-new-style);
+    font-size: var(--p-size);
+    line-height: var(--p-line-height);
+    letter-spacing: var(--p-letter-spacing);
+
+    &:global(b) {
+      font-weight: var(--p-new-bold-weight);
+      font-style: var(--p-new-bold-style);
+      font-size: var(--p-bold-size);
+      line-height: var(--p-bold-line-height);
+      letter-spacing: var(--p-bold-letter-spacing);
+    }
+  }
+
+  .root[data-locale="en"] .paragraph,
+  .root[data-locale="en"] :global(.ce-paragraph),
+  .root[data-locale="en"] :global(.cdx-quote__text),
+  .root[data-locale="en"] :global(blockquote) {
+    margin: 0;
+    word-break: keep-all;
+    font-weight: var(--mobile-new-p-en-weight);
+    font-style: var(--mobile-new-p-en-style);
+    font-size: var(--mobile-new-p-en-size);
+    line-height: var(--mobile-new-p-en-line-height);
+    letter-spacing: var(--mobile-new-p-en-letter-spacing);
+
+    &:global(b) {
+      font-weight: 700;
+      font-style: bold;
+    }
+  }
+
+  .root[data-locale="en"] h3 {
+    line-height: 22px;
+    letter-spacing: 3%;
+  }
+
+  .root[data-locale="ko"] :global([style*="Noto Serif KR"]) {
+    font-weight: var(--mobile-new-p-kr-weight);
+    font-style: var(--mobile-new-p-kr-style);
+    font-size: var(--mobile-new-p-kr-size);
+    line-height: var(--mobile-new-p-kr-line-height);
+    letter-spacing: var(--mobile-new-p-kr-letter-spacing);
+  }
+
+  .root[data-locale="en"] :global([style*="Libre Caslon Text"]) {
+    font-weight: var(--mobile-new-p-en-serif-weight);
+    font-style: var(--mobile-new-p-en-serif-style);
+    font-size: var(--mobile-new-p-en-serif-size);
+    line-height: var(--mobile-new-p-en-serif-line-height);
+    letter-spacing: var(--mobile-new-p-en-serif-letter-spacing);
+  }
+
+
+
 }

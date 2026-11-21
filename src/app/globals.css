@@ -47,15 +47,21 @@
 
   --p-weight: 400;
   --p-style: normal;
-  --p-size: 17.5px;
-  --p-line-height: 29px;
+  --p-size: 16px;
+  --p-line-height: 26px;
   --p-letter-spacing: 0.04em;
 
-  --p-new-weight: 600;
-  --p-new-style: semi-bold;
+  --p-new-weight: 400;
+  --p-new-style: regular;
   --p-new-size: 17.5px;
   --p-new-line-height: 29px;
   --p-new-letter-spacing: 0.04em;
+
+  --new-p-kr-weight: 400;
+  --new-p-kr-style: regular;
+  --new-p-kr-size: 16.5px;
+  --new-p-kr-line-height: 29px;
+  --new-p-kr-letter-spacing: 0.04em;
 
   --new-p-en-weight: 400;
   --new-p-en-style: regular;
@@ -65,12 +71,18 @@
 
   --new-p-en-serif-weight: 400;
   --new-p-en-serif-style: regular;
-  --new-p-en-serif-size: 17.5px;
+  --new-p-en-serif-size: 17px;
   --new-p-en-serif-line-height: 25px;
   --new-p-en-serif-letter-spacing: 0.015em;
 
   --p-bold-weight: 700;
   --p-bold-style: bold;
+
+  --p-new-bold-weight: 700;
+  --p-new-bold-style: bold;
+  --p-new-bold-size: 17.5px;
+  --p-new-bold-line-height: 29px;
+  --p-new-bold-letter-spacing: 0.04em;
 
   --footer-weight: 400;
   --footer-style: normal;
@@ -95,6 +107,30 @@
   --mobile-title-1-size: 40px;
   --mobile-title-1-line-height: 48px;
   --mobile-title-1-letter-spacing: 0.01em;
+
+  --mobile-new-p-kr-weight: 400;
+  --mobile-new-p-kr-style: regular;
+  --mobile-new-p-kr-size: 15.5px;
+  --mobile-new-p-kr-line-height: 25.5px;
+  --mobile-new-p-kr-letter-spacing: 0.02em;
+
+  --mobile-new-p-en-weight: 400;
+  --mobile-new-p-en-style: regular;
+  --mobile-new-p-en-size: 16px;
+  --mobile-new-p-en-line-height: 21px;
+  --mobile-new-p-en-letter-spacing: 0.03em;
+
+  --mobile-new-caption-en-weight: 400;
+  --mobile-new-caption-en-style: regular;
+  --mobile-new-caption-en-size: 14px;
+  --mobile-new-caption-en-line-height: 18px;
+  --mobile-new-caption-en-letter-spacing: 0;
+
+  --mobile-new-p-en-serif-weight: 400;
+  --mobile-new-p-en-serif-style: regular;
+  --mobile-new-p-en-serif-size: 15.25px;
+  --mobile-new-p-en-serif-line-height: 22px;
+  --mobile-new-p-en-serif-letter-spacing: 0.015em;
 }
 
 /* Tablet (480px ~ 1020px): desktop typography applies until overrides are added */
@@ -240,13 +276,13 @@ a {
   letter-spacing: var(--title-1-letter-spacing);
 }
 
-.p {
+/* .p {
   font-weight: var(--p-weight);
   font-style: var(--p-style);
   font-size: var(--p-size);
   line-height: var(--p-line-height);
   letter-spacing: var(--p-letter-spacing);
-}
+} */
 
 .p-bold {
   font-weight: var(--p-bold-weight);
@@ -265,11 +301,11 @@ a {
 }
 
 .caption {
-  font-weight: var(--caption-weight);
-  font-style: var(--caption-style);
-  font-size: var(--caption-size);
-  line-height: var(--caption-line-height);
-  letter-spacing: var(--caption-letter-spacing);
+  font-weight: var(--caption-new-weight);
+  font-style: var(--caption-new-style);
+  font-size: var(--caption-new-size);
+  line-height: var(--caption-new-line-height);
+  letter-spacing: var(--caption-new-letter-spacing);
 }
 
 .mobile-title-1 {
