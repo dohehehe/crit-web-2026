@@ -204,11 +204,9 @@
 .asideItem {
   display: flex;
   gap: 5px;
-  padding: 0 24px;
-  padding-bottom: 10px;
+  padding: 12px 24px;
   border-top: 1px solid var(--black);
   align-items: flex-start;
-  padding-top: 8px;
 }
 
 :global(html.channelBackground) .asideItem,
@@ -217,9 +215,12 @@
 }
 
 .asideTitle {
-  padding-top: 3px;
   width: calc((100vw - 48px - 800px) / 2);
-  line-height: 30px !important;
+  line-height: 29px;
+}
+
+.asideIssueTitle {
+  line-height: 36px;
 }
 
 .asideButton {
@@ -466,13 +467,31 @@
   }
 
   .asideItem {
+    padding-top: 11.68px;
+    padding-bottom: 11.32px;
+    gap: 11.32px;
+  }
+
+  .asideItemIssue {
     padding-top: 6px;
-    padding-bottom: 9px;
-    gap: 9px;
+    padding-bottom: 0px;
   }
 
   .tagList {
     margin-top: 0;
+    gap: 12px;
+  }
+
+  .tagItem {
+    font-family: Pretendard;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: 0%;
+  }
+
+  .issuePostList {
+    margin-top: 22px;
   }
 
   .authorContainer {

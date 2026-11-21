@@ -15,5 +15,6 @@
 @media (max-width: var(--breakpoint-mobile)) {
   .main {
     padding: 80px 10px;
+    padding-bottom: 70px;
   }
 }
