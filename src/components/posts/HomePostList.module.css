@@ -1,0 +1,22 @@
+.sentinel {
+  height: 1px;
+}
+
+.status {
+  display: flex;
+  justify-content: center;
+  padding: 36px 0 8px;
+  color: var(--gray-65);
+}
+
+.retry {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 35%;
+}

@@ -15,7 +15,9 @@ function applyOrder(query, orderBy) {
     return query.order("sort_order", { ascending: true, nullsFirst: false });
   }
 
-  return query.order("date", { ascending: false, nullsFirst: false });
+  return query
+    .order("date", { ascending: false, nullsFirst: false })
+    .order("id", { ascending: false });
 }
 
 export const getPosts = cache(async (options = {}) => {
@@ -24,16 +26,18 @@ export const getPosts = cache(async (options = {}) => {
     categoryId,
     issueId,
     limit = DEFAULT_POST_LIST_LIMIT,
+    offset = 0,
     orderBy = "date",
   } = options;
 
+  const safeLimit = Math.max(1, Number(limit) || DEFAULT_POST_LIST_LIMIT);
+  const safeOffset = Math.max(0, Number(offset) || 0);
   const supabase = createAdminClient();
 
   let query = supabase
     .from("posts")
     .select(POST_LIST_SELECT)
-    .eq("is_active", true)
-    .limit(limit);
+    .eq("is_active", true);
 
   if (sectionId) {
     query = query.eq("section_id", sectionId);
@@ -47,7 +51,10 @@ export const getPosts = cache(async (options = {}) => {
     query = query.eq("issue_id", issueId);
   }
 
-  query = applyOrder(query, orderBy);
+  query = applyOrder(query, orderBy).range(
+    safeOffset,
+    safeOffset + safeLimit - 1
+  );
 
   const { data, error } = await query;
 
@@ -79,7 +86,9 @@ export async function getPostsByIssue(issueId, options = {}) {
 }
 
 function isUuid(value) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value
+  );
 }
 
 function decodeRouteParam(value) {
