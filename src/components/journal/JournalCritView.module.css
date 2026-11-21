@@ -26,12 +26,13 @@
   gap: 6px;
   margin-bottom: 28px;
   width: min(100%, 600px);
-  margin: 0 auto 28px;
+  margin: 0 0 28px;
 }
 
 .issueNumber {
   display: inline-block;
   color: var(--black);
+  font-size: 24px;
 }
 
 .title {
@@ -41,10 +42,10 @@
 
 .media {
   width: min(100%, 600px);
-  margin: 10px auto 68px;
+  margin: 10px auto 36px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 }
 
 .cover {
