@@ -45,6 +45,7 @@ export function getInfoNavItems(isLoggedIn) {
 const NAVIGATION_SUB_ITEMS = [
   INFO_NAV_ITEMS.find((item) => item.href === "/about"),
   INFO_NAV_ITEMS.find((item) => item.href === "/notice"),
+  INFO_NAV_ITEMS.find((item) => item.href === "/subscription"),
   MYPAGE_NAV_ITEM,
 ];
 
