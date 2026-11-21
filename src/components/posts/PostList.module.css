@@ -6,8 +6,8 @@
 .list {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  column-gap: 13px;
-  row-gap: 62px;
+  column-gap: 10px;
+  row-gap: 32px;
   width: 100%;
   list-style: none;
   padding-bottom: 10px;
