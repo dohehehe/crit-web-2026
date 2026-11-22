@@ -13,12 +13,24 @@ function formatActiveStatus(isActive) {
   return isActive ? "공개" : "비공개";
 }
 
-function formatPostAuthors(post) {
-  const names = (post.post_author ?? [])
-    .map((row) => row.authors?.name)
-    .filter(Boolean);
+function namesFrom(rows) {
+  return (rows ?? []).map((row) => row.authors?.name).filter(Boolean);
+}
 
-  return names.length > 0 ? names.join(", ") : "—";
+function formatPostAuthors(post) {
+  const authors = namesFrom(post.post_author);
+  const contributors = namesFrom(post.post_contributor);
+  const parts = [];
+
+  if (authors.length > 0) {
+    parts.push(authors.join(", "));
+  }
+
+  if (contributors.length > 0) {
+    parts.push(`기여자 ${contributors.join(", ")}`);
+  }
+
+  return parts.length > 0 ? parts.join(" · ") : "—";
 }
 
 function formatPostDate(date) {

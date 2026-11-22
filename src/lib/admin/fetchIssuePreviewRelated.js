@@ -8,10 +8,15 @@ function parseIssueNumber(value) {
   return Number.isNaN(num) ? null : num;
 }
 
-function mapPostForPreview(post) {
-  const authors = (post.post_author ?? [])
+function mapPeople(rows) {
+  return (rows ?? [])
     .map((row) => row.authors)
-    .filter((author) => author?.name);
+    .filter((person) => person?.name);
+}
+
+function mapPostForPreview(post) {
+  const authors = mapPeople(post.post_author);
+  const contributors = mapPeople(post.post_contributor);
 
   return {
     id: post.id,
@@ -19,6 +24,7 @@ function mapPostForPreview(post) {
     slug: post.slug ?? "",
     author: authors[0] ?? null,
     authors,
+    contributors,
   };
 }
 
@@ -58,7 +64,7 @@ export async function fetchIssuePostsForPreview(issueId) {
     params: {
       scope: ADMIN_SCOPE,
       "eq.issue_id": issueId,
-      select: "id,title,slug,sort_order,post_author(authors(id,name))",
+      select: "id,title,slug,sort_order,post_author(authors(id,name)),post_contributor(authors(id,name))",
       order: "sort_order.asc",
       limit: 100,
     },
@@ -91,7 +97,7 @@ export async function fetchIssuePreviewRelated({ issueId, issueNumber }) {
         params: {
           ...adminParams,
           "eq.issue_id": issueId,
-          select: "id,title,slug,sort_order,post_author(authors(id,name))",
+          select: "id,title,slug,sort_order,post_author(authors(id,name)),post_contributor(authors(id,name))",
           order: "sort_order.asc",
           limit: 100,
         },

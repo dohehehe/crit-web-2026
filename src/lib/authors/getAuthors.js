@@ -55,16 +55,26 @@ export async function getPostsByAuthorId(authorId, { limit = 100 } = {}) {
 
   const supabase = createAdminClient();
 
-  const { data: links, error: linksError } = await supabase
-    .from("post_author")
-    .select("post_id")
-    .eq("author_id", authorId);
+  const [authorLinks, contributorLinks] = await Promise.all([
+    supabase.from("post_author").select("post_id").eq("author_id", authorId),
+    supabase.from("post_contributor").select("post_id").eq("author_id", authorId),
+  ]);
 
-  if (linksError) {
-    throw new Error(linksError.message);
+  if (authorLinks.error) {
+    throw new Error(authorLinks.error.message);
   }
 
-  const postIds = [...new Set((links ?? []).map((row) => row.post_id).filter(Boolean))];
+  if (contributorLinks.error) {
+    throw new Error(contributorLinks.error.message);
+  }
+
+  const postIds = [
+    ...new Set(
+      [...(authorLinks.data ?? []), ...(contributorLinks.data ?? [])]
+        .map((row) => row.post_id)
+        .filter(Boolean)
+    ),
+  ];
 
   if (postIds.length === 0) {
     return [];

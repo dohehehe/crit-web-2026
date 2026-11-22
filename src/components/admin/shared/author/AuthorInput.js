@@ -23,7 +23,14 @@ function isDuplicate(authors, name) {
   );
 }
 
-export function AuthorInput({ value = [], onChange, disabled = false }) {
+export function AuthorInput({
+  value = [],
+  onChange,
+  disabled = false,
+  placeholder = "작가 검색...",
+  createGuide = "새 작가는 Enter 두 번으로 등록",
+  createGuideDetail = "(조합 확정 → 작가 추가)",
+}) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -220,8 +227,8 @@ export function AuthorInput({ value = [], onChange, disabled = false }) {
   } else if (trimmedQuery && suggestions.length > 0) {
     guideMain = "검색 결과를 클릭해 등록하세요.";
   } else if (trimmedQuery) {
-    guideMain = "새 작가는 Enter 두 번으로 등록";
-    guideDetail = "(조합 확정 → 작가 추가)";
+    guideMain = createGuide;
+    guideDetail = createGuideDetail;
   }
 
   return (
@@ -264,7 +271,7 @@ export function AuthorInput({ value = [], onChange, disabled = false }) {
             }
           }}
           onKeyDown={handleKeyDown}
-          placeholder="작가 검색..."
+          placeholder={placeholder}
           disabled={disabled}
           autoComplete="off"
         />

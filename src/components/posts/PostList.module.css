@@ -1,3 +1,5 @@
+@import "../../app/breakpoints.css";
+
 .frame {
   container-type: inline-size;
   width: 100%;
@@ -5,7 +7,7 @@
 
 .list {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   column-gap: 10px;
   row-gap: 32px;
   width: 100%;
@@ -13,58 +15,28 @@
   padding-bottom: 10px;
 }
 
-/* A track is kept at or under 500px by adding a column before it would pass that width. */
-@container (min-width: 501px) {
-  .list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@container (min-width: 1014px) {
-  .list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@container (min-width: 1527px) {
-  .list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@container (min-width: 2040px) {
-  .list {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-}
-
-@container (min-width: 2553px) {
-  .list {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-}
-
-@container (min-width: 3066px) {
-  .list {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-  }
-}
-
-@container (min-width: 3579px) {
-  .list {
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-  }
-}
-
 .list>li {
   min-width: 0;
 }
 
 .featured {
-  grid-column: 1 / -1;
+  width: 100%;
 }
 
-@media (max-width: 479px) {
+/* Tablet keeps two columns. A narrow tablet card falls under 350px so the row still fills. */
+@media (min-width: var(--breakpoint-mobile)) {
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1000px) {
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
   .list {
     row-gap: 40px;
   }

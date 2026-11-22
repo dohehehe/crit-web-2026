@@ -77,7 +77,7 @@ export function AdminPostsPanel({ sectionId = null }) {
     refetch: refetchAuthors,
   } = useAdminQuery("authors", {
     params: {
-      select: "id,name,slug,email,post_author(count)",
+      select: "id,name,slug,email,post_author(count),post_contributor(count)",
       order: "name.asc",
       limit: 200,
     },
@@ -123,18 +123,18 @@ export function AdminPostsPanel({ sectionId = null }) {
 
   const postsParams = useMemo(() => {
     const base = {
-      select: "id,title,date,is_active,issue_id,post_author(authors(name))",
+      select: "id,title,date,is_active,issue_id,post_author(authors(name)),post_contributor(authors(name))",
       order: "date.desc",
       limit: 100,
       "eq.section_id": selectedSectionId,
     };
 
     if (sectionUsesWorkshopStatusTabs(sectionMode)) {
-      base.select = "id,title,date,is_active,issue_id,post_author(authors(name)),start_at,end_at";
+      base.select = "id,title,date,is_active,issue_id,post_author(authors(name)),post_contributor(authors(name)),start_at,end_at";
     }
 
     if (sectionUsesIssuePostSortOrder(sectionMode)) {
-      base.select = "id,title,date,is_active,issue_id,post_author(authors(name)),sort_order";
+      base.select = "id,title,date,is_active,issue_id,post_author(authors(name)),post_contributor(authors(name)),sort_order";
       base.order = "sort_order.asc";
     }
 

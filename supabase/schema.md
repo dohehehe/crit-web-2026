@@ -2,8 +2,8 @@
 
 > Auto-generated. Run `npm run supabase:schema` to refresh.
 
-- Updated: 2026-11-11T04:07:38.451Z
-- Tables: 15
+- Updated: 2026-11-22T07:34:29.121Z
+- Tables: 16
 
 ## `authors`
 
@@ -121,6 +121,15 @@
 | `id` | uuid | yes | gen_random_uuid() | PK |
 | `post_id` | uuid | no | gen_random_uuid() | FK → posts.id |
 
+## `post_contributor`
+
+| Column | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `author_id` | uuid | no | gen_random_uuid() | FK → authors.id |
+| `created_at` | timestamp with time zone | yes | now() |  |
+| `id` | uuid | yes | gen_random_uuid() | PK |
+| `post_id` | uuid | no | gen_random_uuid() | FK → posts.id |
+
 ## `post_keywords`
 
 | Column | Type | Required | Default | Notes |
@@ -155,6 +164,7 @@
 | `title` | text | no |  |  |
 | `updated_at` | timestamp with time zone | no |  |  |
 | `video_url` | text | no |  |  |
+| `view_count` | numeric | no |  |  |
 | `workshop_url` | text | no |  |  |
 
 ## `roles`

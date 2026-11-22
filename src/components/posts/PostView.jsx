@@ -12,6 +12,7 @@ import {
   formatAuthorNames,
   getAuthorDisplayName,
   getPostAuthors,
+  getPostContributors,
 } from "@/lib/posts/formatAuthorNames";
 import { getAuthorPath } from "@/lib/routes/authors";
 import { IssuePdfLink } from "@/components/issues/IssuePdfLink";
@@ -124,7 +125,6 @@ function PostAsideBanner({ banner }) {
         src={banner.imgUrl}
         alt=""
         fill
-        sizes="(max-width: 768px) 100vw, 50vw"
         className={styles.bannerImage}
       />
     </div>
@@ -179,6 +179,8 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
       ? post.thumbnailCaptionEn
       : post.thumbnailCaptionKr
     )?.trim() ?? "";
+  const authors = getPostAuthors(post);
+  const contributors = getPostContributors(post);
 
   return (
     <>
@@ -193,7 +195,6 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                 alt={thumbnailCaption ? "" : (title ?? "")}
                 width={0}
                 height={0}
-                sizes="100vw"
                 className={styles.thumbnailImage}
                 priority
               />
@@ -299,13 +300,21 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           </div>
         ) : null}
 
-        {getPostAuthors(post).length > 0 ? (
+        {authors.length > 0 ? (
           <div className={styles.asideItem}>
-            <div className={`${styles.asideTitle} menu-en`}>Author</div>
-            <AuthorAside
-              authors={getPostAuthors(post)}
-              locale={activeLocale}
-            />
+            <div className={`${styles.asideTitle} menu-en`}>
+              {authors.length > 1 ? "Authors" : "Author"}
+            </div>
+            <AuthorAside authors={authors} locale={activeLocale} />
+          </div>
+        ) : null}
+
+        {contributors.length > 0 ? (
+          <div className={styles.asideItem}>
+            <div className={`${styles.asideTitle} menu-en`}>
+              {contributors.length > 1 ? "Contributors" : "Contributor"}
+            </div>
+            <AuthorAside authors={contributors} locale={activeLocale} />
           </div>
         ) : null}
 

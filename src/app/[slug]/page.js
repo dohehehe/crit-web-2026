@@ -1,10 +1,7 @@
 import { notFound } from "next/navigation";
 import { PostList } from "@/components/posts/PostList";
 import { PreparingMessage } from "@/components/status/StatusMessage";
-import {
-  getSectionMode,
-  sectionUsesIssuePostSortOrder,
-} from "@/lib/admin/section-mode";
+import { getSectionMode } from "@/lib/admin/section-mode";
 import { getPostsBySection } from "@/lib/posts/getPosts";
 import { getSectionHref } from "@/lib/sections/getSectionHref";
 import { getSectionByPathSlug } from "@/lib/sections/getSections";
@@ -22,11 +19,7 @@ export async function generateMetadata({ params }) {
     return {};
   }
 
-  const posts = await getPostsBySection(section.id, {
-    orderBy: sectionUsesIssuePostSortOrder(getSectionMode(section))
-      ? "sort_order"
-      : "date",
-  });
+  const posts = await getPostsBySection(section.id);
   const image = posts.map((post) => resolvePostShareImage(post)).find(Boolean);
 
   return buildPageMetadata({
@@ -47,9 +40,7 @@ export default async function SectionPage({ params }) {
   const sectionMode = getSectionMode(section);
   const isChannelSection = sectionMode === "channel";
 
-  const posts = await getPostsBySection(section.id, {
-    orderBy: sectionUsesIssuePostSortOrder(sectionMode) ? "sort_order" : "date",
-  });
+  const posts = await getPostsBySection(section.id);
 
   if (posts.length === 0) {
     return <PreparingMessage />;

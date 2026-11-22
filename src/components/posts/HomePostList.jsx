@@ -114,7 +114,7 @@ export function HomePostList({ initialPosts, initialHasMore, pageSize }) {
               글을 더 불러오지 못했습니다. 다시 시도
             </button>
           ) : (
-            "글을 불러오는 중"
+            ""
           )}
         </div>
       ) : null}
