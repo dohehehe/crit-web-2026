@@ -24,7 +24,7 @@
 }
 
 /* Tablet keeps two columns. A narrow tablet card falls under 350px so the row still fills. */
-@media (min-width: var(--breakpoint-mobile)) {
+@media (max-width: var(--breakpoint-tablet)) {
   .list {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
