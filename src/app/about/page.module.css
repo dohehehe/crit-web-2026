@@ -70,6 +70,7 @@
   line-height: 52px;
   letter-spacing: 1%;
   font-weight: 600;
+  word-break: break-all;
 }
 
 .empty {
