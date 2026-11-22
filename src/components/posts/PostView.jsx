@@ -179,6 +179,8 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
       ? post.thumbnailCaptionEn
       : post.thumbnailCaptionKr
     )?.trim() ?? "";
+  const authors = getPostAuthors(post);
+  const contributors = getPostContributors(post);
 
   return (
     <>
@@ -298,23 +300,21 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
           </div>
         ) : null}
 
-        {getPostAuthors(post).length > 0 ? (
+        {authors.length > 0 ? (
           <div className={styles.asideItem}>
-            <div className={`${styles.asideTitle} menu-en`}>Author</div>
-            <AuthorAside
-              authors={getPostAuthors(post)}
-              locale={activeLocale}
-            />
+            <div className={`${styles.asideTitle} menu-en`}>
+              {authors.length > 1 ? "Authors" : "Author"}
+            </div>
+            <AuthorAside authors={authors} locale={activeLocale} />
           </div>
         ) : null}
 
-        {getPostContributors(post).length > 0 ? (
+        {contributors.length > 0 ? (
           <div className={styles.asideItem}>
-            <div className={`${styles.asideTitle} menu-en`}>Contributor</div>
-            <AuthorAside
-              authors={getPostContributors(post)}
-              locale={activeLocale}
-            />
+            <div className={`${styles.asideTitle} menu-en`}>
+              {contributors.length > 1 ? "Contributors" : "Contributor"}
+            </div>
+            <AuthorAside authors={contributors} locale={activeLocale} />
           </div>
         ) : null}
 
