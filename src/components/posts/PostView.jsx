@@ -12,6 +12,7 @@ import {
   formatAuthorNames,
   getAuthorDisplayName,
   getPostAuthors,
+  getPostContributors,
 } from "@/lib/posts/formatAuthorNames";
 import { getAuthorPath } from "@/lib/routes/authors";
 import { IssuePdfLink } from "@/components/issues/IssuePdfLink";
@@ -302,6 +303,16 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
             <div className={`${styles.asideTitle} menu-en`}>Author</div>
             <AuthorAside
               authors={getPostAuthors(post)}
+              locale={activeLocale}
+            />
+          </div>
+        ) : null}
+
+        {getPostContributors(post).length > 0 ? (
+          <div className={styles.asideItem}>
+            <div className={`${styles.asideTitle} menu-en`}>Contributor</div>
+            <AuthorAside
+              authors={getPostContributors(post)}
               locale={activeLocale}
             />
           </div>

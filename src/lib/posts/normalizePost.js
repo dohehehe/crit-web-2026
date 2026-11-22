@@ -1,18 +1,18 @@
 import { getEditorParagraphPlainText } from "@/lib/editorjs/getEditorParagraphPlainText";
 import { getThumbnailUrl, parseThumbnail } from "@/lib/posts/thumbnail";
 
-function normalizeAuthors(post) {
-  return (post.post_author ?? [])
+function normalizePeople(rows) {
+  return (rows ?? [])
     .map((row) => row.authors)
-    .filter((author) => author?.name)
-    .map((author) => ({
-      id: author.id ?? null,
-      name: author.name,
-      slug: author.slug ?? "",
-      imgUrl: author.img_url ?? author.imgUrl ?? "",
-      description: author.content
-        ? getEditorParagraphPlainText(author.content)
-        : author.description ?? "",
+    .filter((person) => person?.name)
+    .map((person) => ({
+      id: person.id ?? null,
+      name: person.name,
+      slug: person.slug ?? "",
+      imgUrl: person.img_url ?? person.imgUrl ?? "",
+      description: person.content
+        ? getEditorParagraphPlainText(person.content)
+        : person.description ?? "",
     }));
 }
 
@@ -20,7 +20,8 @@ export function normalizePost(post) {
   const keywords = (post.post_keywords ?? [])
     .map((row) => row.keywords)
     .filter(Boolean);
-  const authors = normalizeAuthors(post);
+  const authors = normalizePeople(post.post_author);
+  const contributors = normalizePeople(post.post_contributor);
 
   return {
     id: post.id,
@@ -40,6 +41,7 @@ export function normalizePost(post) {
     issueNumber: post.issues?.issue_number ?? "",
     author: authors[0] ?? null,
     authors,
+    contributors,
     keywords,
   };
 }

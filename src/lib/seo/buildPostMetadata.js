@@ -1,5 +1,8 @@
 import { getPostMetaDescription } from "@/lib/posts/getPostMetaDescription";
-import { getPostAuthors } from "@/lib/posts/formatAuthorNames";
+import {
+  getPostAuthors,
+  getPostContributors,
+} from "@/lib/posts/formatAuthorNames";
 import { getPostPath } from "@/lib/routes/posts";
 import { buildPageMetadata } from "@/lib/seo/buildPageMetadata";
 import { resolvePostShareImage } from "@/lib/seo/resolveShareImage";
@@ -21,7 +24,13 @@ export async function buildPostMetadata({
   const keywords = (post.keywords ?? [])
     .map((keyword) => keyword?.name)
     .filter(Boolean);
-  const authorNames = getPostAuthors(post).map((author) => author.name);
+  const authorNames = [
+    ...new Set(
+      [...getPostAuthors(post), ...getPostContributors(post)].map(
+        (person) => person.name
+      )
+    ),
+  ];
   const authors = authorNames.length > 0 ? authorNames : undefined;
   const publishedTime = post.date ? `${post.date}T00:00:00+09:00` : undefined;
 

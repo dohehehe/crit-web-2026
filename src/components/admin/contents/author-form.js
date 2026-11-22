@@ -13,7 +13,8 @@ import { slugifyKeyword } from "@/lib/keywords/slugify";
 import EditorClient from "@/components/admin/shared/editor/EditorClient";
 import styles from "@/components/admin/shared/post-form.module.css";
 
-const AUTHOR_SELECT = "id,name,slug,email,img_url,content,post_author(count)";
+const AUTHOR_SELECT =
+  "id,name,slug,email,img_url,content,post_author(count),post_contributor(count)";
 const LIST_HREF = contentsSectionHref(AUTHORS_TAB_ID);
 
 function parseContent(content) {

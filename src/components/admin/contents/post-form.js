@@ -18,6 +18,7 @@ import {
   serializeThumbnail,
 } from "@/lib/posts/thumbnail";
 import { syncPostAuthors } from "@/lib/authors/syncPostAuthors";
+import { syncPostContributors } from "@/lib/authors/syncPostContributors";
 import { syncPostKeywords } from "@/lib/keywords/syncPostKeywords";
 import {
   fetchIssueFileUrlForPreview,
@@ -162,6 +163,7 @@ function PostFormFields({
   initialContentEn,
   initialKeywords,
   initialAuthors,
+  initialContributors,
   section,
   sectionMode,
   categories,
@@ -199,6 +201,7 @@ function PostFormFields({
   const [form, setForm] = useState(initialValues);
   const [keywords, setKeywords] = useState(initialKeywords);
   const [authors, setAuthors] = useState(initialAuthors);
+  const [contributors, setContributors] = useState(initialContributors);
   const [contentLocale, setContentLocale] = useState("ko");
   const [editorData, setEditorData] = useState(initialContent);
   const [editorMountKey, setEditorMountKey] = useState(0);
@@ -206,6 +209,7 @@ function PostFormFields({
   const [editorError, setEditorError] = useState(null);
   const [keywordError, setKeywordError] = useState(null);
   const [authorError, setAuthorError] = useState(null);
+  const [contributorError, setContributorError] = useState(null);
   const [thumbnailError, setThumbnailError] = useState(null);
   const [hoverThumbnailError, setHoverThumbnailError] = useState(null);
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
@@ -309,6 +313,7 @@ function PostFormFields({
     setEditorError(null);
     setKeywordError(null);
     setAuthorError(null);
+    setContributorError(null);
 
     let contents = null;
 
@@ -349,6 +354,7 @@ function PostFormFields({
     try {
       const keywordNames = keywords.map((keyword) => keyword.name);
       const authorNames = authors.map((author) => author.name);
+      const contributorNames = contributors.map((contributor) => contributor.name);
       let savedPostId = postId;
 
       if (isEdit) {
@@ -358,14 +364,22 @@ function PostFormFields({
         savedPostId = created.id;
       }
 
-      const [authorResult, keywordResult] = await Promise.allSettled([
-        syncPostAuthors(savedPostId, authorNames),
-        syncPostKeywords(savedPostId, keywordNames),
-      ]);
+      const [authorResult, contributorResult, keywordResult] =
+        await Promise.allSettled([
+          syncPostAuthors(savedPostId, authorNames),
+          syncPostContributors(savedPostId, contributorNames),
+          syncPostKeywords(savedPostId, keywordNames),
+        ]);
 
       if (authorResult.status === "rejected") {
         setAuthorError(
           authorResult.reason?.message ?? "작가를 저장하지 못했습니다."
+        );
+      }
+
+      if (contributorResult.status === "rejected") {
+        setContributorError(
+          contributorResult.reason?.message ?? "기여자를 저장하지 못했습니다."
         );
       }
 
@@ -377,6 +391,7 @@ function PostFormFields({
 
       if (
         authorResult.status === "rejected" ||
+        contributorResult.status === "rejected" ||
         keywordResult.status === "rejected"
       ) {
         return;
@@ -416,6 +431,7 @@ function PostFormFields({
         content: contents.ko,
         contentEn: contents.en,
         authors,
+        contributors,
         keywords,
         section,
         sectionMode,
@@ -584,6 +600,21 @@ function PostFormFields({
           <AuthorInput value={authors} onChange={setAuthors} disabled={isBusy} />
           {authorError && (
             <p className={`${styles.error} caption`}>{authorError}</p>
+          )}
+        </div>
+
+        <div className={styles.field}>
+          <span className="caption">기여자</span>
+          <AuthorInput
+            value={contributors}
+            onChange={setContributors}
+            disabled={isBusy}
+            placeholder="기여자 검색..."
+            createGuide="새 기여자는 Enter 두 번으로 등록"
+            createGuideDetail="(조합 확정 → 기여자 추가)"
+          />
+          {contributorError && (
+            <p className={`${styles.error} caption`}>{contributorError}</p>
           )}
         </div>
 
@@ -957,12 +988,24 @@ export function PostForm({
       enabled: isEdit && Boolean(postId),
     });
 
+  const { data: postContributorsData, isLoading: postContributorsLoading } =
+    useAdminQuery("post_contributor", {
+      params: {
+        "eq.post_id": postId,
+        select: "author_id,authors(id,name)",
+        order: "created_at.asc",
+        limit: 50,
+      },
+      enabled: isEdit && Boolean(postId),
+    });
+
   const categories = categoriesData?.items ?? [];
   const issues = issuesData?.items ?? [];
 
   const isLoadingMeta =
     sectionsLoading ||
-    (isEdit && (postKeywordsLoading || postAuthorsLoading)) ||
+    (isEdit &&
+      (postKeywordsLoading || postAuthorsLoading || postContributorsLoading)) ||
     (sectionHasCategories(sectionMode) && categoriesLoading) ||
     (sectionMode === "journal" && issuesLoading);
 
@@ -1004,6 +1047,9 @@ export function PostForm({
     : [];
 
   const initialAuthors = isEdit ? mapPostAuthors(postAuthorsData?.items) : [];
+  const initialContributors = isEdit
+    ? mapPostAuthors(postContributorsData?.items)
+    : [];
 
   const formKey = isEdit
     ? postId
@@ -1019,6 +1065,7 @@ export function PostForm({
       initialContentEn={initialContentEn}
       initialKeywords={initialKeywords}
       initialAuthors={initialAuthors}
+      initialContributors={initialContributors}
       section={section}
       sectionMode={sectionMode}
       categories={categories}

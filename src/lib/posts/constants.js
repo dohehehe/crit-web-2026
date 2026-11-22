@@ -13,6 +13,7 @@ export const POST_LIST_SELECT = `
   sections ( id, name, slug ),
   issues ( issue_number ),
   post_author ( authors ( id, name ) ),
+  post_contributor ( authors ( id, name ) ),
   post_keywords ( keywords ( id, name, slug ) )
 `;
 
@@ -27,6 +28,7 @@ export const POST_SEARCH_SELECT = `
   sections ( id, name, slug ),
   issues ( issue_number ),
   post_author ( authors ( id, name ) ),
+  post_contributor ( authors ( id, name ) ),
   post_keywords ( keywords ( id, name, slug ) )
 `;
 
@@ -48,6 +50,7 @@ export const POST_DETAIL_SELECT = `
   sections ( id, name, slug ),
   issues ( issue_number ),
   post_author ( authors ( id, name, slug, img_url, content ) ),
+  post_contributor ( authors ( id, name, slug, img_url, content ) ),
   post_keywords ( keywords ( id, name, slug ) )
 `;
 

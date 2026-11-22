@@ -64,6 +64,7 @@ export function buildPostPreviewRecord({
   content,
   contentEn = null,
   authors = [],
+  contributors = [],
   keywords,
   section,
   sectionMode,
@@ -102,6 +103,12 @@ export function buildPostPreviewRecord({
     authors: authors
       .filter((author) => author?.name)
       .map((author) => ({ id: author.id ?? null, name: author.name })),
+    contributors: contributors
+      .filter((contributor) => contributor?.name)
+      .map((contributor) => ({
+        id: contributor.id ?? null,
+        name: contributor.name,
+      })),
     keywords: keywords.map((keyword) => ({
       id: keyword.id ?? null,
       name: keyword.name,
@@ -186,6 +193,9 @@ export function mapPostPreviewRecordToPostView(record) {
       : record.author?.name
         ? [record.author]
         : [],
+    contributors: Array.isArray(record.contributors)
+      ? record.contributors.filter((contributor) => contributor?.name)
+      : [],
     category: record.category ?? null,
     section: record.section ?? null,
     keywords: record.keywords ?? [],

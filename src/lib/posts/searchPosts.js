@@ -101,16 +101,29 @@ async function fetchPostIdsByAuthorIds(authorIds) {
 
   const supabase = createAdminClient();
 
-  const { data, error } = await supabase
-    .from("post_author")
-    .select("post_id")
-    .in("author_id", authorIds);
+  const [authorLinks, contributorLinks] = await Promise.all([
+    supabase.from("post_author").select("post_id").in("author_id", authorIds),
+    supabase
+      .from("post_contributor")
+      .select("post_id")
+      .in("author_id", authorIds),
+  ]);
 
-  if (error) {
-    throw new Error(error.message);
+  if (authorLinks.error) {
+    throw new Error(authorLinks.error.message);
   }
 
-  return [...new Set((data ?? []).map((row) => row.post_id).filter(Boolean))];
+  if (contributorLinks.error) {
+    throw new Error(contributorLinks.error.message);
+  }
+
+  return [
+    ...new Set(
+      [...(authorLinks.data ?? []), ...(contributorLinks.data ?? [])]
+        .map((row) => row.post_id)
+        .filter(Boolean)
+    ),
+  ];
 }
 
 async function fetchAuthorIdsByName(pattern) {
