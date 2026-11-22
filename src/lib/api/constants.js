@@ -9,6 +9,7 @@ export const ALLOWED_TABLES = [
   "notice",
   "notice_popup",
   "post_author",
+  "post_contributor",
   "post_keywords",
   "posts",
   "roles",

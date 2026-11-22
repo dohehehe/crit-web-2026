@@ -1,4 +1,7 @@
+import { ADMIN_SCOPE } from "@/lib/api/constants";
+import { handleCreate, handleList } from "@/lib/api/handlers";
 import { jsonError, jsonOk } from "@/lib/api/response";
+import { requireAdminApi } from "@/lib/auth/requireAdminApi";
 import { HOME_POST_PAGE_SIZE } from "@/lib/posts/constants";
 import { getPosts } from "@/lib/posts/getPosts";
 
@@ -17,6 +20,17 @@ function clampInt(value, fallback, min, max) {
 
 export async function GET(request) {
   const { searchParams } = request.nextUrl;
+
+  if (searchParams.get("scope") === ADMIN_SCOPE) {
+    const authError = await requireAdminApi();
+
+    if (authError) {
+      return authError;
+    }
+
+    return handleList("posts", request);
+  }
+
   const limit = clampInt(
     searchParams.get("limit"),
     HOME_POST_PAGE_SIZE,
@@ -36,4 +50,14 @@ export async function GET(request) {
   } catch {
     return jsonError("Failed to load posts", 500);
   }
+}
+
+export async function POST(request) {
+  const authError = await requireAdminApi();
+
+  if (authError) {
+    return authError;
+  }
+
+  return handleCreate("posts", request);
 }

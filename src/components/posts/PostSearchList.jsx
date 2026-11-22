@@ -15,7 +15,6 @@ export function PostSearchList({ entries }) {
                     src={entry.thumbnailImg}
                     alt=""
                     fill
-                    sizes="160px"
                     className={styles.thumbnailImage}
                   />
                 </div>

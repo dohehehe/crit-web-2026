@@ -24,7 +24,6 @@ export function GallerySlider({ slides, blockCaptionHtml }) {
                     alt={itemCaptionHtml ? "" : `Gallery image ${index + 1}`}
                     width={1600}
                     height={500}
-                    sizes="100vw"
                     className={styles.galleryImage}
                   />
                   {itemCaptionHtml ? (

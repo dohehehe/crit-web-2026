@@ -35,7 +35,6 @@ export function JournalCritView({ issue, posts, otherIssues = [] }) {
                 alt={issue.title ?? ""}
                 width={0}
                 height={0}
-                sizes="(max-width: 500px) 100vw, 500px"
                 className={styles.coverImage}
                 style={{ width: "100%", height: "auto" }}
                 priority

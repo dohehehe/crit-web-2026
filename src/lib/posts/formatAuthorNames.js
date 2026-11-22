@@ -35,3 +35,13 @@ export function formatAuthorNames(post, locale = "ko") {
     .map((author) => getAuthorDisplayName(author, locale))
     .join(", ");
 }
+
+export function getPostContributors(post) {
+  return (post?.contributors ?? []).filter((contributor) => contributor?.name);
+}
+
+export function formatContributorNames(post, locale = "ko") {
+  return getPostContributors(post)
+    .map((contributor) => getAuthorDisplayName(contributor, locale))
+    .join(", ");
+}

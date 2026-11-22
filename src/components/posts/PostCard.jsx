@@ -54,7 +54,6 @@ export function PostCard({
               alt=""
               width={0}
               height={0}
-              sizes="(max-width: 520px) 100vw, (max-width: 1040px) 50vw, (max-width: 1560px) 33vw, (max-width: 2080px) 25vw, 20vw"
               className={styles.thumbnailImage}
             />
             {hoverThumbnailImg ? (
@@ -63,7 +62,6 @@ export function PostCard({
                 alt=""
                 width={0}
                 height={0}
-                sizes="(max-width: 520px) 100vw, (max-width: 1040px) 50vw, (max-width: 1560px) 33vw, (max-width: 2080px) 25vw, 20vw"
                 className={styles.thumbnailHoverImage}
               />
             ) : null}
