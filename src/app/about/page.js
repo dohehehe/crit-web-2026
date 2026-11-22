@@ -108,9 +108,6 @@ export default async function AboutPage() {
                 {visibleEditors.map((editor) => (
                   <li key={editor.id} className={styles.editor}>
                     <h3 className={styles.editorName}>{editorHeading(editor)}</h3>
-                    {editor.name && editor.nameEn ? (
-                      <p className={styles.editorNameEn}>{editor.nameEn}</p>
-                    ) : null}
                     {editor.description ? (
                       <EditorContent contents={editor.description} proseStyles={editorsProseStyles} />
                     ) : null}
@@ -127,7 +124,7 @@ export default async function AboutPage() {
               aria-labelledby="about-authors-heading"
             >
               <h2 id="about-authors-heading" className={`${styles.sectionTitle} ${styles.authorsTitle}`}>
-                Authors
+                Contributors
               </h2>
               <ul className={styles.authorList}>
                 {authors.map((author) => (
