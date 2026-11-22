@@ -30,7 +30,7 @@
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 900px) and (max-width: 1000px) {
   .list {
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   }
