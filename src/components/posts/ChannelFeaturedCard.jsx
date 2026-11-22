@@ -25,7 +25,6 @@ export function ChannelFeaturedCard({ post }) {
                 alt=""
                 width={0}
                 height={0}
-                sizes="100vw"
                 className={styles.thumbnailImage}
                 priority
               />
@@ -35,7 +34,6 @@ export function ChannelFeaturedCard({ post }) {
                   alt=""
                   width={0}
                   height={0}
-                  sizes="100vw"
                   className={styles.thumbnailHoverImage}
                 />
               ) : null}

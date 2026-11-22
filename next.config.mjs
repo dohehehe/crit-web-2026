@@ -12,6 +12,9 @@ const nextConfig = {
     proxyClientMaxBodySize: "52mb",
   },
   images: {
+    // Uploads are already stored as WebP. The loader would resize each one
+    // again per width, and those runs are Vercel Image Transformations.
+    unoptimized: true,
     // Next.js 16 blocks upstream fetches when DNS resolves to NAT64/private IPs.
     dangerouslyAllowLocalIP: true,
     remotePatterns: supabaseHostname

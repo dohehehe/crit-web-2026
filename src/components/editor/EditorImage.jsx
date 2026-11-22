@@ -33,7 +33,6 @@ export function EditorImage({
         alt={alt}
         width={Number(width) || 0}
         height={Number(height) || 0}
-        sizes={portrait ? "50vw" : "100vw"}
         className={proseStyles.image}
         onLoad={(event) => {
           if (isPortraitSize(width, height)) {

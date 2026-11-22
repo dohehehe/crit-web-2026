@@ -124,7 +124,6 @@ function PostAsideBanner({ banner }) {
         src={banner.imgUrl}
         alt=""
         fill
-        sizes="(max-width: 768px) 100vw, 50vw"
         className={styles.bannerImage}
       />
     </div>
@@ -193,7 +192,6 @@ export function PostView({ post, issue, issuePosts = [], banner = null }) {
                 alt={thumbnailCaption ? "" : (title ?? "")}
                 width={0}
                 height={0}
-                sizes="100vw"
                 className={styles.thumbnailImage}
                 priority
               />
