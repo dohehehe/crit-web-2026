@@ -88,9 +88,10 @@
 .wrapper :global(.critColorPickerPanel) {
   display: none;
   position: absolute;
-  top: calc(100% + 8px);
+  top: auto;
+  bottom: calc(100% + 10px);
   right: 0;
-  z-index: 30;
+  z-index: 40;
   grid-template-columns: repeat(4, 18px);
   gap: 8px;
   padding: 8px;
@@ -130,6 +131,32 @@
   display: flex;
   align-items: center;
   width: 100%;
+}
+
+.wrapper :global(.critFontPickerPanel) {
+  display: none;
+  position: fixed;
+  z-index: 40;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.wrapper :global(.critFontPickerPanel.isOpen) {
+  display: block;
+}
+
+.wrapper :global(.critFontPickerSelect) {
+  width: 100%;
+  min-width: 260px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
 }
 
 .wrapper :global(.cdx-text-style-actions select) {
