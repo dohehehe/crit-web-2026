@@ -15,6 +15,7 @@ import {
 } from "@/lib/editorjs/footnotesTune";
 import { normalizeEditorData } from "@/lib/editorjs/normalizeBlocks";
 import { attachImageOrientation } from "@/lib/editorjs/imageOrientation";
+import { BoldInlineTool } from "@/lib/editorjs/boldInlineTool";
 import { attachRichTextPaste } from "@/lib/editorjs/normalizePastedHtml";
 import {
   TextAlignTool,
@@ -213,6 +214,28 @@ function createColorTool(Tool) {
       this.panel?.classList.remove("isOpen");
     }
 
+    placePanel() {
+      const anchor = this.picker?.closest(".ce-popover__container");
+
+      if (!this.panel || !anchor) {
+        return;
+      }
+
+      const rect = anchor.getBoundingClientRect();
+      const width = this.panel.offsetWidth || 120;
+      let left = rect.right + 8;
+
+      if (left + width > window.innerWidth - 8) {
+        left = Math.max(8, rect.left - width - 8);
+      }
+
+      this.panel.style.position = "fixed";
+      this.panel.style.top = `${Math.round(rect.top)}px`;
+      this.panel.style.left = `${Math.round(left)}px`;
+      this.panel.style.right = "auto";
+      this.panel.style.bottom = "auto";
+    }
+
     togglePanel() {
       const willOpen = !this.panel?.classList.contains("isOpen");
 
@@ -221,6 +244,10 @@ function createColorTool(Tool) {
       }
 
       this.panel?.classList.toggle("isOpen");
+
+      if (willOpen) {
+        this.placePanel();
+      }
     }
 
     checkState() {
@@ -599,6 +626,9 @@ const Editor = forwardRef(function Editor(
               },
             },
             underline: Underline,
+            bold: {
+              class: BoldInlineTool,
+            },
             marker: Marker,
             color: {
               class: ColorTool,

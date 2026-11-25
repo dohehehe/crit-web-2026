@@ -88,9 +88,10 @@
 .wrapper :global(.critColorPickerPanel) {
   display: none;
   position: absolute;
-  top: calc(100% + 8px);
+  top: auto;
+  bottom: calc(100% + 10px);
   right: 0;
-  z-index: 30;
+  z-index: 40;
   grid-template-columns: repeat(4, 18px);
   gap: 8px;
   padding: 8px;
