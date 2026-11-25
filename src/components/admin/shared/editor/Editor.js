@@ -467,9 +467,169 @@ function createColorTool(Tool) {
 
 function createTextStyleTool(Tool) {
   return class extends Tool {
+    render() {
+      const button = super.render();
+      const panel = document.createElement("div");
+      const select = document.createElement("select");
+
+      panel.className = "critFontPickerPanel";
+      select.id = "text-style-font-family";
+      select.className = "critFontPickerSelect";
+
+      for (const font of this.config.fontFamilies || []) {
+        const option = document.createElement("option");
+        option.value = font.value;
+        option.textContent = font.label;
+        option.selected = font.value === this.config.defaultFontFamily;
+        select.append(option);
+      }
+
+      panel.append(select);
+      this.panel = panel;
+      this.select = select;
+      this.savedRange = null;
+
+      const keepSelection = (event) => {
+        event.stopPropagation();
+      };
+
+      panel.addEventListener("mousedown", (event) => {
+        event.stopPropagation();
+      });
+      panel.addEventListener("click", keepSelection);
+      select.addEventListener("mousedown", (event) => {
+        if (this.savedRange) {
+          return;
+        }
+
+        const selection = window.getSelection();
+
+        if (selection?.rangeCount && !selection.isCollapsed) {
+          this.savedRange = selection.getRangeAt(0).cloneRange();
+        }
+      });
+      select.addEventListener("change", (event) => {
+        event.stopPropagation();
+        this.restoreSelection();
+        this.applyStyleOnUserAction("fontFamily", select.value);
+        this.closePanel();
+      });
+
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const selection = window.getSelection();
+
+        if (selection?.rangeCount && !selection.isCollapsed) {
+          this.savedRange = selection.getRangeAt(0).cloneRange();
+        }
+
+        if (!panel.isConnected) {
+          button.closest(".codex-editor")?.append(panel);
+        }
+
+        this.togglePanel();
+      });
+
+      this.onDocumentPointerDown = (event) => {
+        if (!panel.classList.contains("isOpen")) {
+          return;
+        }
+
+        const path = event.composedPath?.() ?? [];
+
+        if (path.includes(panel) || path.includes(button)) {
+          return;
+        }
+
+        this.closePanel();
+      };
+
+      document.addEventListener("mousedown", this.onDocumentPointerDown);
+      return button;
+    }
+
+    restoreSelection() {
+      if (!this.savedRange) {
+        return;
+      }
+
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(this.savedRange);
+    }
+
+    placePanel() {
+      const toolbar = this.button
+        ?.closest(".ce-inline-toolbar")
+        ?.querySelector(".ce-popover--inline > .ce-popover__container");
+
+      if (!this.panel || !toolbar) {
+        return;
+      }
+
+      const rect = toolbar.getBoundingClientRect();
+      const colorPanel = document.querySelector(".critColorPickerPanel.isOpen");
+      const colorRect = colorPanel?.getBoundingClientRect();
+      const width = this.panel.offsetWidth || 260;
+      let top = rect.top;
+      let left = rect.right + 8;
+
+      if (colorRect && colorRect.width > 0) {
+        const besideColor = colorRect.right + 8;
+
+        if (besideColor + width <= window.innerWidth - 8) {
+          top = colorRect.top;
+          left = besideColor;
+        } else {
+          top = colorRect.bottom + 8;
+          left = colorRect.left;
+        }
+      }
+
+      if (left + width > window.innerWidth - 8) {
+        left = Math.max(8, rect.left - width - 8);
+      }
+
+      this.panel.style.top = `${Math.round(top)}px`;
+      this.panel.style.left = `${Math.round(left)}px`;
+    }
+
+    closePanel() {
+      this.panel?.classList.remove("isOpen");
+    }
+
+    togglePanel() {
+      const willOpen = !this.panel?.classList.contains("isOpen");
+      this.panel?.classList.toggle("isOpen", willOpen);
+
+      if (willOpen) {
+        this.placePanel();
+      }
+    }
+
     checkState(selection) {
       super.checkState(selection);
+
+      const detected = this.detectStyle?.(selection);
+
+      if (this.select && detected?.fontFamily) {
+        this.select.value = detected.fontFamily;
+      }
+
       return false;
+    }
+
+    clear() {
+      if (this.onDocumentPointerDown) {
+        document.removeEventListener("mousedown", this.onDocumentPointerDown);
+        this.onDocumentPointerDown = null;
+      }
+
+      this.panel?.remove();
+      this.panel = null;
+      this.select = null;
     }
 
     surround() {}
