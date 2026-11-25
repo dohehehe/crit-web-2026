@@ -20,7 +20,7 @@
 }
 
 .featured {
-  width: 100%;
+  grid-column: 1 / -1;
 }
 
 /* Tablet keeps two columns. A narrow tablet card falls under 350px so the row still fills. */
