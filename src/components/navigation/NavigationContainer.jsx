@@ -24,7 +24,7 @@ export function NavigationContainer({
     }
 
     const media = window.matchMedia(
-      `(max-width: ${getComputedStyle(document.documentElement).getPropertyValue("--breakpoint-mobile").trim() || "479px"})`,
+      `(max-width: ${getComputedStyle(document.documentElement).getPropertyValue("--breakpoint-mobile").trim() || "590px"})`,
     );
     const body = document.body;
     const html = document.documentElement;

@@ -12,6 +12,15 @@ import {
 import { CHANNEL_BACKGROUND_CLASS, isChannelPath } from "@/lib/routes/channel";
 import styles from "@/components/navigation/Navigation.module.css";
 
+function getMobileLayoutQuery() {
+  const breakpoint =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--breakpoint-mobile")
+      .trim() || "590px";
+
+  return window.matchMedia(`(max-width: ${breakpoint})`);
+}
+
 function getMobileStickyTopFromLogoHeight(header) {
   const logoLink = header.firstElementChild;
   if (!logoLink) {
@@ -37,7 +46,7 @@ function useJournalStickyTop(headerRef, enabled) {
       return;
     }
 
-    const mobileQuery = window.matchMedia(MOBILE_BREAKPOINT_QUERY);
+    const mobileQuery = getMobileLayoutQuery();
 
     const updateStickyTop = () => {
       if (mobileQuery.matches) {

@@ -70,7 +70,7 @@
   width: 100%;
 }
 
-@media (min-width: calc(var(--breakpoint-mobile) + 1px)) {
+@media (min-width: var(--breakpoint-mobile)) {
   .header:has(.logoLinkDetailHidden) {
     top: 0;
     padding-top: 12px;
@@ -213,7 +213,7 @@
   .header {
     /* position: fixed; */
     left: 0;
-    top: var(--header-sticky-top, -75px);
+    top: var(--header-sticky-top, -65px);
     margin-left: 0;
     background: white;
     padding-top: 14px;
