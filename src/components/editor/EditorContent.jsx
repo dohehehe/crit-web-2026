@@ -4,6 +4,7 @@ import { GallerySlider } from "@/components/editor/GallerySlider";
 import { createFootnoteContext } from "@/lib/editorjs/footnotes";
 import { getGallerySlides } from "@/lib/editorjs/gallery";
 import { normalizeBlocks } from "@/lib/editorjs/normalizeBlocks";
+import { renderEditorHtml } from "@/lib/editorjs/renderEditorHtml";
 import { blockAlignProps } from "@/lib/editorjs/textAlign";
 import styles from "@/components/editor/EditorContent.module.css";
 import defaultProseStyles from "@/components/editor/editorProse.module.css";
@@ -25,7 +26,7 @@ function DocumentFootnotes({ footnotes, proseStyles }) {
               {note.superscript}
             </a>
           </sup>
-          <span dangerouslySetInnerHTML={{ __html: note.content }} />
+          <span dangerouslySetInnerHTML={{ __html: renderEditorHtml(note.content) }} />
         </p>
       ))}
     </aside>
@@ -262,6 +263,7 @@ export function EditorContent({
   }
 
   const footnoteContext = createFootnoteContext(blocks);
+  const applyHtml = (html) => renderEditorHtml(footnoteContext.applyToHtml(html));
   const rootClassName = compact
     ? `${proseStyles.root} ${proseStyles.rootCompact}`
     : proseStyles.root;
@@ -269,7 +271,7 @@ export function EditorContent({
   return (
     <div className={rootClassName} data-locale={locale}>
       {blocks.map((block, index) =>
-        renderBlock(block, index, footnoteContext.applyToHtml, proseStyles),
+        renderBlock(block, index, applyHtml, proseStyles),
       )}
       <DocumentFootnotes
         footnotes={footnoteContext.entries}

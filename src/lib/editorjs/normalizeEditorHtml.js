@@ -1,3 +1,5 @@
+import { editorHtmlToPlainText } from "@/lib/editorjs/renderEditorHtml";
+
 export function normalizeEditorHtml(html) {
   if (!html) {
     return html;
@@ -11,5 +13,5 @@ export function getCaptionPlainText(html) {
     return "";
   }
 
-  return normalizeEditorHtml(html).replace(/<[^>]*>/g, "").trim();
+  return editorHtmlToPlainText(normalizeEditorHtml(html));
 }
