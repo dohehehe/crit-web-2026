@@ -270,6 +270,11 @@
     color: var(--white);
   }
 
+  .headerJournalTone .navContainer.open {
+    background: var(--crit-orange);
+    color: var(--black);
+  }
+
 
   .navContainer.open .navContent {
     display: flex;
